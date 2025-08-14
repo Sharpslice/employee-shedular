@@ -3,9 +3,16 @@ import passport from 'passport'
 import {Strategy as GoogleStrategy} from 'passport-google-oauth20';
 import prisma from '../../db/db';
 import dotenv from "dotenv";
+import jwt from 'jsonwebtoken';
 const google = express.Router();
 dotenv.config();
 
+interface AuthenticatedUser extends Request{
+    id: number,
+    googleId: string
+    name: string
+    role: string
+}
 
 passport.use(new GoogleStrategy({
     clientID:process.env.GOOGLE_CLIENT_ID ?? "",
@@ -29,7 +36,7 @@ passport.use(new GoogleStrategy({
         return done(null,user)
         
     }catch(error){
-        
+        return done(error,undefined)
     }   
 
    
@@ -38,6 +45,20 @@ passport.use(new GoogleStrategy({
 
 google.get('/',passport.authenticate('google',{scope: ['profile','email'],prompt: 'select_account'}))
 google.get('/callback',passport.authenticate('google',{session:false}),(req,res)=>{
+    const user = req.user as AuthenticatedUser;
+    console.log(user)
+    const token = jwt.sign(
+        {
+            id:user.googleId,
+            name: user.name,
+            role:user.role
+
+        },
+        process.env.JWT_SECRET?? '',
+        {expiresIn: '1h'}
+    )
+
+    res.json({user,token})
     res.redirect('http://localhost:5173/');
 })
 export default google;
