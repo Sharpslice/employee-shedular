@@ -16,8 +16,17 @@ passport.use(new GoogleStrategy({
 },async(accessToken, refreshToken, profile,done)=>{
     try{
         console.log(profile)
-        //let user = await prisma.User.findUnique({where:{id:profile.id}})
-        return done(null,profile)
+        let user = await prisma.user.upsert({
+            where:{
+                googleId: profile.id
+            },
+            update:{},
+            create:{
+                googleId: profile.id,
+                name: profile.displayName
+            },
+        })
+        return done(null,user)
         
     }catch(error){
         
