@@ -17,7 +17,7 @@ passport.use(new GoogleStrategy({
     try{
         console.log(profile)
         //let user = await prisma.User.findUnique({where:{id:profile.id}})
-
+        return done(null,profile)
         
     }catch(error){
         
@@ -27,5 +27,8 @@ passport.use(new GoogleStrategy({
 }),)
 
 
-google.get('/',passport.authenticate('google',{scope: ['profile','email']}))
+google.get('/',passport.authenticate('google',{scope: ['profile','email'],prompt: 'select_account'}))
+google.get('/callback',passport.authenticate('google',{session:false}),(req,res)=>{
+    res.redirect('http://localhost:5173/');
+})
 export default google;
