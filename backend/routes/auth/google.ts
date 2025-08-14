@@ -1,7 +1,10 @@
 import express from 'express';
 import passport from 'passport'
 import {Strategy as GoogleStrategy} from 'passport-google-oauth20';
+import prisma from '../../db/db';
+import dotenv from "dotenv";
 const google = express.Router();
+dotenv.config();
 
 
 passport.use(new GoogleStrategy({
@@ -11,14 +14,18 @@ passport.use(new GoogleStrategy({
 
 
 },async(accessToken, refreshToken, profile,done)=>{
+    try{
+        console.log(profile)
+        //let user = await prisma.User.findUnique({where:{id:profile.id}})
 
+        
+    }catch(error){
+        
+    }   
 
    
 }),)
 
 
-
-google.get('/',(req,res)=>{
-
-})
+google.get('/',passport.authenticate('google',{scope: ['profile','email']}))
 export default google;
