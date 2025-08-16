@@ -9,7 +9,7 @@ function Login(){
 
     return (
     <>
-        <Box>
+        <Box sx={{border: "1px solid black"}}>
 
             <Button onClick={googleSignUpClick}>
                 Sign up with Google
