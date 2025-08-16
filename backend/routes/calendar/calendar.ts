@@ -11,7 +11,8 @@ calendarApi.get('/currentMonth',(req,res)=>{
 
     const dayIndex = getDay(startOfMonth(today));
 
-    
+    const currentMonthString = format(new Date(),'MMMM');
+
 
     const daysInAMonth: (number | null)[] = Array.from({length:42},()=>{
         return null
@@ -21,7 +22,7 @@ calendarApi.get('/currentMonth',(req,res)=>{
     }
 
     
-    res.json({daysInAMonth})
+    res.json({currentMonthString,daysInAMonth})
 })
 
 export default calendarApi
