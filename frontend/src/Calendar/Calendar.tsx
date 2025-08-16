@@ -1,27 +1,37 @@
 
-import { useEffect } from "react"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {getDaysInMonth,format, startOfMonth, getDay} from 'date-fns';
+
 import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+
+
+type CalendarResponse ={
+    daysInAMonth: (number | null)[];
+}
 
 function Calendar(){
-
-
-    const today = new Date();
-    const totalDays = getDaysInMonth(today);
-
-    const dayIndex = getDay(startOfMonth(today));
-
+    const [daysInAMonth, setDaysInAMonth] = useState<(number|null)[]>([]);
+   
     useEffect(()=>{
-        console.log(totalDays)
-    })
+        const fetchCalendarData =async()=>{
+            try{
+                const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/currentMonth`,{withCredentials:true});
+                
+                setDaysInAMonth(response.data.daysInAMonth);
 
-    const daysInAMonth: (number | null)[] = Array.from({length:42},()=>{
-        return null
-    })
-    for(let day = dayIndex,i=1; i<=totalDays;day++,i++){
-        daysInAMonth[day] = i;
-    }
+            }catch(error){
+                if(error instanceof Error)
+                {
+                    console.log(error.message)
+                }
+                
+            }
+            
+
+        }
+        fetchCalendarData();
+    },[])
 
 
     
@@ -33,16 +43,16 @@ function Calendar(){
     <Box sx={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gridTemplateRows:'50px repeat(6,1fr)',width:'65vw',height:'100vh'}}>
 
         {daysOfTheWeek.map(days =>(
-            <Box sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid grey',height:'50px'}}>
+            <Box key={days} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid grey',height:'50px'}}>
                 {days}
 
             </Box>
 
         ))}
 
-        {daysInAMonth.map((day) =>(
+        {daysInAMonth.map((day,index) =>(
             
-            <Box sx={{width:'100%', height:'100%',border:'1px solid grey',borderRadius:'0'}}>
+            <Box key={index} sx={{width:'100%', height:'100%',border:'1px solid grey',borderRadius:'0'}}>
                 {day}
             </Box>
         ))}
