@@ -23,14 +23,23 @@ passport.use(new GoogleStrategy({
 },async(accessToken, refreshToken, profile,done)=>{
     try{
         console.log(profile)
-        let user = await prisma.user.upsert({
+
+
+
+        let user = await prisma.employee.upsert({
             where:{
                 googleId: profile.id
             },
             update:{},
             create:{
                 googleId: profile.id,
-                name: profile.displayName
+                name: profile.displayName || '',
+                email: profile.emails?.[0]?.value || '',
+                phone_number: null,
+                role: 'ADMIN',
+                color:null,
+                isWorking:true
+
             },
         })
         return done(null,user)

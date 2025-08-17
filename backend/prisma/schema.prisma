@@ -19,14 +19,76 @@ enum Role {
     ADMIN
 }
 
-model Test {
-  id      Int    @id @default(autoincrement())
-  name    String
-}
 
-model User {
+model Employee {
   id              Int         @id @default(autoincrement())
   googleId        String      @unique
+  email           String      @unique
   name            String
+  phone_number    String?
   role            Role        @default(USER)
+  color           String?
+  isWorking       Boolean
+
+  shifts          Employee_Shifts[]
+  availability    Employee_Availability[]
+  override        Availability_Override[]
+
+  @@map("employee")
 }
+
+model Employee_Shifts{
+    id                Int       @id @default(autoincrement())
+    employee_id       Int
+    date              DateTime
+    start_time        String
+    end_time          String
+
+    employee          Employee  @relation(fields: [employee_id], references:id)
+    calendar          Calendar  @relation(fields: [date],references:date)
+
+    @@map("employee_shifts")
+}
+
+model Employee_Availability{
+    id                      Int       @id @default(autoincrement())
+    employee_id             Int
+    date                    DateTime
+    start_time              DateTime
+    end_time                DateTime
+
+    employee                Employee  @relation(fields:[employee_id],references:id)
+
+    @@map("employee_availability")
+}
+
+model Availability_Override{
+    id                      Int         @id @default(autoincrement())
+    employee_id             Int
+    date                    DateTime
+    isAvailable             Boolean
+
+    employee                Employee @relation(fields:[employee_id],references:id)
+    calendar                Calendar @relation(fields:[date],references:date)
+
+    @@map("availability_override")
+}
+
+model Calendar{
+    date              DateTime        @id
+    day_of_month      Int
+    days_of_week      Int
+    week              Int
+    month             String
+    year              Int
+    isWeekend         Boolean
+    isHoliday         Boolean
+    holiday_name      String?
+
+    shift_dates       Employee_Shifts[]
+    override_dates    Availability_Override[]
+
+    @@map("calendar")
+}
+
+
