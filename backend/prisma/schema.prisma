@@ -81,8 +81,8 @@ model Calendar{
     week              Int
     month             String
     year              Int
-    is_weekend         Boolean
-    is_holiday       Boolean
+    is_weekend        Boolean
+    is_holiday        Boolean
     holiday_name      String?
 
     shift_dates       Employee_Shifts[]

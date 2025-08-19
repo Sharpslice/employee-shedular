@@ -19,8 +19,7 @@ function Calendar(){
             try{
                 const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/currentMonth`,{withCredentials:true});
                 
-                setDaysInAMonth(response.data.daysInAMonth);
-                setCurrentMonthString(response.data.currentMonthString)
+                
 
             }catch(error){
                 if(error instanceof Error)
