@@ -13,16 +13,19 @@ type MonthElement = {
 
 type CalendarResponse ={
     month: MonthElement[]
+    currentMonth: string
     
 }
 
 function Calendar(){
     const [daysInAMonth,setDayInAMonth] = useState<MonthElement[]>([])
+    const [currentMonth,setCurrentMonth] = useState<string>('')
     useEffect(()=>{
         const fetchCalendarData =async()=>{
             try{
                 const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/currentMonth`,{withCredentials:true});
                 setDayInAMonth(response.data.month)
+                setCurrentMonth(response.data.currentMonth)
                 console.log(response.data.month)
 
             }catch(error){
@@ -48,7 +51,7 @@ function Calendar(){
     <Box sx={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gridTemplateRows:'50px 50px repeat(6,1fr)',width:'65vw',height:'100vh'}}>
 
         <Box gridColumn={"span 7"} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid black',fontSize:'24px'}}>
-            {/* {currentMonthString} */}
+            { currentMonth }
         </Box>
 
 
