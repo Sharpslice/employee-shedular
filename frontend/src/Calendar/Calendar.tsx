@@ -16,9 +16,13 @@ type MonthElement = {
 
 type CalendarResponse ={
     month: MonthElement[]
-    currentMonth: string
+    currentMonth: number
     
 }
+function getMonthName(monthNumber:number){
+        const month = new Date(2000,monthNumber-1,1);
+        return month.toLocaleString('default',{month:'long'})
+    }
 
 function Calendar(){
     const [daysInAMonth,setDayInAMonth] = useState<MonthElement[]>([])
@@ -28,7 +32,7 @@ function Calendar(){
             try{
                 const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/currentMonth`,{withCredentials:true});
                 setDayInAMonth(response.data.month)
-                setCurrentMonth(response.data.currentMonth)
+                setCurrentMonth(getMonthName(response.data.currentMonth))
                 console.log(response.data.month)
 
             }catch(error){
@@ -51,29 +55,29 @@ function Calendar(){
 
     return (
     <>
-    <Box sx={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gridTemplateRows:'50px 50px repeat(6,1fr)',width:'65vw',height:'100vh'}}>
 
-        <Box gridColumn={"span 7"} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid black',fontSize:'24px'}}>
-            { currentMonth }
+        <Box sx={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gridTemplateRows:'50px 50px repeat(6,1fr)',width:'65vw',height:'100vh'}}>
+
+            <Box gridColumn={"span 7"} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid black',fontSize:'24px'}}>
+                {currentMonth}
+            </Box>
+            {daysOfTheWeek.map(days =>(
+                <Box key={days} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid grey',height:'50px'}}>
+                    {days}
+                </Box>
+
+            ))}
+            
+            {daysInAMonth.length>0 && daysInAMonth.map((dayObj:MonthElement,index) =>(
+                <DateCell key={`${index}`} day={dayObj} ></DateCell>
+            ))}
+
         </Box>
 
 
-        {daysOfTheWeek.map(days =>(
-            <Box key={days} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid grey',height:'50px'}}>
-                {days}
-            </Box>
 
-        ))}
 
-        {daysInAMonth.length>0 && daysInAMonth.map((dayObj:MonthElement,index) =>(
-            
-            <DateCell key={`${index}`} day={dayObj} >
-                
-            </DateCell>
-        ))}
-        
-    </Box>
-        
+    
     </>
     )
 }

@@ -18,7 +18,7 @@ function resetTimeToMidnight(date:Date){
 calendarApi.get('/currentMonth',async (req,res)=>{
     const today = new Date()
 
-    const currentMonth = (today).toLocaleString('default',{month:'long'})
+    const currentMonth = (today).getMonth() + 1
 
     const firstDay = resetTimeToMidnight( startOfWeek( startOfMonth(today)  ))
     const lastDay =  resetTimeToMidnight (startOfDay (endOfWeek( endOfMonth(today))) )
