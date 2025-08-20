@@ -3,12 +3,15 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import DateCell from './DateCell';
+
 
 type MonthElement = {
     week:number,
     date: Date,
     days_of_week:number,
     day_of_month:number
+    month: number
 }
 
 type CalendarResponse ={
@@ -58,16 +61,15 @@ function Calendar(){
         {daysOfTheWeek.map(days =>(
             <Box key={days} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid grey',height:'50px'}}>
                 {days}
-
             </Box>
 
         ))}
 
-        {daysInAMonth.length>0 && daysInAMonth.map((day:MonthElement,index) =>(
+        {daysInAMonth.length>0 && daysInAMonth.map((dayObj:MonthElement,index) =>(
             
-            <Box key={index} sx={{width:'100%', height:'100%',border:'1px solid grey',borderRadius:'0'}}>
-                {day.day_of_month}
-            </Box>
+            <DateCell key={`${index}`} day={dayObj} >
+                
+            </DateCell>
         ))}
         
     </Box>
