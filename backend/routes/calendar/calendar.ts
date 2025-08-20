@@ -1,28 +1,73 @@
 import express from 'express'
-
+import prisma from '../../db/db';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {getDaysInMonth,format, startOfMonth, getDay} from 'date-fns';
+import {getDaysInMonth,format, startOfMonth, getDay, endOfMonth, startOfDay,startOfWeek,endOfWeek} from 'date-fns';
+
 const calendarApi = express.Router();
 
+function resetTimeToMidnight(date:Date){
+    const utcStart = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0,0,0,0
+    ));
 
-calendarApi.get('/currentMonth',(req,res)=>{
-    const today = new Date();
-    const totalDays = getDaysInMonth(today);
+    return utcStart
+}
+calendarApi.get('/currentMonth',async (req,res)=>{
+    
+    
 
-    const dayIndex = getDay(startOfMonth(today));
+   
+    const firstDay = resetTimeToMidnight( startOfWeek(startOfMonth(new Date())) )
+    const lastDay =  resetTimeToMidnight (startOfDay (endOfWeek( endOfMonth(new Date()))) )
+ 
 
-    const currentMonthString = format(new Date(),'MMMM');
 
-
-    const daysInAMonth: (number | null)[] = Array.from({length:42},()=>{
-        return null
+    const month = await prisma.calendar.findMany({
+        select:{
+            week:true,
+            date:true,
+            day_of_month:true,
+            days_of_week:true,
+            
+        },
+        where:{
+            date:{
+                gte: firstDay,
+                lte: lastDay 
+            }
+        }
     })
-    for(let day = dayIndex,i=1; i<=totalDays;day++,i++){
-        daysInAMonth[day] = i;
-    }
+    console.log(month)
+    
+    res.json({month})
+    
+
+
 
     
-    res.json({currentMonthString,daysInAMonth})
+
 })
 
 export default calendarApi
+
+
+//const today = new Date();
+    // const totalDays = getDaysInMonth(today);
+
+    // const dayIndex = getDay(startOfMonth(today));
+
+    // const currentMonthString = format(new Date(),'MMMM');
+
+
+    // const daysInAMonth: (number | null)[] = Array.from({length:42},()=>{
+    //     return null
+    // })
+    // for(let day = dayIndex,i=1; i<=totalDays;day++,i++){
+    //     daysInAMonth[day] = i;
+    // }
+
+    
+    // res.json({currentMonthString,daysInAMonth})

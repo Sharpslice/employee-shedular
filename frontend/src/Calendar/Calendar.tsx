@@ -4,23 +4,26 @@ import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
+type MonthElement = {
+    week:number,
+    date: Date,
+    days_of_week:number,
+    day_of_month:number
+}
 
 type CalendarResponse ={
-    currentMonthString:(string)
-    daysInAMonth: (number | null)[];
+    month: MonthElement[]
+    
 }
 
 function Calendar(){
-    const [daysInAMonth, setDaysInAMonth] = useState<(number|null)[]>([]);
-    const [currentMonthString,setCurrentMonthString] = useState<string>('')
+    const [daysInAMonth,setDayInAMonth] = useState<MonthElement[]>([])
     useEffect(()=>{
         const fetchCalendarData =async()=>{
             try{
                 const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/currentMonth`,{withCredentials:true});
-                
-                setDaysInAMonth(response.data.daysInAMonth);
-                setCurrentMonthString(response.data.currentMonthString)
+                setDayInAMonth(response.data.month)
+                console.log(response.data.month)
 
             }catch(error){
                 if(error instanceof Error)
@@ -45,7 +48,7 @@ function Calendar(){
     <Box sx={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gridTemplateRows:'50px 50px repeat(6,1fr)',width:'65vw',height:'100vh'}}>
 
         <Box gridColumn={"span 7"} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid black',fontSize:'24px'}}>
-            {currentMonthString}
+            {/* {currentMonthString} */}
         </Box>
 
 
@@ -57,10 +60,10 @@ function Calendar(){
 
         ))}
 
-        {daysInAMonth.map((day,index) =>(
+        {daysInAMonth.length>0 && daysInAMonth.map((day:MonthElement,index) =>(
             
             <Box key={index} sx={{width:'100%', height:'100%',border:'1px solid grey',borderRadius:'0'}}>
-                {day}
+                {day.day_of_month}
             </Box>
         ))}
         
