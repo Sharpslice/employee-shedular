@@ -1,36 +1,48 @@
 import express from 'express'
 import prisma from '../../db/db';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {getDaysInMonth,format, startOfMonth, getDay, endOfMonth, startOfDay} from 'date-fns';
+import {getDaysInMonth,format, startOfMonth, getDay, endOfMonth, startOfDay,startOfWeek,endOfWeek} from 'date-fns';
 
 const calendarApi = express.Router();
 
+function resetTimeToMidnight(date:Date){
+    const utcStart = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0,0,0,0
+    ));
 
+    return utcStart
+}
 calendarApi.get('/currentMonth',async (req,res)=>{
-    const calendarMap: {} = {};
-
     
+    
+
    
-    const firstDay = startOfMonth( new Date());
-    const lastDay = endOfMonth(new Date());
+    const firstDay = resetTimeToMidnight( startOfWeek(startOfMonth(new Date())) )
+    const lastDay =  resetTimeToMidnight (startOfDay (endOfWeek( endOfMonth(new Date()))) )
+ 
+
+
     const month = await prisma.calendar.findMany({
         select:{
+            week:true,
             date:true,
+            day_of_month:true,
             days_of_week:true,
-            week:true
+            
         },
         where:{
             date:{
                 gte: firstDay,
-                lte: lastDay
+                lte: lastDay 
             }
         }
-
-
-
     })
     console.log(month)
-
+    
+    res.json({month})
     
 
 

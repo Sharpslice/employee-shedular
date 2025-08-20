@@ -1,14 +1,16 @@
 import prisma from './db'
-import {startOfMonth,format, addYears, getWeekOfMonth} from 'date-fns';
+import {startOfMonth,format, addYears, getWeekOfMonth,subMonths} from 'date-fns';
 async function fillCalendar(){
 
     const today = new Date();
 
-    const firstDayOfCurrentMonth = format(startOfMonth(today),'yyyy-MM-dd');
+    //const firstDayOfCurrentMonth = format(startOfMonth(today),'yyyy-MM-dd');
     const twoYearsLater = format(addYears(startOfMonth(today),2),'yyyy-MM-dd');
 
-    console.log(`'${firstDayOfCurrentMonth}'`);
-    console.log(`'${firstDayOfCurrentMonth}'`);
+
+    const firstDayOfLastMonth = format( subMonths(startOfMonth(today),1),'yyyy-MM-dd' )
+
+    
 
 
     await prisma.$executeRaw`
@@ -28,7 +30,7 @@ async function fillCalendar(){
             NULL
         FROM
             generate_series(
-            ${firstDayOfCurrentMonth}::date,
+            ${firstDayOfLastMonth}::date,
             ${twoYearsLater}::date,
             INTERVAL '1 day'
             
