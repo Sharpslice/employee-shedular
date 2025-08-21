@@ -79,7 +79,7 @@ model Calendar{
     day_of_month      Int
     days_of_week      Int
     week              Int
-    month             String
+    month             Int
     year              Int
     is_weekend        Boolean
     is_holiday        Boolean
