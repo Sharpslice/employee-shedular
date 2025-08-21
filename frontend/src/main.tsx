@@ -5,7 +5,7 @@ import './index.css'
 import App from './App.tsx'
 import Login from './login/login.tsx';
 import Calendar from './Calendar/Calendar.tsx';
-import { GlobalStyles } from '@mui/material';
+import { MantineProvider } from '@mantine/core';
 
 
 
@@ -33,16 +33,10 @@ createRoot(document.getElementById('root')!).render(
  
 
   <StrictMode>
-    <GlobalStyles
-      styles={{
-        '#root': {
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        },
-      }}
-    />
-    <RouterProvider router ={router}/>
+
+      <MantineProvider>
+        <RouterProvider router ={router}/>
+      </MantineProvider>
+    
   </StrictMode>,
 )

@@ -1,6 +1,6 @@
 
 
-import { Box } from '@mui/material';
+import { Box } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import DateCell from './DateCell';
@@ -56,22 +56,21 @@ function Calendar(){
     return (
     <>
 
-        <Box sx={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gridTemplateRows:'50px 50px repeat(6,1fr)',width:'65vw',height:'100vh'}}>
+        <Box style={{display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gridTemplateRows: '50px 50px repeat(6, 1fr)', width: '65vw', height: '100vh',}}>
 
-            <Box gridColumn={"span 7"} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid black',fontSize:'24px'}}>
+            <Box style={{gridColumn: 'span 7',display: 'flex',justifyContent: 'center',alignItems: 'center',border: '1px solid black',fontSize: '24px',}}>
                 {currentMonth}
             </Box>
-            {daysOfTheWeek.map(days =>(
-                <Box key={days} sx={{display:'flex',justifyContent:'center',alignItems:'center',border:'1px solid grey',height:'50px'}}>
+
+            {daysOfTheWeek.map((days) => (
+                <Box key={days} style={{display: 'flex',justifyContent: 'center',alignItems: 'center',border: '1px solid grey',height: '50px',}}>
                     {days}
                 </Box>
-
-            ))}
-            
-            {daysInAMonth.length>0 && daysInAMonth.map((dayObj:MonthElement,index) =>(
-                <DateCell key={`${index}`} day={dayObj} ></DateCell>
             ))}
 
+            {daysInAMonth.length > 0 && daysInAMonth.map((dayObj: MonthElement, index) => (
+                    <DateCell key={`${index}`} day={dayObj} />
+                ))}
         </Box>
 
 
