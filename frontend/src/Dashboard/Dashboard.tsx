@@ -6,7 +6,10 @@ import {DateTime} from 'luxon'
 function Dashboard(){   
     const [dateValue,setDateValue]= useState<string | null>(DateTime.local().toISODate())
 
-    
+    const onTodayClick =()=>{
+        console.log(DateTime.local().toISODate())
+        setDateValue(DateTime.local().toISODate())
+    }
 
     const navClick = (direction: 'prev' | 'next')=>{
         const time = DateTime.fromISO(dateValue!)
@@ -69,7 +72,7 @@ function Dashboard(){
                 </Group>
 
                 <Group>
-                    <Button>
+                    <Button onClick={onTodayClick}>
                         Today
                     </Button>
                 </Group>
