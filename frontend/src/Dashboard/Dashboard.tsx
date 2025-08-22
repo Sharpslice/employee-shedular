@@ -41,7 +41,7 @@ function Dashboard(){
 
     useEffect(()=>{
         const fetchData =async() =>{
-           const response =  await axios.get(`http://localhost:3000/api/calendar/date?date=${dateValue}`)
+            await axios.get(`http://localhost:3000/api/calendar/date?date=${dateValue}`)
         }
         fetchData()
     },[dateValue])
