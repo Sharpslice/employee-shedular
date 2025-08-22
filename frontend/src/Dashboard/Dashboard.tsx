@@ -4,17 +4,35 @@ import { IconCalendar,IconChevronLeft,IconChevronRight } from "@tabler/icons-rea
 import { useState } from "react"
 import {DateTime} from 'luxon'
 function Dashboard(){   
-    const [dateValue,setDateValue]= useState<string | null>(new Date().toString())
+    const [dateValue,setDateValue]= useState<string | null>(DateTime.local().toISODate())
 
     
 
     const navClick = (direction: 'prev' | 'next')=>{
+        const time = DateTime.fromISO(dateValue!)
+
         if(direction == 'prev'){
-            console.log(dateValue)
+            console.log('prev')
+            const prevWeek = time.minus({week:1});
+            
+            const test = prevWeek.minus({day: (prevWeek.weekday % 7)}).toISODate()
+         
+            setDateValue(test!)
+            console.log(test)
         }
         else if(direction=='next'){
-            console.log(dateValue)
+            console.log('next')
+            
+            const nextWeek = time.plus({week:1});
+            
+            const test = nextWeek.startOf('week',{useLocaleWeeks:true}).toISODate()
+         
+            setDateValue(test!)
+            console.log(test)
+            
         }
+
+        
     }
 
 
