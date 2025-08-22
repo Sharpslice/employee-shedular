@@ -1,8 +1,9 @@
 import { ActionIcon, Button, Container, Group,Popover, PopoverDropdown } from "@mantine/core"
 import {DatePicker} from '@mantine/dates'
 import { IconCalendar,IconChevronLeft,IconChevronRight } from "@tabler/icons-react";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {DateTime} from 'luxon'
+import axios from "axios";
 function Dashboard(){   
     const [dateValue,setDateValue]= useState<string | null>(DateTime.local().toISODate())
 
@@ -38,6 +39,13 @@ function Dashboard(){
         
     }
 
+    useEffect(()=>{
+        const fetchData =async() =>{
+           const response =  await axios.get(`http://localhost:3000/api/calendar/date?date=${dateValue}`)
+        }
+        fetchData()
+    },[dateValue])
+
 
 
     return(
@@ -62,6 +70,7 @@ function Dashboard(){
                                 onChange={setDateValue}
                                 highlightToday={true}
                                 firstDayOfWeek={0}
+                                
                             />
                         </PopoverDropdown>
                     </Popover>
