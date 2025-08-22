@@ -53,7 +53,7 @@ model Employee_Shifts{
 model Employee_Availability{
     id                      Int       @id @default(autoincrement())
     employee_id             Int
-    date                    DateTime
+    date                    DateTime  @db.Date
     start_time              DateTime
     end_time                DateTime
 
@@ -65,7 +65,7 @@ model Employee_Availability{
 model Availability_Override{
     id                      Int         @id @default(autoincrement())
     employee_id             Int
-    date                    DateTime
+    date                    DateTime    @db.Date
     is_available            Boolean
 
     employee                Employee @relation(fields:[employee_id],references:id)
@@ -75,7 +75,7 @@ model Availability_Override{
 }
 
 model Calendar{
-    date              DateTime        @id
+    date              DateTime        @id @db.Date
     day_of_month      Int
     days_of_week      Int
     week              Int
