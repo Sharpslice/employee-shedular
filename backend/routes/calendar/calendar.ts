@@ -2,7 +2,7 @@ import express from 'express'
 import prisma from '../../db/db';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {getDaysInMonth,format, startOfMonth, getDay, endOfMonth, startOfDay,startOfWeek,endOfWeek,addMonths} from 'date-fns';
-
+import {DateTime} from 'luxon'
 const calendarApi = express.Router();
 
 function resetTimeToMidnight(date:Date){
@@ -15,13 +15,38 @@ function resetTimeToMidnight(date:Date){
 
     return utcStart
 }
+calendarApi.get('/date', async(req,res)=>{
+    const {date} = req.query
+    
+    const newDate = (DateTime.fromISO(date as string));
+
+    const startOfWeek = (newDate.minus({day: (newDate.weekday % 7)}))
+    const endOfWeek = startOfWeek.plus({day:6})
+    
+    const dateArray = await prisma.calendar.findMany({
+        select:{
+            date:true,
+        },
+        where:{
+            date:{
+                gte: startOfWeek.toJSDate(),
+                lte: endOfWeek.toJSDate()
+            }
+        }
+    });
+    console.log(dateArray)
+    res.json({dateArray})
+
+})
+
+
 calendarApi.get('/currentMonth',async (req,res)=>{
     const today = new Date()
 
     const currentMonth = (today).getMonth() + 1
 
-    const firstDay = resetTimeToMidnight( startOfWeek( startOfMonth(today)  ))
-    const lastDay =  resetTimeToMidnight (startOfDay (endOfWeek( endOfMonth(today))) )
+    const firstDay = startOfWeek( startOfMonth(today)  )
+    const lastDay =  startOfDay (endOfWeek( endOfMonth(today))) 
  
     const month = await prisma.calendar.findMany({
         select:{

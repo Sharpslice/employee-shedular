@@ -1,4 +1,4 @@
-import {Box, Button} from '@mui/material';
+import {Box, Button} from '@mantine/core';
 
 function Login(){
 
@@ -9,7 +9,7 @@ function Login(){
 
     return (
     <>
-        <Box sx={{border: "1px solid black"}}>
+        <Box style={{border: "1px solid black"}}>
 
             <Button onClick={googleSignUpClick}>
                 Sign up with Google

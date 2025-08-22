@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box } from '@mantine/core';
 import type { PropsWithChildren } from "react";
 
 
@@ -21,7 +21,7 @@ function getMonthName(monthNumber:number){
 function DateCell({key,day}: PropsWithChildren<Props>){
     
     return (<>
-        <Box key={key} sx={{
+        <Box key={key} style={{
             backgroundColor: day.month != 8?'rgba(0,0,0,0.1)': "transparent",
             width:'100%', height:'100%',border:'1px solid grey',borderRadius:'0',
             display:'flex',flexDirection:'column',alignItems:'flex-end'
