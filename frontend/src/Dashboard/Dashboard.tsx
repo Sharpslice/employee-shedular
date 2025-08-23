@@ -4,106 +4,52 @@ import { IconCalendar,IconChevronDown,IconChevronLeft,IconChevronRight } from "@
 import { useEffect, useState } from "react"
 import {DateTime} from 'luxon'
 import axios from "axios";
+
+
 function Dashboard(){   
     const [dateValue,setDateValue]= useState<string | null>(DateTime.local().toISODate())
-    const [filterByValue,setFilterByValue] = useState<string>('week')
+    const [view,setView] = useState<'day' | 'week' | 'bi-week' | 'month'>('week')
 
-
-    const onTodayClick =()=>{
-        console.log(DateTime.local().toISODate())
-        setDateValue(DateTime.local().toISODate())
-    }
-
-    const onFilterClick =(select: 'day' | 'week' | 'bi week' | 'month') =>{
-        setFilterByValue(select)
-    }
-
-
-
-    const lastWeekISODate = (time:DateTime):string =>{
-         const prevWeek = time.minus({week:1});
-            
-        const test = prevWeek.minus({day: (prevWeek.weekday % 7)}).toISODate()
-        console.log(test)
-        return test!;
-    }
-
-    const nextWeekISODate = (time:DateTime):string =>{
-        const nextWeek = time.plus({week:1});
-            
-        const test = nextWeek.startOf('week',{useLocaleWeeks:true}).toISODate()
-        console.log(test)
-        return test!
-    }
-
-    const nextDayISODate = (time:DateTime):string =>{
-        const nextDay = time.plus({day:1}).toISODate()
-        console.log(nextDay)
-        return nextDay!
-    }
-    const prevDayISODate = (time:DateTime):string =>{
-        const prevDay =  time.minus({day:1}).toISODate()
-        console.log(prevDay)
-        return prevDay!
-    }
-
-    const nextMonthISODate = (time:DateTime):string =>{
-        const nextMonth = time.startOf('month').plus({months:1}).toISODate()
-
-        console.log(nextMonth)
-        return nextMonth!
-    }
-
-    const prevMonthISODate = (time:DateTime):string =>{
-        const prevMonth = time.startOf('month').minus({months:1}).toISODate()
-        console.log(prevMonth)
-        return prevMonth!
-    }
 
     
     
     const navClick = (direction: 'prev' | 'next')=>{
+
         const time = DateTime.fromISO(dateValue!)
+        let isoDate:string | null
+        if(view === 'day' ){
+            isoDate = direction === 'prev' 
+            ? time.minus({days:1}).toISODate()
+            : time.plus({days:1}).toISODate()
 
-        if(direction == 'prev'){
-            if(filterByValue == 'week'){
-                setDateValue(lastWeekISODate(time))
-            }
-            else if(filterByValue == 'day'){
-                setDateValue(prevDayISODate(time))
-            }
-            else if(filterByValue == 'month'){
-                setDateValue(prevMonthISODate(time))
-            }
-            
-           
-        }
-        else if(direction=='next'){
-            if(filterByValue=='week'){
-                setDateValue(nextWeekISODate(time))
-            }
-            else if(filterByValue == 'day'){
-                setDateValue(nextDayISODate(time))
-            }
-            else if(filterByValue == 'month'){
-                setDateValue(nextMonthISODate(time))
-            }
-            
-            
-            
-        }
+        } else if (view ==='week'){
+            isoDate = direction === 'prev' 
+            ? time.minus({weeks:1}).toISODate()
+            : time.plus({weeks:1}).toISODate()
 
+        } else if (view ==='bi-week'){
+            isoDate = direction === 'prev' 
+            ? time.minus({weeks:2}).toISODate()
+            : time.plus({weeks:2}).toISODate()
+        } else if (view === 'month'){
+            isoDate = direction === 'prev' 
+            ? time.minus({months:1}).toISODate()
+            : time.plus({months:1}).toISODate()
+        }
+        console.log(isoDate!)
+        setDateValue(isoDate!)
+        
         
     }
 
     useEffect(()=>{
         const fetchData =async() =>{
-            const response = await axios.get(`http://localhost:3000/api/calendar/date?date=${dateValue}&view=${filterByValue}`)
+            const response = await axios.get(`http://localhost:3000/api/calendar/date?date=${dateValue}&view=${view}`)
 
             console.log(response.data.dateArray)
         }
         fetchData()
-    },[dateValue,filterByValue])
+    },[dateValue,view])
 
 
 
@@ -140,27 +86,27 @@ function Dashboard(){
                 </Group>
 
                 
-                <Button onClick={onTodayClick}>
+                <Button onClick={()=>{setDateValue(DateTime.local().toISODate())}}>
                     Today
                 </Button>
                 
                 <Menu >
                     <Menu.Target>
                         <Button rightSection={<IconChevronDown/>}>
-                            {filterByValue}
+                            {view}
                         </Button>
                     </Menu.Target>
                     <Menu.Dropdown>
-                        {filterByValue != 'day' && <Menu.Item onClick={()=>{onFilterClick('day')}}>
+                        {view != 'day' && <Menu.Item onClick={()=>{setView('day')}}>
                             {'day'}
                         </Menu.Item>}
-                        { filterByValue != 'week' && <Menu.Item onClick={()=>{onFilterClick('week')}}>
+                        { view != 'week' && <Menu.Item onClick={()=>{setView('week')}}>
                             {'week'}
                         </Menu.Item>}
-                        {filterByValue != 'bi week' && <Menu.Item onClick={()=>{onFilterClick('bi week')}}>
+                        {view != 'bi-week' && <Menu.Item onClick={()=>{setView('bi-week')}}>
                             {'bi week'}
                         </Menu.Item>}
-                        {filterByValue != 'month' && <Menu.Item onClick={()=>{onFilterClick('month')}}>
+                        {view != 'month' && <Menu.Item onClick={()=>{setView('month')}}>
                             {'month'}
                         </Menu.Item>}
 
