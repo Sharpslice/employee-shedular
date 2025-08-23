@@ -1,12 +1,16 @@
-import { ActionIcon, Button, Container, Group,Popover, PopoverDropdown } from "@mantine/core"
+import { ActionIcon, Button, Container, Group,Menu,Popover, PopoverDropdown } from "@mantine/core"
 import {DatePicker} from '@mantine/dates'
-import { IconCalendar,IconChevronLeft,IconChevronRight } from "@tabler/icons-react";
+import { IconCalendar,IconChevronDown,IconChevronLeft,IconChevronRight } from "@tabler/icons-react";
 import { useEffect, useState } from "react"
 import {DateTime} from 'luxon'
 import axios from "axios";
 function Dashboard(){   
     const [dateValue,setDateValue]= useState<string | null>(DateTime.local().toISODate())
+    const [filterByValue,setFilterByValue] = useState<string>('week')
 
+    const onFilterClick =(select: 'day' | 'week' | 'bi week' | 'month') =>{
+        setFilterByValue(select)
+    }
     const onTodayClick =()=>{
         console.log(DateTime.local().toISODate())
         setDateValue(DateTime.local().toISODate())
@@ -80,12 +84,34 @@ function Dashboard(){
                     </ActionIcon>
                 </Group>
 
-                <Group>
-                    <Button onClick={onTodayClick}>
-                        Today
-                    </Button>
-                </Group>
+                
+                <Button onClick={onTodayClick}>
+                    Today
+                </Button>
+                
+                <Menu >
+                    <Menu.Target>
+                        <Button rightSection={<IconChevronDown/>}>
+                            {filterByValue}
+                        </Button>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        {filterByValue != 'day' && <Menu.Item onClick={()=>{onFilterClick('day')}}>
+                            {'day'}
+                        </Menu.Item>}
+                        { filterByValue != 'week' && <Menu.Item onClick={()=>{onFilterClick('week')}}>
+                            {'week'}
+                        </Menu.Item>}
+                        {filterByValue != 'bi week' && <Menu.Item onClick={()=>{onFilterClick('bi week')}}>
+                            {'bi week'}
+                        </Menu.Item>}
+                        {filterByValue != 'month' && <Menu.Item onClick={()=>{onFilterClick('month')}}>
+                            {'month'}
+                        </Menu.Item>}
 
+
+                    </Menu.Dropdown>
+                </Menu>
 
                 
             </Group>
