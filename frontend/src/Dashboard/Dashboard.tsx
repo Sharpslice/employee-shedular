@@ -8,35 +8,46 @@ function Dashboard(){
     const [dateValue,setDateValue]= useState<string | null>(DateTime.local().toISODate())
     const [filterByValue,setFilterByValue] = useState<string>('week')
 
-    const onFilterClick =(select: 'day' | 'week' | 'bi week' | 'month') =>{
-        setFilterByValue(select)
-    }
+
     const onTodayClick =()=>{
         console.log(DateTime.local().toISODate())
         setDateValue(DateTime.local().toISODate())
     }
 
+    const onFilterClick =(select: 'day' | 'week' | 'bi week' | 'month') =>{
+        setFilterByValue(select)
+    }
+
+
+
+    const lastWeekISODate = (time:DateTime):string =>{
+         const prevWeek = time.minus({week:1});
+            
+        const test = prevWeek.minus({day: (prevWeek.weekday % 7)}).toISODate()
+        console.log(test)
+        return test!;
+    }
+
+    const nextWeekISODate = (time:DateTime):string =>{
+        const nextWeek = time.plus({week:1});
+            
+        const test = nextWeek.startOf('week',{useLocaleWeeks:true}).toISODate()
+        console.log(test)
+        return test!
+    }
+    
     const navClick = (direction: 'prev' | 'next')=>{
         const time = DateTime.fromISO(dateValue!)
 
         if(direction == 'prev'){
-            console.log('prev')
-            const prevWeek = time.minus({week:1});
             
-            const test = prevWeek.minus({day: (prevWeek.weekday % 7)}).toISODate()
-         
-            setDateValue(test!)
-            console.log(test)
+            setDateValue(lastWeekISODate(time))
+           
         }
         else if(direction=='next'){
-            console.log('next')
+           
+            setDateValue(nextWeekISODate(time))
             
-            const nextWeek = time.plus({week:1});
-            
-            const test = nextWeek.startOf('week',{useLocaleWeeks:true}).toISODate()
-         
-            setDateValue(test!)
-            console.log(test)
             
         }
 
