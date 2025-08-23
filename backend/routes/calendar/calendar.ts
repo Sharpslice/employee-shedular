@@ -1,7 +1,7 @@
 import express from 'express'
 import prisma from '../../db/db';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {getDaysInMonth,format, startOfMonth, getDay, endOfMonth, startOfDay,startOfWeek,endOfWeek,addMonths} from 'date-fns';
+
 import {DateTime} from 'luxon'
 
 
@@ -10,25 +10,40 @@ import {DateTime} from 'luxon'
 const calendarApi = express.Router();
 
 calendarApi.get('/date', async(req,res)=>{
-    const {date} = req.query
+    const {date,view} = req.query
+    const selectedDate = DateTime.fromISO(date as string)
+    let beginDate = selectedDate
+    let endDate = selectedDate
     
-    const newDate = (DateTime.fromISO(date as string));
+    switch(view){
 
-    const startOfWeek = (newDate.minus({day: (newDate.weekday % 7)}))
-    const endOfWeek = startOfWeek.plus({day:6})
+        case 'week':
+            beginDate = selectedDate.startOf('week',{useLocaleWeeks:true})
+            endDate = selectedDate.endOf('week',{useLocaleWeeks:true}).startOf('day')
+            break;
+        case 'month':
+            beginDate = selectedDate.startOf('month').startOf('week',{useLocaleWeeks:true})
+            endDate = selectedDate.endOf('month').endOf('week',{useLocaleWeeks:true}).startOf('day')
+            break;
+        default:
+    }
     
     const dateArray = await prisma.calendar.findMany({
         select:{
+            week:true,
             date:true,
+            day_of_month:true,
+            days_of_week:true,
+            month:true,
         },
         where:{
             date:{
-                gte: startOfWeek.toJSDate(),
-                lte: endOfWeek.toJSDate()
+                gte: beginDate.toJSDate(),
+                lte: endDate.toJSDate()
             }
         }
     });
-    console.log(dateArray)
+    
     res.json({dateArray})
 
 })

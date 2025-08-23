@@ -98,10 +98,12 @@ function Dashboard(){
 
     useEffect(()=>{
         const fetchData =async() =>{
-            await axios.get(`http://localhost:3000/api/calendar/date?date=${dateValue}`)
+            const response = await axios.get(`http://localhost:3000/api/calendar/date?date=${dateValue}&view=${filterByValue}`)
+
+            console.log(response.data.dateArray)
         }
         fetchData()
-    },[dateValue])
+    },[dateValue,filterByValue])
 
 
 
