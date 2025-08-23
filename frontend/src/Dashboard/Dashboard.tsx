@@ -35,18 +35,41 @@ function Dashboard(){
         console.log(test)
         return test!
     }
+
+    const nextDayISODate = (time:DateTime):string =>{
+        const nextDay = time.plus({day:1}).toISODate()
+        console.log(nextDay)
+        return nextDay!
+    }
+    const prevDayISODate = (time:DateTime):string =>{
+        const prevDay =  time.minus({day:1}).toISODate()
+        console.log(prevDay)
+        return prevDay!
+    }
+
+    
     
     const navClick = (direction: 'prev' | 'next')=>{
         const time = DateTime.fromISO(dateValue!)
 
         if(direction == 'prev'){
+            if(filterByValue == 'week'){
+                setDateValue(lastWeekISODate(time))
+            }
+            else if(filterByValue == 'day'){
+                setDateValue(prevDayISODate(time))
+            }
             
-            setDateValue(lastWeekISODate(time))
            
         }
         else if(direction=='next'){
-           
-            setDateValue(nextWeekISODate(time))
+            if(filterByValue=='week'){
+                setDateValue(nextDayISODate(time))
+            }
+            else if(filterByValue == 'day'){
+                setDateValue(nextDayISODate(time))
+            }
+            
             
             
         }
