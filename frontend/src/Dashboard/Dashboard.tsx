@@ -47,6 +47,19 @@ function Dashboard(){
         return prevDay!
     }
 
+    const nextMonthISODate = (time:DateTime):string =>{
+        const nextMonth = time.startOf('month').plus({months:1}).toISODate()
+
+        console.log(nextMonth)
+        return nextMonth!
+    }
+
+    const prevMonthISODate = (time:DateTime):string =>{
+        const prevMonth = time.startOf('month').minus({months:1}).toISODate()
+        console.log(prevMonth)
+        return prevMonth!
+    }
+
     
     
     const navClick = (direction: 'prev' | 'next')=>{
@@ -59,15 +72,21 @@ function Dashboard(){
             else if(filterByValue == 'day'){
                 setDateValue(prevDayISODate(time))
             }
+            else if(filterByValue == 'month'){
+                setDateValue(prevMonthISODate(time))
+            }
             
            
         }
         else if(direction=='next'){
             if(filterByValue=='week'){
-                setDateValue(nextDayISODate(time))
+                setDateValue(nextWeekISODate(time))
             }
             else if(filterByValue == 'day'){
                 setDateValue(nextDayISODate(time))
+            }
+            else if(filterByValue == 'month'){
+                setDateValue(nextMonthISODate(time))
             }
             
             
