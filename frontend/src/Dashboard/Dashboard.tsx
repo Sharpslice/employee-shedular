@@ -1,5 +1,5 @@
-import { ActionIcon, Button, Container, Group,Menu,Popover, PopoverDropdown } from "@mantine/core"
-import {DatePicker} from '@mantine/dates'
+import { ActionIcon, Button,  Group,Menu,Popover, PopoverDropdown } from "@mantine/core"
+import {DatePicker, } from '@mantine/dates'
 import { IconCalendar,IconChevronDown,IconChevronLeft,IconChevronRight } from "@tabler/icons-react";
 import { useEffect, useState } from "react"
 import {DateTime} from 'luxon'
@@ -31,7 +31,7 @@ function Dashboard(){
             isoDate = direction === 'prev' 
             ? time.minus({weeks:2}).toISODate()
             : time.plus({weeks:2}).toISODate()
-            
+
         } else if (view === 'month'){
             isoDate = direction === 'prev' 
             ? time.minus({months:1}).toISODate()
@@ -56,16 +56,19 @@ function Dashboard(){
 
     return(
         <>  
-        <Container >
-            <Group  style={{}}>
+        
+            <Group style={{padding:'0.4rem',backgroundColor:'lightgray'}}>
+
                 <Group gap={0}>
-                    <ActionIcon variant="outline" radius={0} onClick={()=>navClick('prev')}>
+                    <ActionIcon style={{border:'1px px black'}} size={36} variant="filled" radius={0}  onClick={()=>navClick('prev')}
+                      
+                        >
                         <IconChevronLeft/>
                     </ActionIcon>
 
                     <Popover>
                         <Popover.Target>
-                            <ActionIcon variant="outline" radius={0}>
+                            <ActionIcon size={36} variant="filled" radius={0}>
                                 <IconCalendar/>
                             </ActionIcon>
                         </Popover.Target>
@@ -80,46 +83,55 @@ function Dashboard(){
                             />
                         </PopoverDropdown>
                     </Popover>
-                
-                    <ActionIcon variant="outline" radius={0} onClick={()=>navClick('next')}>
+                    
+                    
+
+                    
+                    <ActionIcon size={36}  variant="filled" radius={0} onClick={()=>navClick('next')}
+                       
+                        >
                         <IconChevronRight/>
                     </ActionIcon>
                 </Group>
-
+                    
                 
-                <Button onClick={()=>{setDateValue(DateTime.local().toISODate())}}>
+
+                <Group>
+                        <Button onClick={()=>{setDateValue(DateTime.local().toISODate())}}>
                     Today
                 </Button>
                 
                 <Menu >
                     <Menu.Target>
-                        <Button rightSection={<IconChevronDown/>}>
+                        <Button style={{width:'120px'}}rightSection={<IconChevronDown/>}>
                             {view}
                         </Button>
                     </Menu.Target>
                     <Menu.Dropdown>
                         {view != 'day' && <Menu.Item onClick={()=>{setView('day')}}>
-                            {'day'}
+                            {'Day'}
                         </Menu.Item>}
                         { view != 'week' && <Menu.Item onClick={()=>{setView('week')}}>
-                            {'week'}
+                            {'Week'}
                         </Menu.Item>}
                         {view != 'bi-week' && <Menu.Item onClick={()=>{setView('bi-week')}}>
-                            {'bi week'}
+                            {'Bi week'}
                         </Menu.Item>}
                         {view != 'month' && <Menu.Item onClick={()=>{setView('month')}}>
-                            {'month'}
+                            {'Month'}
                         </Menu.Item>}
 
 
                     </Menu.Dropdown>
                 </Menu>
+                </Group>
+                
 
                 
             </Group>
 
 
-        </Container>
+      
             
 
 
