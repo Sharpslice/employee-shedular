@@ -21,6 +21,13 @@ calendarApi.get('/date', async(req,res)=>{
             beginDate = selectedDate.startOf('week',{useLocaleWeeks:true})
             endDate = selectedDate.endOf('week',{useLocaleWeeks:true}).startOf('day')
             break;
+        case 'bi-week':
+            console.log('bi-week')
+            beginDate = selectedDate.startOf('week',{useLocaleWeeks:true})
+            console.log(beginDate)
+            endDate = selectedDate.plus({weeks:1}).endOf('week',{useLocaleWeeks:true}).startOf('day')
+            console.log(endDate)
+            break;
         case 'month':
             beginDate = selectedDate.startOf('month').startOf('week',{useLocaleWeeks:true})
             endDate = selectedDate.endOf('month').endOf('week',{useLocaleWeeks:true}).startOf('day')

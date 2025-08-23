@@ -31,6 +31,7 @@ function Dashboard(){
             isoDate = direction === 'prev' 
             ? time.minus({weeks:2}).toISODate()
             : time.plus({weeks:2}).toISODate()
+            
         } else if (view === 'month'){
             isoDate = direction === 'prev' 
             ? time.minus({months:1}).toISODate()
