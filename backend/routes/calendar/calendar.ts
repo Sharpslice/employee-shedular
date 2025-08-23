@@ -59,14 +59,15 @@ calendarApi.get('/date', async(req,res)=>{
 calendarApi.get('/currentMonth',async (req,res)=>{
     const today = DateTime.now()
     const currentMonth = today.month
+    console.log(`today: ${today.toJSDate()}`)
 
-    const firstDay = today.startOf('month').minus({day:(today.weekday%7)}).toJSDate()
+    const firstDay = today.startOf('month').startOf('week',{useLocaleWeeks:true}).toJSDate()
 
-    const endOfMonth = today.endOf('month') 
+    const lastDay = today.endOf('month').endOf('week',{useLocaleWeeks:true}).startOf('day').toJSDate() 
 
-    const lastDay = endOfMonth.plus({day:6 - (endOfMonth.weekday %7)}).startOf('day').toJSDate()
-    console.log(firstDay)
-    console.log(lastDay)
+    
+    console.log(`first day${firstDay}`)
+    console.log(`second day${lastDay}`)
     const month = await prisma.calendar.findMany({
         select:{
             week:true,
