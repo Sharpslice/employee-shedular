@@ -2,6 +2,7 @@ import { ActionIcon, Button, Group, Menu, Popover, PopoverDropdown } from "@mant
 import { DatePicker } from "@mantine/dates"
 import { IconCalendar, IconChevronDown, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import {DateTime} from 'luxon'
+import { Link } from "react-router-dom"
 
 
 type HeaderProps = {
@@ -111,6 +112,12 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
 
                     </Menu.Dropdown>
                 </Menu>
+                </Group>
+
+                <Group>
+                    <ActionIcon size={36} component={Link} to="/calendar">
+                        <IconCalendar />
+                    </ActionIcon>
                 </Group>
                 
 

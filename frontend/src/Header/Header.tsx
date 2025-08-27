@@ -29,8 +29,6 @@ function Header(){
                 data-active = {active === link.link?true : undefined}
                 onClick={()=>{onSelectClick(link)}}
                 >
-                
-                
                 {link.label}
             </Link>
         )

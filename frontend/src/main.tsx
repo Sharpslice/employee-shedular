@@ -31,6 +31,10 @@ import Dashboard from './Dashboard/Dashboard.tsx';
           path:"/availability",
           element: null
         },
+        {
+          path:'/calendar',
+          element: <Calendar/>
+        }
 
       ]
       
