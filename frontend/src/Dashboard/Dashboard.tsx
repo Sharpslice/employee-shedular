@@ -1,178 +1,65 @@
-import { ActionIcon, Button, Container, Group,Menu,Popover, PopoverDropdown } from "@mantine/core"
-import {DatePicker} from '@mantine/dates'
-import { IconCalendar,IconChevronDown,IconChevronLeft,IconChevronRight } from "@tabler/icons-react";
+
 import { useEffect, useState } from "react"
 import {DateTime} from 'luxon'
 import axios from "axios";
+import Header from "./Header";
+import { Box, Container, Group } from "@mantine/core";
+
+type DayElement ={
+    week:number,
+    date: string,
+    days_of_week:number,
+    day_of_month:number
+    month: number
+}
+type CalendarResponse ={
+    dateArray: DayElement[]
+   
+    
+}
 function Dashboard(){   
     const [dateValue,setDateValue]= useState<string | null>(DateTime.local().toISODate())
-    const [filterByValue,setFilterByValue] = useState<string>('week')
+    const [view,setView] = useState<'day' | 'week' | 'bi-week' | 'month'>('week')
 
-
-    const onTodayClick =()=>{
-        console.log(DateTime.local().toISODate())
-        setDateValue(DateTime.local().toISODate())
-    }
-
-    const onFilterClick =(select: 'day' | 'week' | 'bi week' | 'month') =>{
-        setFilterByValue(select)
-    }
-
-
-
-    const lastWeekISODate = (time:DateTime):string =>{
-         const prevWeek = time.minus({week:1});
-            
-        const test = prevWeek.minus({day: (prevWeek.weekday % 7)}).toISODate()
-        console.log(test)
-        return test!;
-    }
-
-    const nextWeekISODate = (time:DateTime):string =>{
-        const nextWeek = time.plus({week:1});
-            
-        const test = nextWeek.startOf('week',{useLocaleWeeks:true}).toISODate()
-        console.log(test)
-        return test!
-    }
-
-    const nextDayISODate = (time:DateTime):string =>{
-        const nextDay = time.plus({day:1}).toISODate()
-        console.log(nextDay)
-        return nextDay!
-    }
-    const prevDayISODate = (time:DateTime):string =>{
-        const prevDay =  time.minus({day:1}).toISODate()
-        console.log(prevDay)
-        return prevDay!
-    }
-
-    const nextMonthISODate = (time:DateTime):string =>{
-        const nextMonth = time.startOf('month').plus({months:1}).toISODate()
-
-        console.log(nextMonth)
-        return nextMonth!
-    }
-
-    const prevMonthISODate = (time:DateTime):string =>{
-        const prevMonth = time.startOf('month').minus({months:1}).toISODate()
-        console.log(prevMonth)
-        return prevMonth!
-    }
-
-    
-    
-    const navClick = (direction: 'prev' | 'next')=>{
-        const time = DateTime.fromISO(dateValue!)
-
-        if(direction == 'prev'){
-            if(filterByValue == 'week'){
-                setDateValue(lastWeekISODate(time))
-            }
-            else if(filterByValue == 'day'){
-                setDateValue(prevDayISODate(time))
-            }
-            else if(filterByValue == 'month'){
-                setDateValue(prevMonthISODate(time))
-            }
-            
-           
-        }
-        else if(direction=='next'){
-            if(filterByValue=='week'){
-                setDateValue(nextWeekISODate(time))
-            }
-            else if(filterByValue == 'day'){
-                setDateValue(nextDayISODate(time))
-            }
-            else if(filterByValue == 'month'){
-                setDateValue(nextMonthISODate(time))
-            }
-            
-            
-            
-        }
-
-        
-    }
-
+    const [datesRange,setDatesRange] = useState<DayElement[]>([]) 
     useEffect(()=>{
         const fetchData =async() =>{
-            const response = await axios.get(`http://localhost:3000/api/calendar/date?date=${dateValue}&view=${filterByValue}`)
-
+            const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${dateValue}&view=${view}`)
+            setDatesRange(response.data.dateArray)
             console.log(response.data.dateArray)
         }
         fetchData()
-    },[dateValue,filterByValue])
-
-
+    },[dateValue,view])
 
     return(
         <>  
-        <Container >
-            <Group  style={{}}>
-                <Group gap={0}>
-                    <ActionIcon variant="outline" radius={0} onClick={()=>navClick('prev')}>
-                        <IconChevronLeft/>
-                    </ActionIcon>
+            <Header dateValue={dateValue} setDateValue={setDateValue} view={view} setView={setView}/>
+            <Container style={{backgroundColor:'lightgray',width:'100vw', height:'100vh'}} size='100%' >
 
-                    <Popover>
-                        <Popover.Target>
-                            <ActionIcon variant="outline" radius={0}>
-                                <IconCalendar/>
-                            </ActionIcon>
-                        </Popover.Target>
-                        <PopoverDropdown>
-                            <DatePicker
-                                type='default'
-                                allowDeselect value={dateValue}
-                                onChange={setDateValue}
-                                highlightToday={true}
-                                firstDayOfWeek={0}
-                                
-                            />
-                        </PopoverDropdown>
-                    </Popover>
+               
+            <Group>
+
+            
+                {datesRange.map((day)=>{
+                    
+                    day.date = DateTime.fromISO(day.date).toISODate()!
+                    return (
+                        <Box style={{border:'1px solid black'}}>
+                            {day.day_of_month}
+                        </Box>
+
+                        
+                    )
+                })}
+            </Group>    
                 
-                    <ActionIcon variant="outline" radius={0} onClick={()=>navClick('next')}>
-                        <IconChevronRight/>
-                    </ActionIcon>
-                </Group>
-
-                
-                <Button onClick={onTodayClick}>
-                    Today
-                </Button>
-                
-                <Menu >
-                    <Menu.Target>
-                        <Button rightSection={<IconChevronDown/>}>
-                            {filterByValue}
-                        </Button>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        {filterByValue != 'day' && <Menu.Item onClick={()=>{onFilterClick('day')}}>
-                            {'day'}
-                        </Menu.Item>}
-                        { filterByValue != 'week' && <Menu.Item onClick={()=>{onFilterClick('week')}}>
-                            {'week'}
-                        </Menu.Item>}
-                        {filterByValue != 'bi week' && <Menu.Item onClick={()=>{onFilterClick('bi week')}}>
-                            {'bi week'}
-                        </Menu.Item>}
-                        {filterByValue != 'month' && <Menu.Item onClick={()=>{onFilterClick('month')}}>
-                            {'month'}
-                        </Menu.Item>}
+               
 
 
-                    </Menu.Dropdown>
-                </Menu>
-
-                
-            </Group>
 
 
-        </Container>
+            </Container>
+            
             
 
 

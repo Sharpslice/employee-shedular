@@ -42,8 +42,6 @@ function Calendar(){
                 }
                 
             }
-            
-
         }
         fetchCalendarData();
     },[])
@@ -55,6 +53,11 @@ function Calendar(){
 
     return (
     <>
+        
+
+
+
+
 
         <Box style={{display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gridTemplateRows: '50px 50px repeat(6, 1fr)', width: '65vw', height: '100vh',}}>
 

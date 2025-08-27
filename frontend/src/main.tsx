@@ -21,12 +21,16 @@ import Dashboard from './Dashboard/Dashboard.tsx';
       children:[
         {
           path:"/schedule",
-          element: <Calendar/>
+          element: <Dashboard/>
         },
         {
-          path:"/dashboard",
-          element: <Dashboard/>
-        }
+          path:'contacts',
+          element: null
+        },
+        {
+          path:"/availability",
+          element: null
+        },
 
       ]
       
