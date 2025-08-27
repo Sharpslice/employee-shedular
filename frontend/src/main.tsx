@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import {createBrowserRouter, RouterProvider}  from 'react-router-dom';
+import {createBrowserRouter, Navigate, RouterProvider}  from 'react-router-dom';
 import './index.css'
 import App from './App.tsx'
 import Login from './login/login.tsx';
@@ -20,19 +20,35 @@ import Dashboard from './Dashboard/Dashboard.tsx';
       element:<App/>,
       children:[
         {
-          path:"/schedule",
-          element: <Dashboard/>
+          path:"schedule",
+          element: <Dashboard/>,
+          children:[
+            {
+              index:true,
+              element: <Navigate to={'week'} replace/>,
+            },
+            { path:'day',
+              element: null
+            },
+            { path:'week',
+              element: null
+            },
+            {
+              path:'month',
+              element: null
+            }
+          ]
         },
         {
           path:'contacts',
           element: null
         },
         {
-          path:"/availability",
+          path:"availability",
           element: null
         },
         {
-          path:'/calendar',
+          path:'calendar',
           element: <Calendar/>
         }
 
