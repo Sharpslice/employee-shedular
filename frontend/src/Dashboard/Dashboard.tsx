@@ -4,6 +4,7 @@ import {DateTime} from 'luxon'
 import axios from "axios";
 import Header from "./Header";
 import { Box, Container, Group } from "@mantine/core";
+import { Outlet } from "react-router-dom";
 
 type DayElement ={
     week:number,
@@ -34,31 +35,18 @@ function Dashboard(){
     return(
         <>  
             <Header dateValue={dateValue} setDateValue={setDateValue} view={view} setView={setView}/>
-            <Container style={{backgroundColor:'lightgray',width:'100vw', height:'100vh'}} size='100%' >
-
-               
-            <Group>
-
             
-                {datesRange.map((day)=>{
-                    
-                    day.date = DateTime.fromISO(day.date).toISODate()!
-                    return (
-                        <Box style={{border:'1px solid black'}}>
-                            {day.day_of_month}
-                        </Box>
-
-                        
-                    )
-                })}
-            </Group>    
+             <Container style={{backgroundColor:'lightgray',width:'100vw', height:'100vh'}} size='100%' >
+                <Outlet context={{datesRange}}/>
+               
+            
                 
                
 
 
 
 
-            </Container>
+            </Container> 
             
             
 

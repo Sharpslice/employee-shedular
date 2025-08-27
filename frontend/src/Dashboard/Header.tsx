@@ -2,6 +2,7 @@ import { ActionIcon, Button, Group, Menu, Popover, PopoverDropdown } from "@mant
 import { DatePicker } from "@mantine/dates"
 import { IconCalendar, IconChevronDown, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import {DateTime} from 'luxon'
+import { Link, useNavigate } from "react-router-dom"
 
 
 type HeaderProps = {
@@ -13,7 +14,7 @@ type HeaderProps = {
 }
 
 function Header({dateValue,setDateValue,view,setView}:HeaderProps){
-
+    const navigate = useNavigate();
     const navClick = (direction: 'prev' | 'next')=>{
 
         const time = DateTime.fromISO(dateValue!)
@@ -40,15 +41,23 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
         }
         console.log(isoDate!)
         setDateValue(isoDate!)
+
         
         
+    }
+
+    const viewClick = (selectedView:'day' | 'week' | 'bi-week' | 'month') =>{
+        if(selectedView != view){
+            navigate(selectedView);
+            setView(selectedView)
+        }
     }
     return(<>
         <Group style={{padding:'0.4rem',backgroundColor:'lightgray'}}>
 
                 <Group gap={0}>
                     <ActionIcon style={{border:'1px px black'}} size={36} variant="filled" radius={0}  onClick={()=>navClick('prev')}
-                      
+
                         >
                         <IconChevronLeft/>
                     </ActionIcon>
@@ -95,16 +104,16 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
                         </Button>
                     </Menu.Target>
                     <Menu.Dropdown>
-                        {view != 'day' && <Menu.Item onClick={()=>{setView('day')}}>
+                        {view != 'day' && <Menu.Item onClick={()=>{viewClick('day')}}>
                             {'Day'}
                         </Menu.Item>}
-                        { view != 'week' && <Menu.Item onClick={()=>{setView('week')}}>
+                        { view != 'week' && <Menu.Item onClick={()=>{viewClick('week')}}>
                             {'Week'}
                         </Menu.Item>}
-                        {view != 'bi-week' && <Menu.Item onClick={()=>{setView('bi-week')}}>
+                        {view != 'bi-week' && <Menu.Item onClick={()=>{viewClick('bi-week')}}>
                             {'Bi week'}
                         </Menu.Item>}
-                        {view != 'month' && <Menu.Item onClick={()=>{setView('month')}}>
+                        {view != 'month' && <Menu.Item onClick={()=>{viewClick('month')}}>
                             {'Month'}
                         </Menu.Item>}
 
@@ -112,12 +121,18 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
                     </Menu.Dropdown>
                 </Menu>
                 </Group>
+
+                <Group>
+                    <ActionIcon size={36} component={Link} to="/calendar">
+                        <IconCalendar />
+                    </ActionIcon>
+                </Group>
                 
 
                 
             </Group>
 
-
+            
 
     </>)
 }
