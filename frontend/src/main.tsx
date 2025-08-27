@@ -9,6 +9,7 @@ import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
 import Dashboard from './Dashboard/Dashboard.tsx';
+import Week from './Dashboard/views/week.tsx';
 
 
 
@@ -31,7 +32,7 @@ import Dashboard from './Dashboard/Dashboard.tsx';
               element: null
             },
             { path:'week',
-              element: null
+              element: <Week/>
             },
             {
               path:'month',
