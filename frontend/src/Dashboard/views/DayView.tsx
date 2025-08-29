@@ -19,7 +19,7 @@ function DayView(){
                 
                 day.date = DateTime.fromISO(day.date).toISODate()!
                 return (
-                    <Box style={{border:'1px solid black'}}>
+                    <Box key={day.date} style={{border:'1px solid black'}}>
                         {day.day_of_month}
                     </Box>
 

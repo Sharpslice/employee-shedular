@@ -4,7 +4,7 @@ import {DateTime} from 'luxon'
 import axios from "axios";
 import Header from "./Header";
 import { Container} from "@mantine/core";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 type DayElement ={
     week:number,
@@ -19,23 +19,27 @@ type CalendarResponse ={
     
 }
 function Dashboard(){   
-    const [date,setDate]= useState<string | null>(DateTime.local().toISODate())
-    const [view,setView] = useState<'day' | 'week' | 'bi-week' | 'month'>('week')
-
+    // const [date,setDate]= useState<string | null>(DateTime.local().toISODate())
+    // const [view,setView] = useState<'day' | 'week' | 'bi-week' | 'month'>('week')
+    const {view,date} = useParams();
     const [dateRange,setDateRange] = useState<DayElement[]>([]) 
+
+    const safeView = view ?? 'week'
+    const safeDate = date ?? DateTime.local().toISODate()
 
     useEffect(()=>{
         const fetchData =async() =>{
-            const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${date}&view=${view}`)
+            
+            const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`)
             setDateRange(response.data.dateArray)
             console.log(response.data.dateArray)
         }
         fetchData()
-    },[date,view])
+    },[safeDate,safeView])
 
     return(
         <>  
-            <Header date={date} setDate={setDate} view={view} setView={setView}/>
+            <Header view={safeView} date={safeDate} />
             
              <Container style={{backgroundColor:'lightgray',width:'100vw', height:'100vh'}} size='100%' >
                 <Outlet context={{dateRange}}/>

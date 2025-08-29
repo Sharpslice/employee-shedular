@@ -1,5 +1,5 @@
 import { Box, Group } from "@mantine/core";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext} from "react-router-dom";
 import {DateTime } from 'luxon';
 type DayElement ={
     week:number,
@@ -10,13 +10,15 @@ type DayElement ={
 }
 function Week(){
     const { dateRange } = useOutletContext<{ dateRange: DayElement[] }>();
+    
+
     return (<>
     <Group>
                     {dateRange.map((day)=>{
                         
                         day.date = DateTime.fromISO(day.date).toISODate()!
                         return (
-                            <Box style={{border:'1px solid black'}}>
+                            <Box key={day.date} style={{border:'1px solid black'}}>
                                 {day.day_of_month}
                             </Box>
     
