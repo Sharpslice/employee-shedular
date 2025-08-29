@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import {DateTime} from 'luxon'
 import axios from "axios";
 import Header from "./Header";
-import { Box, Container, Group } from "@mantine/core";
+import { Container} from "@mantine/core";
 import { Outlet } from "react-router-dom";
 
 type DayElement ={
@@ -19,33 +19,26 @@ type CalendarResponse ={
     
 }
 function Dashboard(){   
-    const [dateValue,setDateValue]= useState<string | null>(DateTime.local().toISODate())
+    const [date,setDate]= useState<string | null>(DateTime.local().toISODate())
     const [view,setView] = useState<'day' | 'week' | 'bi-week' | 'month'>('week')
 
-    const [datesRange,setDatesRange] = useState<DayElement[]>([]) 
+    const [dateRange,setDateRange] = useState<DayElement[]>([]) 
+
     useEffect(()=>{
         const fetchData =async() =>{
-            const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${dateValue}&view=${view}`)
-            setDatesRange(response.data.dateArray)
+            const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${date}&view=${view}`)
+            setDateRange(response.data.dateArray)
             console.log(response.data.dateArray)
         }
         fetchData()
-    },[dateValue,view])
+    },[date,view])
 
     return(
         <>  
-            <Header dateValue={dateValue} setDateValue={setDateValue} view={view} setView={setView}/>
+            <Header date={date} setDate={setDate} view={view} setView={setView}/>
             
              <Container style={{backgroundColor:'lightgray',width:'100vw', height:'100vh'}} size='100%' >
-                <Outlet context={{datesRange}}/>
-               
-            
-                
-               
-
-
-
-
+                <Outlet context={{dateRange}}/>
             </Container> 
             
             

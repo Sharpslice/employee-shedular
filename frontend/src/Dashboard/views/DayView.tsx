@@ -11,11 +11,11 @@ type DayElement ={
 
 
 function DayView(){
-    const { datesRange } = useOutletContext<{ datesRange: DayElement[] }>();
+    const { dateRange } = useOutletContext<{ dateRange: DayElement[] }>();
     return(
     <>
         <Group>
-            {datesRange.map((day)=>{
+            {dateRange.map((day)=>{
                 
                 day.date = DateTime.fromISO(day.date).toISODate()!
                 return (

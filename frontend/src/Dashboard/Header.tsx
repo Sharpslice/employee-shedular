@@ -2,22 +2,34 @@ import { ActionIcon, Button, Group, Menu, Popover, PopoverDropdown } from "@mant
 import { DatePicker } from "@mantine/dates"
 import { IconCalendar, IconChevronDown, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import {DateTime} from 'luxon'
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 
 type HeaderProps = {
-    dateValue: string | null
-    setDateValue: React.Dispatch<React.SetStateAction<string | null>>;
+    date: string | null
+    setDate: React.Dispatch<React.SetStateAction<string | null>>;
 
     view: 'day' | 'week' | 'bi-week' | 'month'
     setView : React.Dispatch<React.SetStateAction<'day' | 'week' | 'bi-week' | 'month'>>
 }
 
-function Header({dateValue,setDateValue,view,setView}:HeaderProps){
+function Header({date,setDate,view,setView}:HeaderProps){
     const navigate = useNavigate();
+
+    const [menuValue,setMenuValue] = useState('week')
+
+    const viewClick = (selectedView:'day' | 'week' | 'bi-week' | 'month') =>{
+        if(selectedView != view){
+            navigate(`${selectedView}`);
+            setView(selectedView)
+            setMenuValue(selectedView)
+        }
+    }
+
     const navClick = (direction: 'prev' | 'next')=>{
 
-        const time = DateTime.fromISO(dateValue!)
+        const time = DateTime.fromISO(date!)
         let isoDate:string | null
         if(view === 'day' ){
             isoDate = direction === 'prev' 
@@ -40,18 +52,13 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
             : time.plus({months:1}).toISODate()
         }
         console.log(isoDate!)
-        setDateValue(isoDate!)
-
+        setDate(isoDate!)
+       
         
         
     }
 
-    const viewClick = (selectedView:'day' | 'week' | 'bi-week' | 'month') =>{
-        if(selectedView != view){
-            navigate(selectedView);
-            setView(selectedView)
-        }
-    }
+    
     return(<>
         <Group style={{padding:'0.4rem',backgroundColor:'lightgray'}}>
 
@@ -71,8 +78,8 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
                         <PopoverDropdown>
                             <DatePicker
                                 type='default'
-                                allowDeselect value={dateValue}
-                                onChange={setDateValue}
+                                allowDeselect value={date}
+                                onChange={setDate}
                                 highlightToday={true}
                                 firstDayOfWeek={0}
                                 
@@ -93,14 +100,14 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
                 
 
                 <Group>
-                        <Button onClick={()=>{setDateValue(DateTime.local().toISODate())}}>
+                        <Button onClick={()=>{setDate(DateTime.local().toISODate())}}>
                     Today
                 </Button>
                 
                 <Menu>
                     <Menu.Target>
                         <Button style={{width:'120px'}}rightSection={<IconChevronDown/>}>
-                            {view}
+                            {menuValue}
                         </Button>
                     </Menu.Target>
                     <Menu.Dropdown>

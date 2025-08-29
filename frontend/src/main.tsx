@@ -29,15 +29,18 @@ import DayView from './Dashboard/views/DayView.tsx';
               index:true,
               element: <Navigate to={'week'} replace/>,
             },
-            { path:'day',
-              element: <DayView/>
-            },
-            { path:'week',
-              element: <Week/>
+            { 
+              path:'day', element: <DayView/>
             },
             {
-              path:'month',
-              element: null
+              path:'day/:date', element: <DayView/>
+            },
+
+            { 
+              path:'week',element: <Week/>
+            },
+            {
+              path:'month',element: null
             }
           ]
         },
