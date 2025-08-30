@@ -1,6 +1,6 @@
 import { Box, Flex } from "@mantine/core";
 import { useOutletContext} from "react-router-dom";
-import {DateTime } from 'luxon';
+
 type DayElement ={
     week:number,
     date: string,
