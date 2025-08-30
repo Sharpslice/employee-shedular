@@ -32,7 +32,7 @@ function Dashboard(){
             
             const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`)
             setDateRange(response.data.dateArray)
-            console.log(response.data.dateArray)
+            console.log("hi",response.data.dateArray)
         }
         fetchData()
     },[safeDate,safeView])
@@ -41,7 +41,7 @@ function Dashboard(){
         <>  
             <Header view={safeView} date={safeDate} />
             
-             <Container style={{backgroundColor:'lightgray',width:'100vw', height:'100vh'}} size='100%' >
+             <Container fluid  style={{backgroundColor:'lightgray',width:'100%',display:'flex',justifyContent:'center',padding:'0'}}>
                 <Outlet context={{dateRange}}/>
             </Container> 
             

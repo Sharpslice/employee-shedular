@@ -53,10 +53,6 @@ function Header({view,date}:HeaderProps){
         console.log(isoDate!)
         
         navigate(`${view}/${isoDate!}`)
-            
-        
-       
-        
         
     }
 
@@ -65,11 +61,7 @@ function Header({view,date}:HeaderProps){
         <Group style={{padding:'0.4rem',backgroundColor:'lightgray'}}>
 
                 <Group gap={0}>
-                    <ActionIcon style={{border:'1px px black'}} size={36} variant="filled" radius={0}  onClick={()=>navClick('prev')}
-
-                        >
-                        <IconChevronLeft/>
-                    </ActionIcon>
+                    
 
                     <Popover>
                         <Popover.Target>
@@ -90,6 +82,11 @@ function Header({view,date}:HeaderProps){
                     </Popover>
                     
                     
+                    <ActionIcon style={{border:'1px px black'}} size={36} variant="filled" radius={0}  onClick={()=>navClick('prev')}
+
+                        >
+                        <IconChevronLeft/>
+                    </ActionIcon>
 
                     
                     <ActionIcon size={36}  variant="filled" radius={0} onClick={()=>navClick('next')}
