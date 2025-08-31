@@ -5,6 +5,7 @@ import axios from "axios";
 import Header from "./Header";
 import { Container} from "@mantine/core";
 import { Outlet, useParams } from "react-router-dom";
+import EmployeeBoard from "./EmployeeBoard";
 
 type DayElement ={
     week:number,
@@ -41,7 +42,8 @@ function Dashboard(){
         <>  
             <Header view={safeView} date={safeDate} />
             
-             <Container fluid  style={{backgroundColor:'lightgray',width:'100%',display:'flex',justifyContent:'center',padding:'0'}}>
+             <Container fluid style={{backgroundColor:'lightgray',width:'100%',display:'flex',justifyContent:'center',alignItems:'flex-start',padding:'0'}}>
+                <EmployeeBoard/>
                 <Outlet context={{dateRange}}/>
             </Container> 
             

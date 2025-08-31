@@ -3,6 +3,7 @@ import {  DatePickerInput } from "@mantine/dates"
 import { IconCalendar, IconChevronDown, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import {DateTime} from 'luxon'
 
+
 import { Link, useNavigate} from "react-router-dom"
 
 
@@ -16,7 +17,7 @@ function Header({view,date}:HeaderProps){
     const navigate = useNavigate();
     
     
-
+   
 
 
     const viewClick = (selectedView:'day' | 'week' | 'bi-week' | 'month') =>{
@@ -25,6 +26,7 @@ function Header({view,date}:HeaderProps){
             
         }
     }
+    
 
     const navClick = (direction: 'prev' | 'next')=>{
 
@@ -63,7 +65,7 @@ function Header({view,date}:HeaderProps){
             <Group >
                 <Group>
                     <DatePickerInput
-                    
+                   
                     allowDeselect value={date}
                     onChange={(e)=>{navigate(`${view}/${e ?e :DateTime.local().toISODate()}`)}}
                     highlightToday={true}
