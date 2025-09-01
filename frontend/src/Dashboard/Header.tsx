@@ -1,23 +1,36 @@
-import { ActionIcon, Button, Group, Menu, Popover, PopoverDropdown } from "@mantine/core"
-import { DatePicker } from "@mantine/dates"
+import { ActionIcon, Button, Group, Menu } from "@mantine/core"
+import {  DatePickerInput } from "@mantine/dates"
 import { IconCalendar, IconChevronDown, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import {DateTime} from 'luxon'
-import { Link, useNavigate } from "react-router-dom"
+
+
+import { Link, useNavigate} from "react-router-dom"
 
 
 type HeaderProps = {
-    dateValue: string | null
-    setDateValue: React.Dispatch<React.SetStateAction<string | null>>;
+    date: string 
 
-    view: 'day' | 'week' | 'bi-week' | 'month'
-    setView : React.Dispatch<React.SetStateAction<'day' | 'week' | 'bi-week' | 'month'>>
+    view: string
 }
 
-function Header({dateValue,setDateValue,view,setView}:HeaderProps){
+function Header({view,date}:HeaderProps){
     const navigate = useNavigate();
+    
+    
+   
+
+
+    const viewClick = (selectedView:'day' | 'week' | 'bi-week' | 'month') =>{
+        if(selectedView != view){
+            navigate(`${selectedView}/${date}`);
+            
+        }
+    }
+    
+
     const navClick = (direction: 'prev' | 'next')=>{
 
-        const time = DateTime.fromISO(dateValue!)
+        const time = DateTime.fromISO(date!)
         let isoDate:string | null
         if(view === 'day' ){
             isoDate = direction === 'prev' 
@@ -40,60 +53,49 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
             : time.plus({months:1}).toISODate()
         }
         console.log(isoDate!)
-        setDateValue(isoDate!)
-
         
+        navigate(`${view}/${isoDate!}`)
         
     }
 
-    const viewClick = (selectedView:'day' | 'week' | 'bi-week' | 'month') =>{
-        if(selectedView != view){
-            navigate(selectedView);
-            setView(selectedView)
-        }
-    }
+    
     return(<>
-        <Group style={{padding:'0.4rem',backgroundColor:'lightgray'}}>
+        <Group  style={{padding:'0.4rem 1rem',backgroundColor:'lightgray',width:'100%',display:'flex',justifyContent:'space-between'}}>
 
-                <Group gap={0}>
-                    <ActionIcon style={{border:'1px px black'}} size={36} variant="filled" radius={0}  onClick={()=>navClick('prev')}
+            <Group >
+                <Group>
+                    <DatePickerInput
+                   
+                    allowDeselect value={date}
+                    onChange={(e)=>{navigate(`${view}/${e ?e :DateTime.local().toISODate()}`)}}
+                    highlightToday={true}
+                    firstDayOfWeek={0}
+                    style={{minWidth:'10rem'}}
+                
+                
+                
+                
+                />
+                
+                
+                <ActionIcon style={{border:'1px px black'}} size={36} variant="filled" radius={0}  onClick={()=>navClick('prev')}
 
-                        >
-                        <IconChevronLeft/>
-                    </ActionIcon>
+                    >
+                    <IconChevronLeft/>
+                </ActionIcon>
 
-                    <Popover>
-                        <Popover.Target>
-                            <ActionIcon size={36} variant="filled" radius={0}>
-                                <IconCalendar/>
-                            </ActionIcon>
-                        </Popover.Target>
-                        <PopoverDropdown>
-                            <DatePicker
-                                type='default'
-                                allowDeselect value={dateValue}
-                                onChange={setDateValue}
-                                highlightToday={true}
-                                firstDayOfWeek={0}
-                                
-                            />
-                        </PopoverDropdown>
-                    </Popover>
+                <ActionIcon size={36}  variant="filled" radius={0} onClick={()=>navClick('next')}
                     
-                    
+                    >
+                    <IconChevronRight/>
+                </ActionIcon>
 
-                    
-                    <ActionIcon size={36}  variant="filled" radius={0} onClick={()=>navClick('next')}
-                       
-                        >
-                        <IconChevronRight/>
-                    </ActionIcon>
                 </Group>
-                    
                 
 
+
                 <Group>
-                        <Button onClick={()=>{setDateValue(DateTime.local().toISODate())}}>
+                        <Button onClick={()=>{ navigate(`${view}/${DateTime.local().toISODate()}`);}}>
                     Today
                 </Button>
                 
@@ -122,6 +124,13 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
                 </Menu>
                 </Group>
 
+
+            </Group>
+                    
+                
+
+                
+
                 <Group>
                     <ActionIcon size={36} component={Link} to="/calendar">
                         <IconCalendar />
@@ -130,10 +139,28 @@ function Header({dateValue,setDateValue,view,setView}:HeaderProps){
                 
 
                 
-            </Group>
+     </Group>
 
             
 
     </>)
 }
 export default Header
+
+{/* <Popover>
+                        <Popover.Target>
+                            <ActionIcon size={36} variant="filled" radius={0}>
+                                <IconCalendar/>
+                            </ActionIcon>
+                        </Popover.Target>
+                        <PopoverDropdown>
+                            <DatePicker
+                                type='default'
+                                allowDeselect value={date}
+                                onChange={(e)=>{navigate(`${view}/${e ?e :DateTime.local().toISODate()}`)}}
+                                highlightToday={true}
+                                firstDayOfWeek={0}
+                                
+                            />
+                        </PopoverDropdown>
+                    </Popover> */}
