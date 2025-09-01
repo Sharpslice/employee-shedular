@@ -31,7 +31,7 @@ function weekDayFromIndex(num:number){
 
 function Week(){
     const { dateRange } = useOutletContext<{ dateRange: DayElement[] }>();
-    console.log(dateRange)
+
   
 
     return (

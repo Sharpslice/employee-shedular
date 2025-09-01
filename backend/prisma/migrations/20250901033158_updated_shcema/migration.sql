@@ -1,15 +1,5 @@
-/*
-  Warnings:
-
-  - You are about to drop the `Test` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropTable
-DROP TABLE "public"."Test";
-
--- DropTable
-DROP TABLE "public"."User";
+-- CreateEnum
+CREATE TYPE "public"."Role" AS ENUM ('USER', 'ADMIN');
 
 -- CreateTable
 CREATE TABLE "public"."employee" (
@@ -29,7 +19,7 @@ CREATE TABLE "public"."employee" (
 CREATE TABLE "public"."employee_shifts" (
     "id" SERIAL NOT NULL,
     "employee_id" INTEGER NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
+    "date" DATE NOT NULL,
     "start_time" TEXT NOT NULL,
     "end_time" TEXT NOT NULL,
 
@@ -40,7 +30,7 @@ CREATE TABLE "public"."employee_shifts" (
 CREATE TABLE "public"."employee_availability" (
     "id" SERIAL NOT NULL,
     "employee_id" INTEGER NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
+    "date" DATE NOT NULL,
     "start_time" TIMESTAMP(3) NOT NULL,
     "end_time" TIMESTAMP(3) NOT NULL,
 
@@ -51,22 +41,22 @@ CREATE TABLE "public"."employee_availability" (
 CREATE TABLE "public"."availability_override" (
     "id" SERIAL NOT NULL,
     "employee_id" INTEGER NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
-    "isAvailable" BOOLEAN NOT NULL,
+    "date" DATE NOT NULL,
+    "is_available" BOOLEAN NOT NULL,
 
     CONSTRAINT "availability_override_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "public"."calendar" (
-    "date" TIMESTAMP(3) NOT NULL,
+    "date" DATE NOT NULL,
     "day_of_month" INTEGER NOT NULL,
     "days_of_week" INTEGER NOT NULL,
     "week" INTEGER NOT NULL,
-    "month" TEXT NOT NULL,
+    "month" INTEGER NOT NULL,
     "year" INTEGER NOT NULL,
-    "isWeekend" BOOLEAN NOT NULL,
-    "isHoliday" BOOLEAN NOT NULL,
+    "is_weekend" BOOLEAN NOT NULL,
+    "is_holiday" BOOLEAN NOT NULL,
     "holiday_name" TEXT,
 
     CONSTRAINT "calendar_pkey" PRIMARY KEY ("date")

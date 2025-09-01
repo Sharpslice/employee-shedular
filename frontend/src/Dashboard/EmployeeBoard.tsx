@@ -19,17 +19,16 @@ function EmployeeBoard(){
         {name:'Erica'},
         {name:'Kaitlyn'},
         {name:'Minh Thu'},
-        {name:'Erica'},
 
     ]
     useEffect(()=>{
         const fetchData= async()=>{
-            const response = await axios.get<EmployeeResponse>('http://localhost:3000/api/employee/all');
-            console.log(response.data.employeeList)
-            setEmployeeList(response.data.employeeList)
+            // const response = await axios.get<EmployeeResponse>('http://localhost:3000/api/employee/all');
+            // console.log(response.data.employeeList)
+            // setEmployeeList(response.data.employeeList)
         }
         fetchData()
-    })
+    },[])
 
 
     return(
@@ -41,7 +40,7 @@ function EmployeeBoard(){
                     </Paper>
             {testList.map((employee)=>{
                 return (
-                    <Paper radius={0}>
+                    <Paper key ={employee.name}radius={0}>
                        {employee.name}
 
                     </Paper>

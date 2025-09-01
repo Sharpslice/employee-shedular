@@ -19,6 +19,16 @@ type CalendarResponse ={
    
     
 }
+interface ShiftElement{
+    employee_id: number,
+    date: string,
+    startTime:string,
+    endTime:string
+
+}
+interface ScheduleResponse{
+    scheduleArray: ShiftElement[]
+}
 function Dashboard(){   
     // const [date,setDate]= useState<string | null>(DateTime.local().toISODate())
     // const [view,setView] = useState<'day' | 'week' | 'bi-week' | 'month'>('week')
@@ -33,7 +43,16 @@ function Dashboard(){
             
             const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`)
             setDateRange(response.data.dateArray)
-            console.log("hi",response.data.dateArray)
+            console.log(response.data.dateArray)
+            try{
+                const scheduleResponse = await axios.get<ScheduleResponse>(`http://localhost:3000/api/employee/schedule/${safeView}/${safeDate}`)
+                console.log(scheduleResponse.data.scheduleArray)
+            }catch(error){
+                console.error(error);
+            }
+            
+            
+          
         }
         fetchData()
     },[safeDate,safeView])
