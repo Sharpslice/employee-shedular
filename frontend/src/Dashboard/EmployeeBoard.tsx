@@ -1,31 +1,35 @@
 import { Box, Paper } from "@mantine/core";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 
 
 interface Employee{
+    id:number,
     name: string
 }
 
 interface EmployeeResponse{
     employeeList: Employee[]
 }
+interface EmployeeBoardProps{
+    employeeList: Employee[]
+    setEmployeeList: React.Dispatch<React.SetStateAction<Employee[]>>
+}
 
+function EmployeeBoard({employeeList,setEmployeeList}:EmployeeBoardProps){
+    //const [employeeList,setEmployeeList] = useState<Employee[]>([])
+    // const testList = [
+    //     {name:'David'},
+    //     {name:'Erica'},
+    //     {name:'Kaitlyn'},
+    //     {name:'Minh Thu'},
 
-function EmployeeBoard(){
-    const [employeeList,setEmployeeList] = useState<Employee[]>([])
-    const testList = [
-        {name:'David'},
-        {name:'Erica'},
-        {name:'Kaitlyn'},
-        {name:'Minh Thu'},
-
-    ]
+    // ]
     useEffect(()=>{
         const fetchData= async()=>{
-            // const response = await axios.get<EmployeeResponse>('http://localhost:3000/api/employee/all');
-            // console.log(response.data.employeeList)
-            // setEmployeeList(response.data.employeeList)
+            const response = await axios.get<EmployeeResponse>('http://localhost:3000/api/employee/all');
+            console.log(response.data.employeeList)
+            setEmployeeList(response.data.employeeList)
         }
         fetchData()
     },[])
@@ -38,7 +42,7 @@ function EmployeeBoard(){
                        Staff
 
                     </Paper>
-            {testList.map((employee)=>{
+            {employeeList.map((employee)=>{
                 return (
                     <Paper key ={employee.name}radius={0}>
                        {employee.name}

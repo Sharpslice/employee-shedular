@@ -6,34 +6,28 @@ import Header from "./Header";
 import { Container} from "@mantine/core";
 import { Outlet, useParams } from "react-router-dom";
 import EmployeeBoard from "./EmployeeBoard";
+import type { Employee } from "./Interfaces/Employee";
+import type { Day } from "./Interfaces/Day";
+import type { Shift } from "./Interfaces/Shift";
 
-type DayElement ={
-    week:number,
-    date: string,
-    days_of_week:number,
-    day_of_month:number
-    month: number
-}
+
 type CalendarResponse ={
-    dateArray: DayElement[]
+    dateArray: Day[]
    
     
 }
-interface ShiftElement{
-    employee_id: number,
-    date: string,
-    startTime:string,
-    endTime:string
 
-}
 interface ScheduleResponse{
-    scheduleArray: ShiftElement[]
+    scheduleArray: Shift[]
 }
 function Dashboard(){   
     // const [date,setDate]= useState<string | null>(DateTime.local().toISODate())
     // const [view,setView] = useState<'day' | 'week' | 'bi-week' | 'month'>('week')
     const {view,date} = useParams();
-    const [dateRange,setDateRange] = useState<DayElement[]>([]) 
+    const [dateRange,setDateRange] = useState<Day[]>([]) 
+    const [shifts, setShifts] = useState<Shift[]>([])
+    const [employeeList, setEmployeeList] = useState<Employee[]>([])
+
 
     const safeView = view ?? 'week'
     const safeDate = date ?? DateTime.local().toISODate()
@@ -47,6 +41,7 @@ function Dashboard(){
             try{
                 const scheduleResponse = await axios.get<ScheduleResponse>(`http://localhost:3000/api/employee/schedule/${safeView}/${safeDate}`)
                 console.log(scheduleResponse.data.scheduleArray)
+                setShifts(scheduleResponse.data.scheduleArray)
             }catch(error){
                 console.error(error);
             }
@@ -62,8 +57,8 @@ function Dashboard(){
             <Header view={safeView} date={safeDate} />
             
              <Container fluid style={{backgroundColor:'lightgray',width:'100%',display:'flex',justifyContent:'center',alignItems:'flex-start',padding:'0'}}>
-                <EmployeeBoard/>
-                <Outlet context={{dateRange}}/>
+                <EmployeeBoard employeeList={employeeList} setEmployeeList={setEmployeeList}/>
+                <Outlet context={{dateRange,shifts,employeeList}}/>
             </Container> 
             
             

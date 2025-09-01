@@ -1,13 +1,12 @@
-import { Box, Flex } from "@mantine/core";
+import { Box, Flex, Grid } from "@mantine/core";
 import { useOutletContext} from "react-router-dom";
+import Cell from "../Cell";
+import type { Employee } from "../Interfaces/Employee";
+import type { Day } from "../Interfaces/Day";
+import type { Shift } from "../Interfaces/Shift";
 
-type DayElement ={
-    week:number,
-    date: string,
-    days_of_week:number,
-    day_of_month:number
-    month: number
-}
+
+
 
 function weekDayFromIndex(num:number){
     switch(num){
@@ -30,12 +29,12 @@ function weekDayFromIndex(num:number){
 }
 
 function Week(){
-    const { dateRange } = useOutletContext<{ dateRange: DayElement[] }>();
-
-  
+    const { dateRange,shifts,employeeList } = useOutletContext<{ dateRange: Day[],shifts:Shift[],employeeList:Employee[] }>();
 
     return (
     <>
+    <Flex w={'100%'} direction={"column"}>
+
         <Flex w={'100%'}>
             {dateRange.map((day)=>{
                 return (
@@ -45,7 +44,26 @@ function Week(){
                 )
             })}
         </Flex>
+
+        <Box display={"grid"} style={{gridTemplateColumns:'repeat(7,1fr)'}}>
+            {employeeList.map((employee)=>{
+                return(
+                    dateRange.map((date)=>{
+
+                        
+                        return(
+                            <Cell Employee={employee} date={date}></Cell>
+                        )
+                    })
+
+                )
+            })}
+        </Box>
             
+        
+    </Flex>
+       
+        
         
     </>)
 }

@@ -8,12 +8,15 @@ const employee = express.Router();
 employee.get('/all',async(req,res)=>{
     const employeeList = await prisma.employee.findMany({
         select:{
+            id:true,
             name:true
         }
 
 
     })
+    console.log(employeeList)
     res.json({employeeList})
+
 })
 
 employee.get('/schedule/:view/:date',async(req,res)=>{
