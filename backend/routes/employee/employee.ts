@@ -63,7 +63,7 @@ employee.get('/schedule/:view/:date',async(req,res)=>{
     }
     });
     
-    const scheduleMap = scheduleArray.reduce<{[key:number]:ScheduleArray[]}>((map,schedule)=>{
+    const scheduleObject = scheduleArray.reduce<{[key:number]:ScheduleArray[]}>((map,schedule)=>{
         if(! map[schedule.employee_id]){
             map[schedule.employee_id] = []
         }
@@ -71,11 +71,11 @@ employee.get('/schedule/:view/:date',async(req,res)=>{
         map[schedule.employee_id]?.push(schedule)
         return map 
     },{})
-    console.log(scheduleMap)
+    console.log(scheduleObject)
 
 
 
-    res.json({scheduleMap})
+    res.json({scheduleObject})
 
 
 })
