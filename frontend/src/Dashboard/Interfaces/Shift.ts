@@ -1,7 +1,10 @@
+
+
+
 export interface Shift{
     employee_id: number,
     date: string,
-    startTime:string,
-    endTime:string
+    start_time:string,
+    end_time:string
 
 }

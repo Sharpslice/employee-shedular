@@ -52,11 +52,12 @@ function Week(){
                 return(
                     dateRange.map((date)=>{
                     
-                        console.log(shifts.get(employee.id)?.find((schedule)=>schedule.date === date.date))
-                        
+                        const shift = shifts.get(employee.id)?.find((schedule)=>schedule.date === date.date)
+                        console.log(typeof shift?.start_time)
                        
                         return(
-                            <Cell></Cell>
+                            shift ? <Cell schedule ={shift}></Cell> : <Box flex={1} bd={'1px solid black'}></Box>
+                            
                         )
                     })
 
