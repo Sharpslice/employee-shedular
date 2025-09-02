@@ -14,7 +14,7 @@ employee.get('/all',async(req,res)=>{
 
 
     })
-    console.log(employeeList)
+   
     res.json({employeeList})
 
 })
@@ -48,7 +48,6 @@ employee.get('/schedule/:view/:date',async(req,res)=>{
         console.log(beginDate.toJSDate());
         console.log(endDate.toJSDate())
     
-
     const scheduleArray = await prisma.employee_Shifts.findMany({
         select:{
             employee_id:true,
@@ -63,11 +62,28 @@ employee.get('/schedule/:view/:date',async(req,res)=>{
         }
     }
     });
-    console.log(scheduleArray)
-    res.json({scheduleArray})
+    
+    const scheduleObject = scheduleArray.reduce<{[key:number]:ScheduleArray[]}>((map,schedule)=>{
+        if(! map[schedule.employee_id]){
+            map[schedule.employee_id] = []
+        }
+        
+        map[schedule.employee_id]?.push(schedule)
+        return map 
+    },{})
+    console.log(scheduleObject)
+
+
+
+    res.json({scheduleObject})
 
 
 })
-
+interface ScheduleArray{
+    employee_id:number,
+    date:Date,
+    start_time:string,
+    end_time:string
+}
 export default employee;
 

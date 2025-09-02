@@ -1,21 +1,18 @@
 import { Box } from "@mantine/core";
-import type { Employee } from "./Interfaces/Employee";
-import type { Day } from "./Interfaces/Day";
-
+import type { Shift } from "./Interfaces/Shift";
+import {DateTime} from 'luxon'
 interface CellProps{
-    Employee: Employee
-    date: Day
+    schedule:Shift
 }
 
 
-function Cell({Employee,date}:CellProps){
+function Cell({schedule}:CellProps){
 
 
     return(
     <>
     <Box  flex={1} bd={'1px solid black'} ta={'center'}>
-        {Employee.id}
-        {date.day_of_month}
+       {`${schedule.start_time} / ${schedule.end_time}`}
 
     </Box>
     

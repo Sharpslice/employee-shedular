@@ -18,19 +18,22 @@ type CalendarResponse ={
 }
 
 interface ScheduleResponse{
-    scheduleArray: Shift[]
+    scheduleObject: {[key:string]: Shift[]}
 }
 function Dashboard(){   
-    // const [date,setDate]= useState<string | null>(DateTime.local().toISODate())
-    // const [view,setView] = useState<'day' | 'week' | 'bi-week' | 'month'>('week')
     const {view,date} = useParams();
     const [dateRange,setDateRange] = useState<Day[]>([]) 
-    const [shifts, setShifts] = useState<Shift[]>([])
+    const [shifts, setShifts] = useState<Map<number,Shift[]>>(new Map())
     const [employeeList, setEmployeeList] = useState<Employee[]>([])
 
 
     const safeView = view ?? 'week'
     const safeDate = date ?? DateTime.local().toISODate()
+
+    const objectToMap = (object:{[key:string]: Shift[]})=>{
+
+        return new Map(Object.entries(object).map(([keys,value])=> [Number(keys),value]))
+    }
 
     useEffect(()=>{
         const fetchData =async() =>{
@@ -40,8 +43,8 @@ function Dashboard(){
             console.log(response.data.dateArray)
             try{
                 const scheduleResponse = await axios.get<ScheduleResponse>(`http://localhost:3000/api/employee/schedule/${safeView}/${safeDate}`)
-                console.log(scheduleResponse.data.scheduleArray)
-                setShifts(scheduleResponse.data.scheduleArray)
+                console.log(objectToMap(scheduleResponse.data.scheduleObject))
+                setShifts(objectToMap(scheduleResponse.data.scheduleObject))
             }catch(error){
                 console.error(error);
             }
