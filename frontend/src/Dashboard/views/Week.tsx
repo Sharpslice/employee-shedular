@@ -1,4 +1,4 @@
-import { Box, Flex, Grid } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import { useOutletContext} from "react-router-dom";
 import Cell from "../Cell";
 import type { Employee } from "../Interfaces/Employee";
@@ -53,10 +53,11 @@ function Week(){
                     dateRange.map((date)=>{
                     
                         const shift = shifts.get(employee.id)?.find((schedule)=>schedule.date === date.date)
-                        console.log(typeof shift?.start_time)
-                       
+                        
+                       console.log(shift)
                         return(
-                            shift ? <Cell shift ={shift}></Cell> : <Box  bd={'1px solid black'}></Box>
+                             //shift ? <Cell key={date.date} shift ={shift}></Cell> : <Box  bd={'1px solid black'}></Box>
+                              <Cell key={employee.id + date.date } shift={shift}></Cell> 
                             
                         )
                     })

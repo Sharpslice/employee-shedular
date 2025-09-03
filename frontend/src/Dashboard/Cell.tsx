@@ -3,7 +3,7 @@ import type { Shift } from "./Interfaces/Shift";
 import TimeRangePicker from "./TimeRangePicker/TimeRangePicker";
 
 interface CellProps{
-    shift:Shift
+    shift?:Shift
 }
 
 

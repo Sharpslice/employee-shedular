@@ -8,21 +8,22 @@ import type { Shift } from "../Interfaces/Shift"
 
 
 interface TimeRangePickerProps{
-    shift:Shift
+    shift?:Shift
 }
 
 function TimeRangePicker({shift}:TimeRangePickerProps){
    
 
-    console.log(shift.employee_id)
+ 
     
-    const [startTime,setStartTime] = useState<string>(shift.start_time)
-    const [endTime,setEndTime] = useState<string>(shift.end_time)
+    const [startTime,setStartTime] = useState<string>(shift?.start_time ?? '' )
+    const [endTime,setEndTime] = useState<string>(shift?.end_time?? '')
 
      useEffect(()=>{
-        console.log(startTime)
-        console.log(endTime)
-     },[startTime,endTime])
+        setStartTime(shift?.start_time ?? '' )
+        setEndTime(shift?.end_time?? '')
+
+     },[shift?.start_time,shift?.end_time])
     return (
         <>
         <Popover>
