@@ -17,7 +17,6 @@ function Cell({shift}:CellProps){
 
             <TimeRangePicker shift={shift}/>
 
-
         </Box>
         
 

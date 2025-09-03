@@ -1,12 +1,9 @@
 import { Box, Paper } from "@mantine/core";
 import axios from "axios";
 import { useEffect} from "react";
+import type { Employee } from "./Interfaces/Employee";
 
 
-interface Employee{
-    id:number,
-    name: string
-}
 
 interface EmployeeResponse{
     employeeList: Employee[]
@@ -17,14 +14,9 @@ interface EmployeeBoardProps{
 }
 
 function EmployeeBoard({employeeList,setEmployeeList}:EmployeeBoardProps){
-    //const [employeeList,setEmployeeList] = useState<Employee[]>([])
-    // const testList = [
-    //     {name:'David'},
-    //     {name:'Erica'},
-    //     {name:'Kaitlyn'},
-    //     {name:'Minh Thu'},
+    
 
-    // ]
+
     useEffect(()=>{
         const fetchData= async()=>{
             const response = await axios.get<EmployeeResponse>('http://localhost:3000/api/employee/all');

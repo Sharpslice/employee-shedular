@@ -30,47 +30,40 @@ function weekDayFromIndex(num:number){
 
 function Week(){
     const { dateRange,shifts,employeeList } = useOutletContext<{ dateRange: Day[],shifts:Map<number,Shift[]>,employeeList:Employee[] }>();
+    return (<>
+        <Flex w={'100%'} direction={"column"}>
 
+            <Flex w={'100%'}>
+                {dateRange.map((day)=>{
+                    return (
+                        <Box key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
+                            {`${weekDayFromIndex(day.days_of_week)} ${day.day_of_month}`}
+                        </Box>
+                    )
+                })}
+            </Flex>
 
-
-    return (
-    <>
-    <Flex w={'100%'} direction={"column"}>
-
-        <Flex w={'100%'}>
-            {dateRange.map((day)=>{
-                return (
-                    <Box key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
-                        {`${weekDayFromIndex(day.days_of_week)} ${day.day_of_month}`}
-                    </Box>
-                )
-            })}
-        </Flex>
-
-        <Box display={"grid"} style={{gridTemplateColumns:'repeat(7,1fr)'}}>
-            {employeeList.map((employee)=>{
-                return(
-                    dateRange.map((date)=>{
-                    
-                        const shift = shifts.get(employee.id)?.find((schedule)=>schedule.date === date.date)
+            <Box display={"grid"} style={{gridTemplateColumns:'repeat(7,1fr)'}}>
+                {employeeList.map((employee)=>{
+                    return(
+                        dateRange.map((date)=>{
                         
-                       console.log(shift)
-                        return(
-                             //shift ? <Cell key={date.date} shift ={shift}></Cell> : <Box  bd={'1px solid black'}></Box>
-                              <Cell key={employee.id + date.date } shift={shift}></Cell> 
-                            
-                        )
-                    })
+                            const shift = shifts.get(employee.id)?.find((schedule)=>schedule.date === date.date)
+                           
+                            return(
+                              <Cell key ={employee.id+ date.date} shift={shift} ></Cell> 
+                                
+                                
+                            )
+                        })
 
-                )
-            })}
-        </Box>
+                    )
+                })}
+            </Box>
+                
             
-        
-    </Flex>
-       
-        
-        
+        </Flex>
+      
     </>)
 }
 export default Week;

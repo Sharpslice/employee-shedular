@@ -18,6 +18,21 @@ employee.get('/all',async(req,res)=>{
     res.json({employeeList})
 
 })
+employee.post('/:employee_id/shift',async(req,res)=>{
+    const employee_id = req.params.employee_id;
+    const {date,start_time,end_time} = req.body;
+
+    await prisma.employee_Shifts.create({
+        data:{
+            employee_id: parseInt(employee_id),
+            date: date,
+            start_time: start_time ?? '',
+            end_time: end_time ?? ''
+        }
+    })
+    res.json({success:true})
+})
+
 
 employee.get('/schedule/:view/:date',async(req,res)=>{
   
