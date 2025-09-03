@@ -4,17 +4,20 @@ import CustomTimeGrid from "./CustomTimeGrid"
 import { useEffect, useState } from "react"
 import { TimeInput } from "@mantine/dates"
 import './TimeRangePicker.css'
+import type { Shift } from "../Interfaces/Shift"
 
 
+interface TimeRangePickerProps{
+    shift:Shift
+}
 
-
-function TimeRangePicker(){
+function TimeRangePicker({shift}:TimeRangePickerProps){
    
 
+    console.log(shift.employee_id)
     
-    
-    const [startTime,setStartTime] = useState<string>('')
-    const [endTime,setEndTime] = useState<string>('')
+    const [startTime,setStartTime] = useState<string>(shift.start_time)
+    const [endTime,setEndTime] = useState<string>(shift.end_time)
 
      useEffect(()=>{
         console.log(startTime)

@@ -3,18 +3,19 @@ import type { Shift } from "./Interfaces/Shift";
 import TimeRangePicker from "./TimeRangePicker/TimeRangePicker";
 
 interface CellProps{
-    schedule:Shift
+    shift:Shift
 }
 
 
-function Cell({schedule}:CellProps){
+function Cell({shift}:CellProps){
 
 
     return(
     <>
         
         <Box bd={'1px solid black'} >
-            <TimeRangePicker/>
+
+            <TimeRangePicker shift={shift}/>
 
 
         </Box>

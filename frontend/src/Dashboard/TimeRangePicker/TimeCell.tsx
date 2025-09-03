@@ -17,14 +17,9 @@ function TimeCell({time,startTime,endTime,setStartTime,setEndTime,first,second,s
 
 
     const onHandleClick = () =>{
-        if(startTime === ''){
-            setFirst(time)
-            setStartTime(time)
-        }
-        else if(endTime ===''){
-            setSecond(time)
-            setEndTime(time)
-        }
+      
+        
+           
         
         
     }
@@ -32,12 +27,12 @@ function TimeCell({time,startTime,endTime,setStartTime,setEndTime,first,second,s
     return(
     <>
         <Paper onClick={onHandleClick} bg={
-      startTime === time
-        ? 'blue'
-        : endTime === time
-        ? 'red'
-        : 'white'
-    } >
+        startTime === time
+            ? 'blue'
+            : endTime === time
+            ? 'red'
+            : 'white'
+            } >
             {time}
         </Paper>
 

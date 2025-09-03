@@ -56,7 +56,7 @@ function Week(){
                         console.log(typeof shift?.start_time)
                        
                         return(
-                            shift ? <Cell schedule ={shift}></Cell> : <Box  bd={'1px solid black'}></Box>
+                            shift ? <Cell shift ={shift}></Cell> : <Box  bd={'1px solid black'}></Box>
                             
                         )
                     })
