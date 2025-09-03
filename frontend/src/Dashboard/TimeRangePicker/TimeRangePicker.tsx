@@ -1,8 +1,8 @@
-import { Box, Group,Input,Popover,Text } from "@mantine/core"
+import { Box, Group, Text } from "@mantine/core"
 
-import CustomTimeGrid from "./CustomTimeGrid"
+
 import { useEffect, useState } from "react"
-import { TimeInput } from "@mantine/dates"
+import { getTimeRange, TimePicker } from "@mantine/dates"
 import './TimeRangePicker.css'
 import type { Shift } from "../Interfaces/Shift"
 
@@ -15,7 +15,7 @@ function TimeRangePicker({shift}:TimeRangePickerProps){
    
 
  
-    
+    const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const [startTime,setStartTime] = useState<string>(shift?.start_time ?? '' )
     const [endTime,setEndTime] = useState<string>(shift?.end_time?? '')
 
@@ -24,38 +24,58 @@ function TimeRangePicker({shift}:TimeRangePickerProps){
         setEndTime(shift?.end_time?? '')
 
      },[shift?.start_time,shift?.end_time])
+
+    
+   
     return (
         <>
-        <Popover>
-            <Popover.Target>
-                <Group className="TimeRangePicker" gap={"sm"}  style={{justifyContent:'center'}}>
-                    <TimeInput
-                        classNames={{ input: 'david-class'}}
-                        style={{width:'max-content'}}
-                        value={startTime}
-                        onChange={(e)=>{setStartTime(e.target.value)}}
+       
+                     <Group className="TimeRangePicker" gap={"sm"}  style={{justifyContent:'center'}} >
+                        <TimePicker
+                            classNames={{ input: 'david-class'}}
+                            style={{width:'max-content'}}
+                            value={startTime}
+                            onChange={(e)=>{setStartTime(e)}}
+                            withDropdown
+                            format="12h"
+                            presets={[
+                                {label:'morning',values:morning},
+                                {label:'Afternoon', values:getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'}) }
+                            ]}
+                            min="10:00"
+                            popoverProps={{
+                                width: 300, // match your Group width
+                            position: 'bottom',
+                            withArrow:true,
+                            middlewares: { flip: true },
+                            }}
+                             maxDropdownContentHeight={150}
+                            
+                            
+                        />
+                        <Box h={'100%'}> <Text>-</Text> </Box>
+                        <TimePicker
+                            classNames={{ input: 'david-class'}}
+                            style={{width:'max-content'}}
                         
-                        
-                    />
-                    <Box h={'100%'}> <Text>-</Text> </Box>
-                    <TimeInput
-                        classNames={{ input: 'david-class'}}
-                        style={{width:'max-content'}}
-                        value={endTime}
-                        onChange={(e)=>{setEndTime(e.target.value)}}
-                    />
-                </Group>
-            </Popover.Target>
+                            withDropdown
+                            value={endTime}
+                            onChange={(e)=>{setEndTime(e)}}
+                            format="12h"
+                            presets={[
+                                {label:'morning',values:morning},
+                                {label:'Afternoon', values:getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'}) }
+                            ]}
+                            popoverProps={{
+                                width: 300, // match your Group width
+                            position: 'bottom',
+                            withArrow:true,
+                            middlewares: { flip: true },
+                            }}
+                             maxDropdownContentHeight={150}
 
-            <Popover.Dropdown>
-                <CustomTimeGrid startTime={startTime} endTime={endTime}setStartTime={setStartTime} setEndTime={setEndTime}/>
-            </Popover.Dropdown>
-        </Popover>
-            
-            
-            
-
-
+                        />
+                    </Group>
 
         
             
