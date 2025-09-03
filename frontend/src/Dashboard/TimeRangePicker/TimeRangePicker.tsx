@@ -19,14 +19,11 @@ function TimeRangePicker({shift}:TimeRangePickerProps){
     const [startTime,setStartTime] = useState<string>(shift?.start_time ?? '' )
     const [endTime,setEndTime] = useState<string>(shift?.end_time?? '')
 
-     useEffect(()=>{
-        setStartTime(shift?.start_time ?? '' )
-        setEndTime(shift?.end_time?? '')
+    useEffect(() => {
+        setStartTime(shift?.start_time ?? '');
+        setEndTime(shift?.end_time ?? '');
+    }, [shift]);
 
-     },[shift?.start_time,shift?.end_time])
-
-    
-   
     return (
         <>
        
@@ -95,16 +92,3 @@ function TimeRangePicker({shift}:TimeRangePickerProps){
 }
 
 export default TimeRangePicker
-
-{/* <TimePicker flex={1}
-                format="12h"
-                withDropdown
-                popoverProps={{width:'target'}}
-                presets={
-                    [
-                        {label:'Morning', values:getTimeRange({startTime:'9:00:00',endTime: '12:00:00',interval:'00:30:00'}) },
-                        {label:'Afternoon', values:getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'}) }
-                    ]
-                    
-                }
-            /> */}

@@ -40,10 +40,10 @@ function Dashboard(){
             
             const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`)
             setDateRange(response.data.dateArray)
-            console.log(response.data.dateArray)
+       
             try{
                 const scheduleResponse = await axios.get<ScheduleResponse>(`http://localhost:3000/api/employee/schedule/${safeView}/${safeDate}`)
-                console.log(objectToMap(scheduleResponse.data.scheduleObject))
+               
                 setShifts(objectToMap(scheduleResponse.data.scheduleObject))
             }catch(error){
                 console.error(error);
