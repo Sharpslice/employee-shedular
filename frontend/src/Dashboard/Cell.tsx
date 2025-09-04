@@ -1,6 +1,7 @@
 import { Box } from "@mantine/core";
 import type { Shift } from "./Interfaces/Shift";
 import TimeRangePicker from "./TimeRangePicker/TimeRangePicker";
+import { useState } from "react";
 
 interface CellProps{
     shift?:Shift
@@ -9,13 +10,13 @@ interface CellProps{
 
 function Cell({shift}:CellProps){
 
-
+    
     return(
     <>
         
-        <Box bd={'1px solid black'} >
-
-            <TimeRangePicker shift={shift}/>
+        <Box tabIndex={0} bd={'1px solid black'} onKeyDown={(e)=>{if(e.key==='Enter') console.log('pressed')}} >
+            
+           <TimeRangePicker shift={shift}/> 
 
         </Box>
         
