@@ -20,7 +20,7 @@ function EmployeeBoard({employeeList,setEmployeeList}:EmployeeBoardProps){
     useEffect(()=>{
         const fetchData= async()=>{
             const response = await axios.get<EmployeeResponse>('http://localhost:3000/api/employee/all');
-            console.log(response.data.employeeList)
+            
             setEmployeeList(response.data.employeeList)
         }
         fetchData()

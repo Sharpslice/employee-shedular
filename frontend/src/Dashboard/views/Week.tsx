@@ -31,7 +31,7 @@ function weekDayFromIndex(num:number){
 function Week(){
     const { dateRange,shifts,employeeList } = useOutletContext<{ dateRange: Day[],shifts:Map<number,Shift[]>,employeeList:Employee[] }>();
 
-    console.log(employeeList)
+   
     return (<>
         <Flex w={'100%'} direction={"column"}>
 
