@@ -30,6 +30,8 @@ function weekDayFromIndex(num:number){
 
 function Week(){
     const { dateRange,shifts,employeeList } = useOutletContext<{ dateRange: Day[],shifts:Map<number,Shift[]>,employeeList:Employee[] }>();
+
+   
     return (<>
         <Flex w={'100%'} direction={"column"}>
 
@@ -51,8 +53,8 @@ function Week(){
                             const shift = shifts.get(employee.id)?.find((schedule)=>schedule.date === date.date)
                            
                             return(
-                              <Cell key ={employee.id+ date.date} shift={shift} ></Cell> 
-                                
+                               
+                                <Cell key={employee.id+date.date}  shift={shift}></Cell>
                                 
                             )
                         })

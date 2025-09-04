@@ -49,8 +49,7 @@ function Dashboard(){
                 console.error(error);
             }
             
-            
-          
+    
         }
         fetchData()
     },[safeDate,safeView])

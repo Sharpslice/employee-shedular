@@ -4,15 +4,16 @@ import { Box, Group, Text } from "@mantine/core"
 import { getTimeRange, TimePicker } from "@mantine/dates"
 import './TimeRangePicker.css'
 import type { Shift } from "../Interfaces/Shift"
+import type React from "react"
 
 
 
 interface TimeRangePickerProps{
     shift?:Shift
-    
+    setIsFocused:React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function TimeRangePicker({shift}:TimeRangePickerProps){
+function TimeRangePicker({setIsFocused,shift}:TimeRangePickerProps){
    
     
  console.log('TimeRangePicker mounted', shift);
@@ -23,8 +24,8 @@ function TimeRangePicker({shift}:TimeRangePickerProps){
 
 
     return (<>
-            <Group  className="TimeRangePicker" gap={"sm"}  style={{justifyContent:'center'}} >
-                <TimePicker
+            <Group tabIndex={1} className="TimeRangePicker" gap={"sm"}  style={{justifyContent:'center'}} >
+                <TimePicker autoFocus
                     classNames={{ input: 'david-class'}}
                     style={{width:'max-content'}}
                     value={shift?.start_time}
@@ -45,7 +46,7 @@ function TimeRangePicker({shift}:TimeRangePickerProps){
 
                 <Box h={'100%'}> <Text>-</Text> </Box>
 
-                <TimePicker
+                <TimePicker onBlur={()=>{setIsFocused(false)}}
                     classNames={{ input: 'david-class'}}
                     style={{width:'max-content'}}
                     format="12h"
