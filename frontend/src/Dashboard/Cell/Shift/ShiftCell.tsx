@@ -1,4 +1,4 @@
-import { Box, Text } from "@mantine/core";
+import { Box, Flex, Text } from "@mantine/core";
 import type { Shift } from "../../Interfaces/Shift";
 import {DateTime} from 'luxon'
 interface PlaceholderProp{
@@ -17,14 +17,14 @@ function ShiftCell({shift}:PlaceholderProp){
     const end_time = convertTo12hr(shift.end_time)
 
     return (<>
-        <Box display={"flex"} style={{justifyContent:'center'}}> 
+        <Flex justify={'center'} align={'center'} gap={12} mih={38} h='100%'> 
 
-           <Text>{start_time}</Text>  
-           <Text>-</Text>
-           <Text>{end_time}</Text>
+           <Text fz={14}>{start_time}</Text>  
+           <Text fz={14}>-</Text>
+           <Text fz={14}>{end_time}</Text>
 
 
-        </Box>
+        </Flex>
     
 
 

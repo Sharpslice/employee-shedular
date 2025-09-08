@@ -1,9 +1,9 @@
-import { Box } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 
 function Placeholder(){
     return(
     <>
-        <Box ta={'center'}>--:-- --</Box>    
+        <Flex mih={38} justify={"center"} align={'center'} fz={14}>--:-- --  --:-- --</Flex>    
     </>)
 }
 
