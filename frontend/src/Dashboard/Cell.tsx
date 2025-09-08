@@ -7,10 +7,11 @@ import type { Employee } from "./Interfaces/Employee";
 interface CellProps{
     shift?:Shift
     employee: Employee
+    date: string
 }
 
 
-function Cell({employee,shift}:CellProps){
+function Cell({date,employee,shift}:CellProps){
 
     const [isFocused,setIsFocused] = useState(false)
 
@@ -25,7 +26,7 @@ function Cell({employee,shift}:CellProps){
             bd={'1px solid black'} >
             
             
-            {isFocused ? <TimeRangePicker setIsFocused={setIsFocused} employee={employee} shift={shift}/>: shift ? <Box ta={'center'}>{shift.start_time}</Box > : <Box ta={'center'}>--:-- --</Box>}
+            {isFocused ? <TimeRangePicker setIsFocused={setIsFocused} date={date }employee={employee} shift={shift}/>: shift ? <Box ta={'center'}>{shift.start_time}</Box > : <Box ta={'center'}>--:-- --</Box>}
 
 
 

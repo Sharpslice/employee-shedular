@@ -41,12 +41,13 @@ model Employee_Shifts{
     id                Int       @id @default(autoincrement())
     employee_id       Int
     date              DateTime  @db.Date
-    start_time        String
-    end_time          String
+    start_time        String?
+    end_time          String?
 
     employee          Employee  @relation(fields: [employee_id], references:id)
     calendar          Calendar  @relation(fields: [date],references:date)
 
+    @@unique([employee_id,date])
     @@map("employee_shifts")
 }
 
