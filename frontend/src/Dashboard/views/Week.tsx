@@ -1,6 +1,6 @@
 import { Box, Flex } from "@mantine/core";
 import { useOutletContext} from "react-router-dom";
-import Cell from "../Cell";
+import Cell from "../Cell/Cell";
 import type { Employee } from "../Interfaces/Employee";
 import type { Day } from "../Interfaces/Day";
 import type { Shift } from "../Interfaces/Shift";
@@ -54,7 +54,7 @@ function Week(){
                            
                             return(
                                
-                                <Cell key={employee.id+date.date}  shift={shift}></Cell>
+                                <Cell key={employee.id+date.date} date={date.date} employee={employee} shift={shift}></Cell>
                                 
                             )
                         })

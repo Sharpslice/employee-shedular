@@ -22,11 +22,12 @@ calendarApi.get('/date', async(req,res)=>{
             endDate = selectedDate.endOf('week',{useLocaleWeeks:true}).startOf('day')
             break;
         case 'bi-week':
-            console.log('bi-week')
+            
+
             beginDate = selectedDate.startOf('week',{useLocaleWeeks:true})
-            console.log(beginDate)
+           
             endDate = selectedDate.plus({weeks:1}).endOf('week',{useLocaleWeeks:true}).startOf('day')
-            console.log(endDate)
+            
             break;
         case 'month':
             beginDate = selectedDate.startOf('month').startOf('week',{useLocaleWeeks:true})
@@ -59,15 +60,14 @@ calendarApi.get('/date', async(req,res)=>{
 calendarApi.get('/currentMonth',async (req,res)=>{
     const today = DateTime.now()
     const currentMonth = today.month
-    console.log(`today: ${today.toJSDate()}`)
+ 
 
     const firstDay = today.startOf('month').startOf('week',{useLocaleWeeks:true}).toJSDate()
 
     const lastDay = today.endOf('month').endOf('week',{useLocaleWeeks:true}).startOf('day').toJSDate() 
 
     
-    console.log(`first day${firstDay}`)
-    console.log(`second day${lastDay}`)
+   
     const month = await prisma.calendar.findMany({
         select:{
             week:true,

@@ -24,6 +24,7 @@ function EmployeeBoard({employeeList,setEmployeeList}:EmployeeBoardProps){
             setEmployeeList(response.data.employeeList)
         }
         fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
 

@@ -1,6 +1,7 @@
 import express from 'express';
 import prisma from '../../db/db'
 import { DateTime } from 'luxon';
+import { connect } from 'http2';
 
 const employee = express.Router();
 
@@ -22,15 +23,45 @@ employee.post('/:employee_id/shift',async(req,res)=>{
     const employee_id = req.params.employee_id;
     const {date,start_time,end_time} = req.body;
 
-    await prisma.employee_Shifts.create({
-        data:{
-            employee_id: parseInt(employee_id),
-            date: date,
-            start_time: start_time ?? '',
-            end_time: end_time ?? ''
+    try{
+       const row =  await prisma.employee_Shifts.upsert({
+            where:{
+                employee_id_date:{ 
+                    employee_id: parseInt(employee_id),
+                    date: new Date(date) 
+                }
+            },
+            update:
+            start_time ?
+                {
+                    start_time:start_time
+                }
+            :
+                {
+                    end_time:end_time
+                },
+            create:{
+                employee_id: parseInt(employee_id),
+                date: new Date(date),
+                start_time: start_time || null,
+                end_time: end_time || null,
+                
+            }
+        })
+        res.json({success:true,row})
+    }
+    catch(error:unknown){
+        if(error instanceof Error){
+            console.error('Error',error.message)
+            return res.status(500).json({success:false,error:error.message})
         }
-    })
-    res.json({success:true})
+      
+
+    }   
+    
+
+
+    
 })
 
 
@@ -38,7 +69,7 @@ employee.get('/schedule/:view/:date',async(req,res)=>{
   
     const view = req.params.view;
     const date = req.params.date
-    console.log(view)
+  
     const selectedDate = DateTime.fromISO(date as string)
         let beginDate = selectedDate
         let endDate = selectedDate
@@ -60,8 +91,7 @@ employee.get('/schedule/:view/:date',async(req,res)=>{
                
         }
 
-        console.log(beginDate.toJSDate());
-        console.log(endDate.toJSDate())
+      
     
     const scheduleArray = await prisma.employee_Shifts.findMany({
         select:{
@@ -86,7 +116,7 @@ employee.get('/schedule/:view/:date',async(req,res)=>{
         map[schedule.employee_id]?.push(schedule)
         return map 
     },{})
-    console.log(scheduleObject)
+   
 
 
 
@@ -97,8 +127,8 @@ employee.get('/schedule/:view/:date',async(req,res)=>{
 interface ScheduleArray{
     employee_id:number,
     date:Date,
-    start_time:string,
-    end_time:string
+    start_time:string | null,
+    end_time:string | null
 }
 export default employee;
 
