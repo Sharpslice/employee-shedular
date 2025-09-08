@@ -1,8 +1,12 @@
 import { Box } from "@mantine/core";
-import type { Shift } from "./Interfaces/Shift";
-import TimeRangePicker from "./TimeRangePicker/TimeRangePicker";
+import type { Shift } from "../Interfaces/Shift";
+
 import {useState } from "react";
-import type { Employee } from "./Interfaces/Employee";
+import type { Employee } from "../Interfaces/Employee";
+import TimeRangePicker from "./TimeRangePicker/TimeRangePicker";
+
+import ShiftCell from "./Shift/ShiftCell";
+import Placeholder from "./Placeholder";
 
 interface CellProps{
     shift?:Shift
@@ -15,7 +19,6 @@ function Cell({date,employee,shift}:CellProps){
 
     const [isFocused,setIsFocused] = useState(false)
 
-    
 
     return(
     <>
@@ -26,9 +29,8 @@ function Cell({date,employee,shift}:CellProps){
             bd={'1px solid black'} >
             
             
-            {isFocused ? <TimeRangePicker setIsFocused={setIsFocused} date={date }employee={employee} shift={shift}/>: shift ? <Box ta={'center'}>{shift.start_time}</Box > : <Box ta={'center'}>--:-- --</Box>}
-
-
+            {isFocused ? <TimeRangePicker setIsFocused={setIsFocused} date={date }employee={employee} shift={shift}/>
+            : shift ? <ShiftCell shift={shift}/>  : <Placeholder/>}
 
         </Box>
         

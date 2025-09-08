@@ -3,10 +3,10 @@ import { Box, Group, Text } from "@mantine/core"
 
 import { getTimeRange, TimePicker } from "@mantine/dates"
 import './TimeRangePicker.css'
-import type { Shift } from "../Interfaces/Shift"
+import type { Shift } from "../../Interfaces/Shift"
 import type React from "react"
 import axios from "axios"
-import type { Employee } from "../Interfaces/Employee"
+import type { Employee } from "../../Interfaces/Employee"
 
 
 
@@ -49,9 +49,6 @@ function TimeRangePicker({setIsFocused, employee, date,shift}:TimeRangePickerPro
                 }
             
             )
-
-
-            
             if(response.data.success){
                 console.log(response.data.row)
             }

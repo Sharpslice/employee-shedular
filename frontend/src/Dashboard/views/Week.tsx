@@ -1,6 +1,6 @@
 import { Box, Flex } from "@mantine/core";
 import { useOutletContext} from "react-router-dom";
-import Cell from "../Cell";
+import Cell from "../Cell/Cell";
 import type { Employee } from "../Interfaces/Employee";
 import type { Day } from "../Interfaces/Day";
 import type { Shift } from "../Interfaces/Shift";
