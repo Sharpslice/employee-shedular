@@ -54,7 +54,7 @@ function Week(){
                            
                             return(
                                
-                                <Cell key={employee.id+date.date}  shift={shift}></Cell>
+                                <Cell key={employee.id+date.date} employee={employee} shift={shift}></Cell>
                                 
                             )
                         })

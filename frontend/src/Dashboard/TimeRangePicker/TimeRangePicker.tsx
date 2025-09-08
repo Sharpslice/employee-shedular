@@ -5,23 +5,26 @@ import { getTimeRange, TimePicker } from "@mantine/dates"
 import './TimeRangePicker.css'
 import type { Shift } from "../Interfaces/Shift"
 import type React from "react"
+import axios from "axios"
+import type { Employee } from "../Interfaces/Employee"
 
 
 
 interface TimeRangePickerProps{
     shift?:Shift
+    employee: Employee
     setIsFocused:React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function TimeRangePicker({setIsFocused,shift}:TimeRangePickerProps){
+function TimeRangePicker({setIsFocused, employee, shift}:TimeRangePickerProps){
    
     
- console.log('TimeRangePicker mounted', shift);
+ 
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const afternoon = getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'})
 
   
-
+  
 
     return (<>
             <Group tabIndex={1} className="TimeRangePicker" gap={"sm"}  style={{justifyContent:'center'}} >

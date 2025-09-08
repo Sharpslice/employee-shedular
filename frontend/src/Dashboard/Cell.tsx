@@ -1,14 +1,16 @@
 import { Box } from "@mantine/core";
 import type { Shift } from "./Interfaces/Shift";
 import TimeRangePicker from "./TimeRangePicker/TimeRangePicker";
-import { useEffect, useRef, useState } from "react";
+import {useState } from "react";
+import type { Employee } from "./Interfaces/Employee";
 
 interface CellProps{
     shift?:Shift
+    employee: Employee
 }
 
 
-function Cell({shift}:CellProps){
+function Cell({employee,shift}:CellProps){
 
     const [isFocused,setIsFocused] = useState(false)
 
@@ -18,12 +20,12 @@ function Cell({shift}:CellProps){
     <>
         
         <Box tabIndex={0}  
-            onKeyDown={(e)=>{if(e.key==='Enter') setIsFocused(true)} } 
-            //onBlur={()=>{setIsFocused(false)}}
+            onKeyDown={(e)=>{if(e.key==='Enter' || e.key===' ') setIsFocused(true)} } 
+            // onClick={()=>{setIsFocused(prev=>!prev)}}
             bd={'1px solid black'} >
             
             
-            {isFocused ? <TimeRangePicker setIsFocused={setIsFocused} shift={shift}/>: shift ? <Box ta={'center'}>{shift.start_time}</Box > : <Box ta={'center'}>--:-- --</Box>}
+            {isFocused ? <TimeRangePicker setIsFocused={setIsFocused} employee={employee} shift={shift}/>: shift ? <Box ta={'center'}>{shift.start_time}</Box > : <Box ta={'center'}>--:-- --</Box>}
 
 
 
