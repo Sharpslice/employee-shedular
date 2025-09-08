@@ -1,4 +1,4 @@
-import { Box, Flex } from "@mantine/core";
+import { Flex } from "@mantine/core";
 
 function Placeholder(){
     return(
