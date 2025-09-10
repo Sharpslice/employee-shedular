@@ -59,7 +59,7 @@ function Dashboard(){
         <>  
             <Header view={safeView} date={safeDate} />
             
-             <Container fluid style={{backgroundColor:'lightgray',width:'100%',display:'flex',justifyContent:'center',alignItems:'flex-start',padding:'0'}}>
+             <Container fluid style={{backgroundColor:'lightgray',width:'100%', height:'100%',display:'flex',justifyContent:'center',alignItems:'flex-start',padding:'0'}}>
                 {/* <EmployeeBoard employeeList={employeeList} /> */}
                 <Outlet context={{dateRange,shifts,employeeList}}/>
             </Container> 
