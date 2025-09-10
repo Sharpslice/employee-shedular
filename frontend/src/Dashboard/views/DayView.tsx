@@ -50,13 +50,13 @@ function DayView(){
 
                 const shift = shifts.get(employee.id)?.find((curr)=> curr.date == dateRange[0].date)
                 let startTime:number;
-                
+                let endTime:number;
                 if(shift){
-                    console.log(typeof shift.start_time)
+                   
                     startTime = timeToDecimalHour(shift.start_time);
+                    endTime = timeToDecimalHour(shift.end_time);
                     
-                    
-                    
+                    console.log(`${((endTime! - startTime!)/9)*100}`)
 
                 }
             
@@ -65,13 +65,11 @@ function DayView(){
                     shift 
                     ?   <Flex pos={'relative'} bg={'blue'} 
                             left={`${((startTime!-9)/9)*100}%`} 
-                            
+                            w={`${((endTime! - startTime!)/9)*100}%`}
                         >
 
 
-                            <Text>{shift.start_time}</Text>
-                            <Text>-</Text>
-                            <Text>{shift.end_time}</Text>
+                            <Text>{shift.start_time}</Text> <Text>-</Text> <Text>{shift.end_time}</Text>
                         </Flex> 
 
                     : null
