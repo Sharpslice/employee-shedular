@@ -1,23 +1,27 @@
 import express from 'express';
 import prisma from '../../db/db'
 import { DateTime } from 'luxon';
-import { connect } from 'http2';
 
 const employee = express.Router();
 
 
-employee.get('/all',async(req,res)=>{
+employee.get('/',async(req,res)=>{
+
+    const date = req.query.date as string
+    const view = req.query.view as string
+    //const isoDate = DateTime.fromISO(date);
+
     const employeeList = await prisma.employee.findMany({
         select:{
             id:true,
             name:true
-        }
+        },
+        ...((view==='day' && date) && { where: { shifts: { some: { date:new Date(date) } } } })
 
 
     })
    
     res.json({employeeList})
-
 })
 employee.post('/:employee_id/shift',async(req,res)=>{
     const employee_id = req.params.employee_id;

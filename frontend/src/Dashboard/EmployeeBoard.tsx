@@ -1,4 +1,4 @@
-import { Flex } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import type { Employee } from "./Interfaces/Employee";
 
 
@@ -19,7 +19,13 @@ function EmployeeBoard({employeeList}:EmployeeBoardProps){
     return(
         <>
         <Flex justify={'center'} direction={'column'}>
-           
+           {employeeList.map((employee)=>{
+                return(
+                    <Box>
+                        {employee.name}
+                    </Box>
+                )
+           })}
         </Flex>
         </>
     )

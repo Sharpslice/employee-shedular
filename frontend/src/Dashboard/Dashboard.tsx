@@ -47,7 +47,7 @@ function Dashboard(){
                
             setShifts(objectToMap(scheduleResponse.data.scheduleObject))
            
-            const employeeResponse = await axios.get<EmployeeResponse>('http://localhost:3000/api/employee/all');
+            const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee?date=${safeDate}&view=${safeView}`);
             
             setEmployeeList(employeeResponse.data.employeeList)
     
@@ -60,7 +60,7 @@ function Dashboard(){
             <Header view={safeView} date={safeDate} />
             
              <Container fluid style={{backgroundColor:'lightgray',width:'100%', height:'100%',display:'flex',justifyContent:'center',alignItems:'flex-start',padding:'0'}}>
-                {/* <EmployeeBoard employeeList={employeeList} /> */}
+                <EmployeeBoard employeeList={employeeList} />
                 <Outlet context={{dateRange,shifts,employeeList}}/>
             </Container> 
             
