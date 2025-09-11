@@ -35,7 +35,7 @@ function Week(){
     return (<>
         <Flex w={'100%'} direction={"column"}>
 
-            <Flex w={'100%'}>
+            <Flex >
                 {dateRange.map((day)=>{
                     return (
                         <Box key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
@@ -45,7 +45,7 @@ function Week(){
                 })}
             </Flex>
 
-            <Box display={"grid"} style={{gridTemplateColumns:'repeat(7,1fr)'}}>
+            <Box display={"grid"}  style={{gridTemplateColumns:'repeat(7,1fr)'}}>
                 {employeeList.map((employee)=>{
                     return(
                         dateRange.map((date)=>{

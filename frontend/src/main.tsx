@@ -68,7 +68,11 @@ createRoot(document.getElementById('root')!).render(
 
   <StrictMode>
 
-      <MantineProvider >
+      <MantineProvider 
+    
+      
+      
+      >
         <RouterProvider router ={router}/>
       </MantineProvider>
     

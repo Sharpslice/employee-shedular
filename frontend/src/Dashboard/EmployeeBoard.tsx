@@ -21,7 +21,7 @@ function EmployeeBoard({employeeList}:EmployeeBoardProps){
         <Flex justify={'center'} direction={'column'}>
            {employeeList.map((employee)=>{
                 return(
-                    <Box>
+                    <Box >
                         {employee.name}
                     </Box>
                 )

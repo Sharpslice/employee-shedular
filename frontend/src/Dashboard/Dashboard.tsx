@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import {DateTime} from 'luxon'
 import axios from "axios";
 import Header from "./Header";
-import { Container} from "@mantine/core";
+import { Container, Flex} from "@mantine/core";
 import { Outlet, useParams } from "react-router-dom";
 import EmployeeBoard from "./EmployeeBoard";
 import type { Employee } from "./Interfaces/Employee";
@@ -54,14 +54,17 @@ function Dashboard(){
         }
         fetchData()
     },[safeDate,safeView])
-
+    console.log(employeeList)
     return(
         <>  
             <Header view={safeView} date={safeDate} />
             
-             <Container fluid style={{backgroundColor:'lightgray',width:'100%', height:'100%',display:'flex',justifyContent:'center',alignItems:'flex-start',padding:'0'}}>
-                <EmployeeBoard employeeList={employeeList} />
-                <Outlet context={{dateRange,shifts,employeeList}}/>
+             <Container fluid display={'grid'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray',padding:'0'}}>
+                
+                    <EmployeeBoard employeeList={employeeList} />
+                    <Outlet context={{dateRange,shifts,employeeList}}/>
+                
+                
             </Container> 
             
             

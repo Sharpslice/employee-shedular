@@ -1,4 +1,4 @@
-import { Box, deepMerge, Flex,Text } from "@mantine/core"
+import { Box, Flex,Text } from "@mantine/core"
 
 import { useOutletContext } from "react-router-dom"
 import type { Shift } from "../Interfaces/Shift"
@@ -24,7 +24,7 @@ function DayView(){
     const { dateRange,shifts,employeeList } = useOutletContext<{ dateRange: DayElement[],shifts:Map<number,Shift[]>, employeeList:Employee[] }>();
     
     const workHours = ['09:00:00', '10:00:00','11:00:00', '12:00:00' ,'13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00']
-    console.log(shifts)
+    
 
     const convertTo12hr = (time:string | null)=>{
         if(!time) return ""
@@ -33,7 +33,7 @@ function DayView(){
     }
     return(
     <>
-    <Flex  direction={'column'} w={'100%'} h={'100%'}>
+    <Flex  direction={'column'} >
 
         <Box  display={'grid'} w={'100%'} style={{gridTemplateColumns:'repeat(9,1fr)'} }>
             {workHours.map((time)=>{
@@ -56,7 +56,7 @@ function DayView(){
                     startTime = timeToDecimalHour(shift.start_time);
                     endTime = timeToDecimalHour(shift.end_time);
                     
-                    console.log(`${((endTime! - startTime!)/9)*100}`)
+                   
 
                 }
             

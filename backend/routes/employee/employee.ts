@@ -9,15 +9,40 @@ employee.get('/',async(req,res)=>{
 
     const date = req.query.date as string
     const view = req.query.view as string
-    //const isoDate = DateTime.fromISO(date);
+   
+
+    let shiftFilter ={}
+    let employeeFilter ={}
+    if(view === 'day'){
+        shiftFilter = {where: date? {date: new Date(date)} : null}
+        employeeFilter = {where:date ? {shifts:{some: {date: new Date(date)}}} : null}
+    }
+    if(view === 'week'){
+        const dt = DateTime.fromISO(date);
+        const start = dt.startOf('week',{useLocaleWeeks:true})
+        const end = dt.endOf('week',{useLocaleWeeks:true}).startOf('day')
+        shiftFilter = {
+            where: date ? {date: { gte:start , lte:end}} : null
+        }
+
+    }
+    if(view=== 'month'){
+
+    }
+
 
     const employeeList = await prisma.employee.findMany({
         select:{
             id:true,
-            name:true
+            name:true,
+            isWorking:true,
+            shifts:{
+               ...shiftFilter
+            }
         },
-        ...((view==='day' && date) && { where: { shifts: { some: { date:new Date(date) } } } })
-
+        
+        ...employeeFilter
+      
 
     })
    
