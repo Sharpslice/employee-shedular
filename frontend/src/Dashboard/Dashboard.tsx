@@ -13,8 +13,9 @@ import type { Shift } from "./Interfaces/Shift";
 
 type CalendarResponse ={
     dateArray: Day[]
-   
-    
+}
+interface EmployeeResponse{
+    employeeList: Employee[]
 }
 
 interface ScheduleResponse{
@@ -41,14 +42,14 @@ function Dashboard(){
             const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`)
             setDateRange(response.data.dateArray)
        
-            try{
-                const scheduleResponse = await axios.get<ScheduleResponse>(`http://localhost:3000/api/employee/schedule/${safeView}/${safeDate}`)
+         
+            const scheduleResponse = await axios.get<ScheduleResponse>(`http://localhost:3000/api/employee/schedule/${safeView}/${safeDate}`)
                
-                setShifts(objectToMap(scheduleResponse.data.scheduleObject))
-            }catch(error){
-                console.error(error);
-            }
+            setShifts(objectToMap(scheduleResponse.data.scheduleObject))
+           
+            const employeeResponse = await axios.get<EmployeeResponse>('http://localhost:3000/api/employee/all');
             
+            setEmployeeList(employeeResponse.data.employeeList)
     
         }
         fetchData()
@@ -59,7 +60,7 @@ function Dashboard(){
             <Header view={safeView} date={safeDate} />
             
              <Container fluid style={{backgroundColor:'lightgray',width:'100%',display:'flex',justifyContent:'center',alignItems:'flex-start',padding:'0'}}>
-                <EmployeeBoard employeeList={employeeList} setEmployeeList={setEmployeeList}/>
+                {/* <EmployeeBoard employeeList={employeeList} /> */}
                 <Outlet context={{dateRange,shifts,employeeList}}/>
             </Container> 
             
