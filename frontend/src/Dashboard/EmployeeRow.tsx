@@ -16,7 +16,7 @@ function EmployeeRow({dateRange,employee}:EmployeeRowProps){
        
         <Flex>
             
-                <Box bd={'1px solid black'} w={'5rem'} style={{}}>
+                <Box bd={'1px solid black'} w={'5rem'} >
                     {employee.name}
                 </Box>
             
