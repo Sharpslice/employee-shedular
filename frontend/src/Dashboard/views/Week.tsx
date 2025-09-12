@@ -5,7 +5,7 @@ import type { Employee } from "../Interfaces/Employee";
 import type { Day } from "../Interfaces/Day";
 import type { Shift } from "../Interfaces/Shift";
 import EmployeeRow from "../EmployeeRow";
-
+import {DateTime} from 'luxon'
 
 
 
@@ -32,13 +32,13 @@ function weekDayFromIndex(num:number){
 function Week(){
     const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],shifts:Map<number,Shift[]>,employeeList:Employee[] }>();
 
-   
+    
     return (<>
-        <Flex w={'100%'} direction={"column"}>
+        <Flex w={'100%'} gap={5} direction={"column"}>
             
-            <Flex gap={'1rem'}>
-                <Box bd={'1px solid black'} w={'5rem'}>Staff</Box>
-                <Flex flex={1}>
+            <Flex  gap={'1rem'}>
+                <Flex justify={'center'} align={'center'} bd={'1px solid black'} w={'5rem'}>Staff</Flex>
+                <Flex gap={5} flex={1}>
                     {dateRange.map((day)=>{
                     return (
                         <Box key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
@@ -54,24 +54,26 @@ function Week(){
 
 
 
+            <Flex gap={10} direction={'column'}>
+                    {employeeList.map((employee)=>{
+                    return (
+                        <EmployeeRow  employee={employee} >
+                            {dateRange.map((date)=>{
+
+                                const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
+                                return(
+                                    <Cell date={date.date} employee={employee} shift={shift}/>
+                                )
+
+                            })}
+                        </EmployeeRow>
+
+
+
+                    )
+                })}
+            </Flex>
             
-            {employeeList.map((employee)=>{
-                return (
-                    <EmployeeRow  employee={employee} >
-                        {dateRange.map((date)=>{
-
-                            const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
-                            return(
-                                <Cell date={date.date} employee={employee} shift={shift}/>
-                            )
-
-                        })}
-                    </EmployeeRow>
-
-
-
-                )
-            })}
             
                 
             

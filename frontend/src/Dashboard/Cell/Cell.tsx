@@ -23,7 +23,7 @@ function Cell({date,employee,shift}:CellProps){
     return(
     <>
         
-        <Box w={'100%'} tabIndex={0}  
+        <Box  w={'100%'} tabIndex={0}  
             onKeyDown={(e)=>{if(e.key==='Enter' || e.key===' ') setIsFocused(true)} } 
             // onClick={()=>{setIsFocused(prev=>!prev)}}
             bd={'1px solid black'} >
