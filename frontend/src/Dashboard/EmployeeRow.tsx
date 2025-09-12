@@ -11,12 +11,10 @@ function EmployeeRow({employee,children}:EmployeeRowProps){
 
     return(
     <>
-       
         <Flex>
-            
-                <Box bd={'1px solid black'} w={'5rem'} >
-                    {employee.name}
-                </Box>
+            <Box bd={'1px solid black'} w={'5rem'} >
+                {employee.name}
+            </Box>
             
             
             <Flex flex={1} miw={'100px'} >

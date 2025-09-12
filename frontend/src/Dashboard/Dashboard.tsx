@@ -36,9 +36,7 @@ function Dashboard(){
             const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`)
             setDateRange(response.data.dateArray)
        
-         
-            
-           
+    
             const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee?date=${safeDate}&view=${safeView}`);
             
             setEmployeeList(employeeResponse.data.employeeList)
@@ -46,15 +44,13 @@ function Dashboard(){
         }
         fetchData()
     },[safeDate,safeView])
-    console.log(employeeList)
-    console.log(dateRange)
+
     return(
         <>  
             <Header view={safeView} date={safeDate} />
             
              <Container fluid display={'grid'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray',padding:'1rem'}}>
                 
-                   
                     <Outlet context={{dateRange,employeeList}}/>
                 
                 
