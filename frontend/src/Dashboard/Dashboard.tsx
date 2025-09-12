@@ -3,9 +3,9 @@ import { useEffect, useState } from "react"
 import {DateTime} from 'luxon'
 import axios from "axios";
 import Header from "./Header";
-import { Container, Flex} from "@mantine/core";
+import { Container} from "@mantine/core";
 import { Outlet, useParams } from "react-router-dom";
-import EmployeeBoard from "./EmployeeBoard";
+
 import type { Employee } from "./Interfaces/Employee";
 import type { Day } from "./Interfaces/Day";
 import type { Shift } from "./Interfaces/Shift";
@@ -62,7 +62,7 @@ function Dashboard(){
             
              <Container fluid display={'grid'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray',padding:'1rem'}}>
                 
-                    {/* <EmployeeBoard employeeList={employeeList} /> */}
+                   
                     <Outlet context={{dateRange,shifts,employeeList}}/>
                 
                 
