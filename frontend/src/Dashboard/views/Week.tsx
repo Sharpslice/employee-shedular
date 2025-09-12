@@ -4,6 +4,7 @@ import Cell from "../Cell/Cell";
 import type { Employee } from "../Interfaces/Employee";
 import type { Day } from "../Interfaces/Day";
 import type { Shift } from "../Interfaces/Shift";
+import EmployeeRow from "../EmployeeRow";
 
 
 
@@ -34,8 +35,9 @@ function Week(){
    
     return (<>
         <Flex w={'100%'} direction={"column"}>
-
-            <Flex >
+            
+            <Flex>
+                <Box bd={'1px solid black'} w={'5rem'}>Staff</Box>
                 {dateRange.map((day)=>{
                     return (
                         <Box key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
@@ -45,23 +47,18 @@ function Week(){
                 })}
             </Flex>
 
-            <Box display={"grid"}  style={{gridTemplateColumns:'repeat(7,1fr)'}}>
-                {employeeList.map((employee)=>{
-                    return(
-                        dateRange.map((date)=>{
-                        
-                            const shift = shifts.get(employee.id)?.find((schedule)=>schedule.date === date.date)
-                           
-                            return(
-                               
-                                <Cell key={employee.id+date.date} date={date.date} employee={employee} shift={shift}></Cell>
-                                
-                            )
-                        })
 
-                    )
-                })}
-            </Box>
+
+            
+            {employeeList.map((employee)=>{
+                return (
+                    <EmployeeRow dateRange={dateRange} employee={employee} ></EmployeeRow>
+
+
+
+                )
+            })}
+            
                 
             
         </Flex>
