@@ -36,15 +36,20 @@ function Week(){
     return (<>
         <Flex w={'100%'} direction={"column"}>
             
-            <Flex>
+            <Flex gap={'1rem'}>
                 <Box bd={'1px solid black'} w={'5rem'}>Staff</Box>
-                {dateRange.map((day)=>{
+                <Flex flex={1}>
+                    {dateRange.map((day)=>{
                     return (
                         <Box key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
                             {`${weekDayFromIndex(day.days_of_week)} ${day.day_of_month}`}
                         </Box>
                     )
-                })}
+                    })}
+                
+                </Flex>
+                    
+                
             </Flex>
 
 
@@ -52,13 +57,14 @@ function Week(){
             
             {employeeList.map((employee)=>{
                 return (
-                    <EmployeeRow employee={employee} >
+                    <EmployeeRow  employee={employee} >
                         {dateRange.map((date)=>{
 
                             const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
                             return(
                                 <Cell date={date.date} employee={employee} shift={shift}/>
                             )
+
                         })}
                     </EmployeeRow>
 
