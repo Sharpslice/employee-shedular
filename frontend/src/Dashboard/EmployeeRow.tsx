@@ -8,8 +8,9 @@ import type { Date } from "./Interfaces/Date";
 interface EmployeeRowProps{
     dateRange: Date[]
     employee: Employee
+    children: React.ReactNode
 }
-function EmployeeRow({dateRange,employee}:EmployeeRowProps){
+function EmployeeRow({dateRange,employee,children}:EmployeeRowProps){
     console.log(dateRange)
     return(
     <>
@@ -22,15 +23,7 @@ function EmployeeRow({dateRange,employee}:EmployeeRowProps){
             
             
             <Flex flex={1} miw={'100px'} >
-                {dateRange.map((date)=>{
-
-                    const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
-                    return(
-                        <Cell date={date.date} employee={employee} shift={shift}/>
-                    )
-
-
-                })}
+                {children}
             </Flex>
 
 

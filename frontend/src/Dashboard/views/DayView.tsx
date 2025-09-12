@@ -1,9 +1,10 @@
-import { Box, Flex,Text } from "@mantine/core"
+import { Box, em, Flex,Text } from "@mantine/core"
 
 import { useOutletContext } from "react-router-dom"
 import type { Shift } from "../Interfaces/Shift"
 import type { Employee } from "../Interfaces/Employee"
 import { DateTime } from "luxon"
+import EmployeeRow from "../EmployeeRow"
 type DayElement ={
     week:number,
     date: string,
@@ -19,23 +20,25 @@ function timeToDecimalHour(time:string){
    
     return decimalHour;
 }
-
+const convertTo12hr = (time:string | null)=>{
+        if(!time) return ""
+        const dt = DateTime.fromFormat(time,'HH:mm:ss');
+        return dt.toFormat('h a')
+    }
 function DayView(){
     const { dateRange,shifts,employeeList } = useOutletContext<{ dateRange: DayElement[],shifts:Map<number,Shift[]>, employeeList:Employee[] }>();
     
     const workHours = ['09:00:00', '10:00:00','11:00:00', '12:00:00' ,'13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00']
     
 
-    const convertTo12hr = (time:string | null)=>{
-        if(!time) return ""
-        const dt = DateTime.fromFormat(time,'HH:mm:ss');
-        return dt.toFormat('h a')
-    }
+    
     return(
     <>
     <Flex  direction={'column'} >
-
-        <Box  display={'grid'} w={'100%'} style={{gridTemplateColumns:'repeat(9,1fr)'} }>
+        
+        <Flex>
+            <Box w={'5rem'}>staff</Box>
+            <Box  display={'grid'} w={'100%'} style={{gridTemplateColumns:'repeat(9,1fr)'} }>
             {workHours.map((time)=>{
                 return (
                     <Box key={time} style={{borderRight:'1px solid black'}}>{convertTo12hr(time)}</Box>
@@ -45,36 +48,35 @@ function DayView(){
 
         </Box>    
 
+        </Flex>
+        
         <Flex  direction={'column'} flex={1} bg={'green'}>
             {employeeList.map((employee)=>{
 
-                const shift = shifts.get(employee.id)?.find((curr)=> curr.date == dateRange[0].date)
+                const todayShift = employee.shifts.find((shift)=> shift.date === dateRange[0].date)
                 let startTime:number;
                 let endTime:number;
-                if(shift){
-                   
-                    startTime = timeToDecimalHour(shift.start_time);
-                    endTime = timeToDecimalHour(shift.end_time);
-                    
-                   
-
+                if(todayShift){
+                    startTime = timeToDecimalHour(todayShift.start_time)
+                    endTime = timeToDecimalHour(todayShift.end_time)
                 }
-            
-
+                console.log(startTime!)
                 return(
-                    shift 
-                    ?   <Flex pos={'relative'} bg={'blue'} 
-                            left={`${((startTime!-9)/9)*100}%`} 
-                            w={`${((endTime! - startTime!)/9)*100}%`}
-                        >
+                    todayShift ? 
+                        <EmployeeRow dateRange={dateRange} employee={employee}>
+                            <Flex bg={'blue'} bd={'1px solid black'} pos={'relative'} left={`${((startTime!-9)/9)*100}%`} w={`${((endTime!-startTime!)/9)*100}%`}>
+                                <Text>
+                                    {todayShift.start_time}
+                                </Text>
+                                <Text>-</Text>
+                                <Text>
+                                    {todayShift.end_time}
+                                </Text>
 
+                            </Flex>
+                        </EmployeeRow>
 
-                            <Text>{shift.start_time}</Text> <Text>-</Text> <Text>{shift.end_time}</Text>
-                        </Flex> 
-
-                    : null
-
-
+                    :null
                 )
             })}
             
