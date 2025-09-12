@@ -1,4 +1,4 @@
-import { Box, em, Flex,Text } from "@mantine/core"
+import { Box, Flex,Text } from "@mantine/core"
 
 import { useOutletContext } from "react-router-dom"
 import type { Shift } from "../Interfaces/Shift"
@@ -26,7 +26,7 @@ const convertTo12hr = (time:string | null)=>{
         return dt.toFormat('h a')
     }
 function DayView(){
-    const { dateRange,shifts,employeeList } = useOutletContext<{ dateRange: DayElement[],shifts:Map<number,Shift[]>, employeeList:Employee[] }>();
+    const { dateRange,employeeList } = useOutletContext<{ dateRange: DayElement[],shifts:Map<number,Shift[]>, employeeList:Employee[] }>();
     
     const workHours = ['09:00:00', '10:00:00','11:00:00', '12:00:00' ,'13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00']
     
@@ -63,7 +63,7 @@ function DayView(){
                 console.log(startTime!)
                 return(
                     todayShift ? 
-                        <EmployeeRow dateRange={dateRange} employee={employee}>
+                        <EmployeeRow employee={employee}>
                             <Flex bg={'blue'} bd={'1px solid black'} pos={'relative'} left={`${((startTime!-9)/9)*100}%`} w={`${((endTime!-startTime!)/9)*100}%`}>
                                 <Text>
                                     {todayShift.start_time}

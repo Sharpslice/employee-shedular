@@ -30,7 +30,7 @@ function weekDayFromIndex(num:number){
 }
 
 function Week(){
-    const { dateRange,shifts,employeeList } = useOutletContext<{ dateRange: Day[],shifts:Map<number,Shift[]>,employeeList:Employee[] }>();
+    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],shifts:Map<number,Shift[]>,employeeList:Employee[] }>();
 
    
     return (<>
@@ -52,7 +52,7 @@ function Week(){
             
             {employeeList.map((employee)=>{
                 return (
-                    <EmployeeRow dateRange={dateRange} employee={employee} >
+                    <EmployeeRow employee={employee} >
                         {dateRange.map((date)=>{
 
                             const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
