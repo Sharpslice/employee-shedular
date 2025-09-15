@@ -36,6 +36,7 @@ employee.get('/',async(req,res)=>{
             id:true,
             name:true,
             isWorking:true,
+            position:true,
             shifts:{
                ...shiftFilter
             }
