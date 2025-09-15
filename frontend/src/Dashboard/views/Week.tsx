@@ -6,6 +6,7 @@ import type { Day } from "../Interfaces/Day";
 import type { Shift } from "../Interfaces/Shift";
 import EmployeeRow from "../EmployeeRow";
 import {DateTime} from 'luxon'
+import ViewHeader from "./View-header";
 
 
 
@@ -37,10 +38,8 @@ function Week(){
     return (<>
         <Flex w={'100%'} gap={5} direction={"column"}>
             
-            <Flex  gap={'1rem'}>
-                <Flex justify={'center'} align={'center'} bd={'1px solid black'} w={'5rem'}>Staff</Flex>
-                <Flex gap={5} flex={1}>
-                    {dateRange.map((day)=>{
+            <ViewHeader colGap={5}>
+                {dateRange.map((day)=>{
 
                     const isToday = today === DateTime.fromISO(day.date).toUTC().toISODate()
                    
@@ -54,12 +53,7 @@ function Week(){
                         </Box>
                     )
                     })}
-                
-                </Flex>
-                    
-                
-            </Flex>
-
+            </ViewHeader>
 
 
             <Flex gap={10} direction={'column'}>
