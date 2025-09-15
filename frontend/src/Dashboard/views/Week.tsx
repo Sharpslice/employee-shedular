@@ -64,7 +64,10 @@ function Week(){
 
                                 const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
                                 return(
-                                    <Cell date={date.date} employee={employee} shift={shift}/>
+                                    <Flex bd={'1px solid black'} flex={1} style={{padding:7}}>
+                                        <Cell date={date.date} employee={employee} shift={shift}/>
+                                    </Flex>
+                                    
                                 )
 
                             })}

@@ -24,10 +24,10 @@ function Cell({date,employee,shift}:CellProps){
     return(
     <>
         
-        <Box className={style.focusBox}  w={'100%'} tabIndex={0}  
+        <Box  className={style.focusBox}   w={'100%'} tabIndex={0}  
             onKeyDown={(e)=>{if(e.key==='Enter' || e.key===' ') setIsFocused(true)} } 
             onDoubleClick={()=>{setIsFocused(prev=>!prev)}}
-            bd={'1px solid black'} >
+             >
             
             
             {isFocused ? <TimeRangePicker setIsFocused={setIsFocused} date={date }employee={employee} shift={shift}/>
