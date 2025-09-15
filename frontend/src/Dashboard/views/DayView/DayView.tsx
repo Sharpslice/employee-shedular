@@ -26,6 +26,11 @@ const convertTo12hr = (time:string | null)=>{
         const dt = DateTime.fromFormat(time,'HH:mm:ss');
         return dt.toFormat('h a')
     }
+const convertTo12hrMin = (time:string | null)=>{
+    if(!time) return ""
+        const dt = DateTime.fromFormat(time,'HH:mm:ss');
+        return dt.toFormat('h:mm a')
+}
 function DayView(){
     const { dateRange,employeeList } = useOutletContext<{ dateRange: DayElement[],shifts:Map<number,Shift[]>, employeeList:Employee[] }>();
     
@@ -60,14 +65,15 @@ function DayView(){
                 return(
                     todayShift ? 
                         <EmployeeRow employee={employee}>
-                            <Flex bg={'blue'} bd={'1px solid black'} pos={'relative'} left={`${((startTime!-9)/9)*100}%`} w={`${((endTime!-startTime!)/9)*100}%`}>
+                            <Flex bg={'blue'} bd={'1px solid black'} pos={'relative'} left={`${((startTime!-9)/9)*100}%`} w={`${((endTime!-startTime!)/9)*100}%`}
+                            style={{padding:10}}
+                            
+                            >
                                 <Text>
-                                    {todayShift.start_time}
+                                    {`${convertTo12hrMin(todayShift.start_time)} - ${convertTo12hrMin(todayShift.end_time)}`}
                                 </Text>
-                                <Text>-</Text>
-                                <Text>
-                                    {todayShift.end_time}
-                                </Text>
+                                
+                                
 
                             </Flex>
                         </EmployeeRow>

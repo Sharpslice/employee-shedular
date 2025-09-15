@@ -18,9 +18,6 @@ function EmployeeRow({employee,children}:EmployeeRowProps){
             </Flex>
          
             
-            
-            
-        
         <Flex gap={5} flex={1} miw={'100px'} >
             {children}
         </Flex>
