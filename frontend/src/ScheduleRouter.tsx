@@ -1,5 +1,5 @@
 import { Navigate, useParams } from "react-router-dom";
-import DayView from "./Dashboard/views/DayView";
+import DayView from "./Dashboard/views/DayView/DayView";
 import Week from "./Dashboard/views/Week";
 
 
