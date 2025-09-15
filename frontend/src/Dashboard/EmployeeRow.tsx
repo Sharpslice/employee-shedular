@@ -13,7 +13,7 @@ function EmployeeRow({employee,children}:EmployeeRowProps){
     <>
         <Flex gap={'1rem'} >
           
-            <Flex justify={'center'} align={"center"} bd={'1px solid black'} w={'5rem'}  >
+            <Flex justify={'center'} align={"center"} bd={'1px solid black'} w={'8rem'}  >
                 {employee.name}
             </Flex>
          

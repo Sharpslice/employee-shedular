@@ -1,4 +1,4 @@
-import {  Flex,Text } from "@mantine/core"
+import {  Divider, Flex,Text } from "@mantine/core"
 
 import { useOutletContext } from "react-router-dom"
 import type { Shift } from "../../Interfaces/Shift"
@@ -40,18 +40,28 @@ function DayView(){
     
     return(
     <>
-    <Flex  direction={'column'} >
+    <Flex gap={5} direction={'column'} >
         
         <ViewHeader>
             {workHours.map((time)=>{
                     return (
-                        <Flex key={time} flex={1} style={{borderRight:'1px solid black'}}>{convertTo12hr(time)}</Flex>
+                        <>
+                            <Flex  key={time} flex={1} style={{padding:5}} >
+                                {convertTo12hr(time)}
+                            </Flex>
+                            <Divider orientation="vertical" color="black" 
+                                
+                            
+                            
+                            />
+                        </>
+                        
                 
                     )
                 })}
         </ViewHeader>
         
-        <Flex  direction={'column'} flex={1} >
+        <Flex  direction={'column'} gap={10} flex={1} >
             {employeeList.map((employee)=>{
 
                 const todayShift = employee.shifts.find((shift)=> shift.date === dateRange[0].date)

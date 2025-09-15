@@ -49,9 +49,9 @@ function Dashboard(){
         <>  
             <Header view={safeView} date={safeDate} />
             
-             <Container fluid display={'grid'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray',padding:'1rem'}}>
+             <Container fluid display={'grid'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
                 
-                    <Outlet context={{dateRange,employeeList}}/>
+                    <Outlet  context={{dateRange,employeeList}}/>
                 
                 
             </Container> 
