@@ -1,10 +1,11 @@
-import { Box, Flex,Text } from "@mantine/core"
+import {  Divider, Flex,Text } from "@mantine/core"
 
 import { useOutletContext } from "react-router-dom"
-import type { Shift } from "../Interfaces/Shift"
-import type { Employee } from "../Interfaces/Employee"
+import type { Shift } from "../../Interfaces/Shift"
+import type { Employee } from "../../Interfaces/Employee"
 import { DateTime } from "luxon"
-import EmployeeRow from "../EmployeeRow"
+import EmployeeRow from "../../EmployeeRow"
+import ViewHeader from "../View-header"
 type DayElement ={
     week:number,
     date: string,
@@ -25,6 +26,11 @@ const convertTo12hr = (time:string | null)=>{
         const dt = DateTime.fromFormat(time,'HH:mm:ss');
         return dt.toFormat('h a')
     }
+const convertTo12hrMin = (time:string | null)=>{
+    if(!time) return ""
+        const dt = DateTime.fromFormat(time,'HH:mm:ss');
+        return dt.toFormat('h:mm a')
+}
 function DayView(){
     const { dateRange,employeeList } = useOutletContext<{ dateRange: DayElement[],shifts:Map<number,Shift[]>, employeeList:Employee[] }>();
     
@@ -34,23 +40,28 @@ function DayView(){
     
     return(
     <>
-    <Flex  direction={'column'} >
+    <Flex gap={5} direction={'column'} >
         
-        <Flex>
-            <Box w={'5rem'}>staff</Box>
-            <Box  display={'grid'} w={'100%'} style={{gridTemplateColumns:'repeat(9,1fr)'} }>
+        <ViewHeader>
             {workHours.map((time)=>{
-                return (
-                    <Box key={time} style={{borderRight:'1px solid black'}}>{convertTo12hr(time)}</Box>
-            
-                )
-            })}
-
-        </Box>    
-
-        </Flex>
+                    return (
+                        <>
+                            <Flex  key={time} flex={1} style={{padding:5}} >
+                                {convertTo12hr(time)}
+                            </Flex>
+                            <Divider orientation="vertical" color="black" 
+                                
+                            
+                            
+                            />
+                        </>
+                        
+                
+                    )
+                })}
+        </ViewHeader>
         
-        <Flex  direction={'column'} flex={1} bg={'green'}>
+        <Flex  direction={'column'} gap={10} flex={1} >
             {employeeList.map((employee)=>{
 
                 const todayShift = employee.shifts.find((shift)=> shift.date === dateRange[0].date)
@@ -60,18 +71,19 @@ function DayView(){
                     startTime = timeToDecimalHour(todayShift.start_time)
                     endTime = timeToDecimalHour(todayShift.end_time)
                 }
-                console.log(startTime!)
+                
                 return(
                     todayShift ? 
                         <EmployeeRow employee={employee}>
-                            <Flex bg={'blue'} bd={'1px solid black'} pos={'relative'} left={`${((startTime!-9)/9)*100}%`} w={`${((endTime!-startTime!)/9)*100}%`}>
+                            <Flex bg={'blue'} bd={'1px solid black'} pos={'relative'} left={`${((startTime!-9)/9)*100}%`} w={`${((endTime!-startTime!)/9)*100}%`}
+                            style={{padding:10}}
+                            
+                            >
                                 <Text>
-                                    {todayShift.start_time}
+                                    {`${convertTo12hrMin(todayShift.start_time)} - ${convertTo12hrMin(todayShift.end_time)}`}
                                 </Text>
-                                <Text>-</Text>
-                                <Text>
-                                    {todayShift.end_time}
-                                </Text>
+                                
+                                
 
                             </Flex>
                         </EmployeeRow>

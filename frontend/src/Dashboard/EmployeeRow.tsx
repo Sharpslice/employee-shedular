@@ -1,6 +1,6 @@
-import { Box, Card, Flex } from "@mantine/core";
+import { Flex } from "@mantine/core";
 import type { Employee } from "./Interfaces/Employee";
-
+import React from 'react'
 
 
 interface EmployeeRowProps{
@@ -8,20 +8,27 @@ interface EmployeeRowProps{
     children: React.ReactNode
 }
 function EmployeeRow({employee,children}:EmployeeRowProps){
-
+    const childrenArray = React.Children.toArray(children)
     return(
     <>
         <Flex gap={'1rem'} >
           
-            <Box bd={'1px solid black'} w={'5rem'} >
+            <Flex justify={'center'} align={"center"} bd={'1px solid black'} w={'8rem'}  >
                 {employee.name}
-            </Box>
-            
-            
-            
-            
-            <Flex flex={1} miw={'100px'} >
-                {children}
+            </Flex>
+         
+           
+            <Flex gap={5} flex={1} miw={'100px'} >
+                
+                {childrenArray.map((child)=>{
+                    return(
+                       <>
+                        {child}
+                       </>
+                    )
+                })}
+               
+                
             </Flex>
 
 

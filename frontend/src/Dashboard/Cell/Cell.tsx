@@ -8,6 +8,7 @@ import TimeRangePicker from "./TimeRangePicker/TimeRangePicker";
 import ShiftCell from "./Shift/ShiftCell";
 import Placeholder from "./Placeholder";
 
+import style from './Cell.module.css'
 interface CellProps{
     shift?:Shift
     employee: Employee
@@ -23,10 +24,10 @@ function Cell({date,employee,shift}:CellProps){
     return(
     <>
         
-        <Box w={'100%'} tabIndex={0}  
+        <Box  className={style.focusBox}   w={'100%'} tabIndex={0}  
             onKeyDown={(e)=>{if(e.key==='Enter' || e.key===' ') setIsFocused(true)} } 
-            // onClick={()=>{setIsFocused(prev=>!prev)}}
-            bd={'1px solid black'} >
+            onDoubleClick={()=>{setIsFocused(prev=>!prev)}}
+             >
             
             
             {isFocused ? <TimeRangePicker setIsFocused={setIsFocused} date={date }employee={employee} shift={shift}/>

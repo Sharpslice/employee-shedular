@@ -71,7 +71,7 @@ function TimeRangePicker({setIsFocused, employee, date,shift}:TimeRangePickerPro
     }
 
     return (<>
-            <Group tabIndex={1} className="TimeRangePicker" gap={"sm"}  style={{justifyContent:'center'}} >
+            <Group  tabIndex={1} className="TimeRangePicker" gap={"sm"}  style={{justifyContent:'center'}} >
                 <TimePicker autoFocus
                     classNames={{ input: 'david-class'}}
                     style={{width:'max-content'}}

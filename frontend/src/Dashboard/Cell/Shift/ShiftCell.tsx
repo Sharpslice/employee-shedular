@@ -17,7 +17,7 @@ function ShiftCell({shift}:PlaceholderProp){
     const end_time = convertTo12hr(shift.end_time)
 
     return (<>
-        <Flex justify={'center'} align={'center'} gap={12} mih={38} h='100%'> 
+        <Flex bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%'> 
 
            <Text fz={14}>{start_time}</Text>  
            <Text fz={14}>-</Text>
