@@ -9,16 +9,12 @@ import { Link, useNavigate} from "react-router-dom"
 
 type HeaderProps = {
     date: string 
-
     view: string
 }
 
 function Header({view,date}:HeaderProps){
     const navigate = useNavigate();
     
-    
-   
-
 
     const viewClick = (selectedView:'day' | 'week' | 'bi-week' | 'month') =>{
         if(selectedView != view){
@@ -60,9 +56,17 @@ function Header({view,date}:HeaderProps){
 
     
     return(<>
-        <Group  style={{padding:'0.4rem 1rem',backgroundColor:'lightgray',width:'100%',display:'flex',justifyContent:'space-between'}}>
+        <Group bg={'LIGHTGRAY'} justify="space-between" w={'100%'} p={'0.6rem 1rem'} 
+            style={{
+                boxShadow:'0 4px 6px rgba(0,0,0,0.4)',
+                borderTop:'1px solid black',
+                borderBottom:'1px solid black',
+               
+            
+            }}
+        >
 
-            <Group >
+            <Group>
                 <Group>
                     <DatePickerInput
                    
@@ -72,19 +76,17 @@ function Header({view,date}:HeaderProps){
                     firstDayOfWeek={0}
                     style={{minWidth:'10rem'}}
                 
-                
-                
-                
+        
                 />
                 
                 
-                <ActionIcon style={{border:'1px px black'}} size={36} variant="filled" radius={0}  onClick={()=>navClick('prev')}
+                <ActionIcon style={{border:'1px px black'}} size={36} variant="filled" radius={'sm'}  onClick={()=>navClick('prev')}
 
                     >
                     <IconChevronLeft/>
                 </ActionIcon>
 
-                <ActionIcon size={36}  variant="filled" radius={0} onClick={()=>navClick('next')}
+                <ActionIcon size={36}  variant="filled" radius={'sm'} onClick={()=>navClick('next')}
                     
                     >
                     <IconChevronRight/>
@@ -147,20 +149,3 @@ function Header({view,date}:HeaderProps){
 }
 export default Header
 
-{/* <Popover>
-                        <Popover.Target>
-                            <ActionIcon size={36} variant="filled" radius={0}>
-                                <IconCalendar/>
-                            </ActionIcon>
-                        </Popover.Target>
-                        <PopoverDropdown>
-                            <DatePicker
-                                type='default'
-                                allowDeselect value={date}
-                                onChange={(e)=>{navigate(`${view}/${e ?e :DateTime.local().toISODate()}`)}}
-                                highlightToday={true}
-                                firstDayOfWeek={0}
-                                
-                            />
-                        </PopoverDropdown>
-                    </Popover> */}

@@ -47,15 +47,17 @@ function Dashboard(){
 
     return(
         <>  
+        
+
+        
             <Header view={safeView} date={safeDate} />
             
-             <Container fluid display={'grid'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
-                
-                    <Outlet  context={{dateRange,employeeList}}/>
-                
-                
-            </Container> 
+            <Container fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
             
+                <Outlet  context={{dateRange,employeeList}}/>
+            
+            </Container> 
+       
             
 
 

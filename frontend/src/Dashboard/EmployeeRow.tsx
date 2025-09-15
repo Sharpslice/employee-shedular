@@ -1,4 +1,4 @@
-import { Flex } from "@mantine/core";
+import { Avatar, Flex, Text } from "@mantine/core";
 import type { Employee } from "./Interfaces/Employee";
 import React from 'react'
 
@@ -13,8 +13,15 @@ function EmployeeRow({employee,children}:EmployeeRowProps){
     <>
         <Flex gap={'1rem'} >
           
-            <Flex justify={'center'} align={"center"} bd={'1px solid black'} w={'8rem'}  >
-                {employee.name}
+            <Flex gap={10} align={'center'} bd={'1px solid black'} w={'10rem'} p={5} >
+                <Avatar name={employee.name} radius={'xs'} color={"blue"}></Avatar>
+                <Flex direction={'column'}>
+                    <Text size="lg">{employee.name}</Text>
+                    <Text size='sm'>{employee.position.toLowerCase().replace(/^\w/,c=>c.toUpperCase())}</Text>
+                </Flex>
+                
+
+
             </Flex>
          
            
