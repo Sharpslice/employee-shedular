@@ -7,7 +7,7 @@ import type { Shift } from "../Interfaces/Shift";
 import EmployeeRow from "../EmployeeRow";
 import {DateTime} from 'luxon'
 import ViewHeader from "./View-header";
-
+import classes from './Week.module.css'
 
 
 function weekDayFromIndex(num:number){
@@ -66,7 +66,8 @@ function Week(){
                                 const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
                                 
                                 return(
-                                    <Flex flex={1} bd={'1px solid black'}  style={{padding:7}}>
+                                    <Flex className={classes.gridCell} tabIndex={0}
+                                        flex={1} bd={'1px solid black'} style={{padding:7}}>
                                         <Cell date={date.date} employee={employee} shift={shift}/>
                                     </Flex>
                                     

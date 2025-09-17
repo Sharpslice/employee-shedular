@@ -1,6 +1,6 @@
 
 
 .focusBox:focus {
-  outline: 2px solid var(--mantine-color-blue-6);  /* your visible outline */
+  /* outline: 2px solid red;  your visible outline */
   
 }
