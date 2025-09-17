@@ -49,6 +49,17 @@ employee.get('/',async(req,res)=>{
    
     res.json({employeeList})
 })
+
+employee.delete('/shift/:shift_id',async(req,res)=>{
+    const shift_id = req.params.shift_id;
+
+    console.log(`delete ${shift_id}`)
+    await prisma.employee_Shifts.delete({
+        where:{id: parseInt(shift_id)}
+    })
+    res.json({success:true})
+})
+
 employee.post('/:employee_id/shift',async(req,res)=>{
     const employee_id = req.params.employee_id;
     const {date,start_time,end_time} = req.body;

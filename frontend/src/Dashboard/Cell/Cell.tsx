@@ -9,6 +9,7 @@ import ShiftCell from "./Shift/ShiftCell";
 import Placeholder from "./Placeholder";
 
 import style from './Cell.module.css'
+import axios from "axios";
 interface CellProps{
     shift?:Shift
     employee: Employee
@@ -20,12 +21,17 @@ function Cell({date,employee,shift}:CellProps){
 
     const [isFocused,setIsFocused] = useState(false)
 
-
+     
     return(
     <>
         
-        <Box className={style.focusBox}   w={'100%'} tabIndex={0}  
-            onKeyDown={(e)=>{if(e.key==='Enter' || e.key===' ') setIsFocused(true)} } 
+        <Box  className={style.focusBox}   w={'100%'} tabIndex={0}  
+            onKeyDown={(e)=>{
+                    if(e.key==='Enter' || e.key===' ') {setIsFocused(true)}
+                    
+                } 
+            
+            } 
             onDoubleClick={()=>{setIsFocused(prev=>!prev)}}
              >
             

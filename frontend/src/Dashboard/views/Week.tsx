@@ -58,11 +58,13 @@ function Week(){
 
             <Flex gap={10} direction={'column'}>
                     {employeeList.map((employee)=>{
+                        
                     return (
                         <EmployeeRow  employee={employee} >
                             {dateRange.map((date)=>{
 
                                 const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
+                                
                                 return(
                                     <Flex flex={1} bd={'1px solid black'}  style={{padding:7}}>
                                         <Cell date={date.date} employee={employee} shift={shift}/>
