@@ -1,0 +1,4 @@
+.gridCell:focus{
+    outline: 2px solid blue;
+   
+}

@@ -2,6 +2,7 @@
 
 
 export interface Shift{
+    id:number | undefined,
     employee_id: number,
     date: string,
     start_time:string,

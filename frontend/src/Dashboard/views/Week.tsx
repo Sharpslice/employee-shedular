@@ -1,13 +1,14 @@
 import { Box, Text,Flex } from "@mantine/core";
 import { useOutletContext} from "react-router-dom";
-import Cell from "../Cell/Cell";
+
 import type { Employee } from "../Interfaces/Employee";
 import type { Day } from "../Interfaces/Day";
 import type { Shift } from "../Interfaces/Shift";
 import EmployeeRow from "../EmployeeRow";
 import {DateTime} from 'luxon'
 import ViewHeader from "./View-header";
-
+import classes from './Week.module.css'
+import Slot from "../Slot/Slot";
 
 
 function weekDayFromIndex(num:number){
@@ -40,16 +41,13 @@ function Week(){
             
             <ViewHeader colGap={5}>
                 {dateRange.map((day)=>{
-
                     const isToday = today === DateTime.fromISO(day.date).toUTC().toISODate()
-                   
                     return (
                         <Box bg={isToday ? 'blue': undefined}  
                             key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
                                 <Text c={isToday? 'white': undefined} fw={isToday? 'bold': undefined}>
                                     {`${weekDayFromIndex(day.days_of_week)} ${day.day_of_month}`}
-                                </Text>
-                            
+                                </Text>       
                         </Box>
                     )
                     })}
@@ -57,15 +55,17 @@ function Week(){
 
 
             <Flex gap={10} direction={'column'}>
-                    {employeeList.map((employee)=>{
+                {employeeList.map((employee)=>{
+                        
                     return (
                         <EmployeeRow  employee={employee} >
                             {dateRange.map((date)=>{
 
                                 const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
+                                
                                 return(
-                                    <Flex flex={1} bd={'1px solid black'}  style={{padding:7}}>
-                                        <Cell date={date.date} employee={employee} shift={shift}/>
+                                    <Flex className={classes.gridCell} tabIndex={0} flex={1} bd={'1px solid black'} style={{padding:7}}>
+                                        <Slot date={date.date} employee={employee} shift={shift}/>
                                     </Flex>
                                     
                                 )
