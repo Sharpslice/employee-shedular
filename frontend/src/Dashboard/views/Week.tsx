@@ -7,8 +7,9 @@ import type { Shift } from "../Interfaces/Shift";
 import EmployeeRow from "../EmployeeRow";
 import {DateTime} from 'luxon'
 import ViewHeader from "./View-header";
-import classes from './Week.module.css'
-import Slot from "../Slot/Slot";
+import ShiftCell from "../Slot/Shift/ShiftCell";
+import Placeholder from "../Slot/Placeholder";
+
 
 
 function weekDayFromIndex(num:number){
@@ -55,22 +56,26 @@ function Week(){
 
 
             <Flex gap={10} direction={'column'}>
-                {employeeList.map((employee)=>{
-                        
+                {employeeList.map((employee)=>{     
                     return (
-                        <EmployeeRow  employee={employee} >
-                            {dateRange.map((date)=>{
-
-                                const shift = employee.shifts?.find((schedule)=>schedule.date === (date.date))
-                                
-                                return(
-                                    <Flex className={classes.gridCell} tabIndex={0} flex={1} bd={'1px solid black'} style={{padding:7}}>
-                                        <Slot date={date.date} employee={employee} shift={shift}/>
-                                    </Flex>
-                                    
-                                )
-
-                            })}
+                        <EmployeeRow employee={employee} dateRange={dateRange} >
+                             {dateRange.map((date)=>{
+                            
+                                    const shift = employee.shifts.find((shift)=>shift.date === date.date)
+                                    const availability = employee.availability.find((availability)=>availability.date === date.date)
+                                    const override = employee.override.find((override)=>override.date === date.date)
+                                    console.log(shift)
+                                    return( 
+                                        <>
+                                            {shift && <ShiftCell shift={shift}/>}
+                                            {(!shift && !availability && !override) && <Placeholder/> }
+                                               
+                                        </>
+                                        
+                                    )
+                            
+                            
+                                })}
                         </EmployeeRow>
 
 
