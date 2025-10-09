@@ -6,4 +6,6 @@ export interface Employee{
     isWorking: boolean
     position: string
     shifts: Shift[]
+    availability : []
+    override : []
 }

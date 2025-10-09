@@ -38,7 +38,7 @@ function Dashboard(){
        
     
             const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee?date=${safeDate}&view=${safeView}`);
-            
+            console.log(employeeResponse.data.employeeList)
             setEmployeeList(employeeResponse.data.employeeList)
     
         }

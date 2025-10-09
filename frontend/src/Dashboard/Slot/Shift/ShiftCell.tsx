@@ -1,7 +1,7 @@
 import { Flex, Text } from "@mantine/core";
 import type { Shift } from "../../Interfaces/Shift";
 import {DateTime} from 'luxon'
-import axios from "axios";
+
 interface PlaceholderProp{
     shift:Shift
 }
