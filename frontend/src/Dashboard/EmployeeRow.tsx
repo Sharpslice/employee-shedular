@@ -22,7 +22,7 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
     }
     return(
     <>
-        <Flex style={{display:hidden ? "none":'block'}}>hello</Flex>
+        
         <Flex gap={'1rem'} >
           
             <Flex onClick={onAvailabilityclick} gap={10} align={'center'} bd={'1px solid black'} w={'10rem'} p={5} >
@@ -36,18 +36,30 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
 
             </Flex>
          
-            
-            <Flex  gap={5} flex={1} miw={'100px'} >
-                
-               {dateRange.map((_,index)=>(
-                    <Flex  flex={1} direction={'column'}  bd={'1px solid black'}>
-                        {childrenArray[index]}
-                    </Flex>
-               ))}
-               
-                
-            </Flex>
 
+            <Flex flex={1} gap={10} direction={'column'}>
+                <Flex gap={5} style={{display:hidden ? "none":'flex'}}> 
+                    {dateRange.map(()=>(
+                        <Flex bg={'green'} justify={'center'} bd={'1px solid black'} flex={1}>Available 9:00am - 1:00pm</Flex>
+
+                    ))}
+                    
+                </Flex>
+
+
+                <Flex  gap={5} flex={1} miw={'100px'} >
+                    
+                    {dateRange.map((_,index)=>(
+                            <Flex  flex={1} direction={'column'}  bd={'1px solid black'}>
+                                {childrenArray[index]}
+                            </Flex>
+                    ))}
+                
+                    
+                </Flex>
+
+            </Flex>
+            
 
         </Flex>
             
