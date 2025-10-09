@@ -3,7 +3,7 @@ import { Flex } from "@mantine/core";
 function Placeholder(){
     return(
     <>
-        <Flex mih={38} justify={"center"} align={'center'} fz={14}>--:-- --  --:-- --</Flex>    
+        <Flex flex={1} mih={38} justify={"center"} align={'center'} fz={14} >--:-- --  --:-- --</Flex>    
     </>)
 }
 

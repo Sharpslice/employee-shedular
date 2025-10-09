@@ -23,7 +23,7 @@ function ShiftCell({shift}:PlaceholderProp){
     }
 
     return (<>
-        <Flex onClick={()=>{onDeleteShift(shift.id!)}}
+        <Flex flex={1} onClick={()=>{onDeleteShift(shift.id!)}}
         
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' > 

@@ -30,13 +30,10 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
            
             <Flex  gap={5} flex={1} miw={'100px'} >
                 
-               {dateRange.map((date,index)=>(
-                    <Flex flex={1}>
+               {dateRange.map((_,index)=>(
+                    <Flex flex={1} direction={'column'}  bd={'1px solid black'}>
                         {childrenArray[index]}
-
                     </Flex>
-
-
                ))}
                
                 
