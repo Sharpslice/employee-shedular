@@ -1,6 +1,6 @@
 import { Avatar, Flex, Text } from "@mantine/core";
 import type { Employee } from "./Interfaces/Employee";
-import React from 'react'
+import React, { useState } from 'react'
 import type { Day } from "./Interfaces/Day";
 
 
@@ -12,11 +12,20 @@ interface EmployeeRowProps{
 }
 function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
     const childrenArray = React.Children.toArray(children)
+
+
+    const [hidden,setHidden]  = useState(true)
+
+
+    const onAvailabilityclick=()=>{
+        setHidden(prev=>!prev)
+    }
     return(
     <>
+        <Flex style={{display:hidden ? "none":'block'}}>hello</Flex>
         <Flex gap={'1rem'} >
           
-            <Flex gap={10} align={'center'} bd={'1px solid black'} w={'10rem'} p={5} >
+            <Flex onClick={onAvailabilityclick} gap={10} align={'center'} bd={'1px solid black'} w={'10rem'} p={5} >
                 <Avatar name={employee.name} radius={'xs'} color={"blue"}></Avatar>
                 <Flex direction={'column'}>
                     <Text size="lg">{employee.name}</Text>
@@ -27,11 +36,11 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
 
             </Flex>
          
-           
+            
             <Flex  gap={5} flex={1} miw={'100px'} >
                 
                {dateRange.map((_,index)=>(
-                    <Flex flex={1} direction={'column'}  bd={'1px solid black'}>
+                    <Flex  flex={1} direction={'column'}  bd={'1px solid black'}>
                         {childrenArray[index]}
                     </Flex>
                ))}
