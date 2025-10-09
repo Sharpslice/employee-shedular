@@ -74,7 +74,7 @@ function DayView(){
                 
                 return(
                     todayShift ? 
-                        <EmployeeRow employee={employee}>
+                        <EmployeeRow employee={employee} dateRange={dateRange}>
                             <Flex bg={'blue'} bd={'1px solid black'} pos={'relative'} left={`${((startTime!-9)/9)*100}%`} w={`${((endTime!-startTime!)/9)*100}%`}
                             style={{padding:10}}
                             
