@@ -1,4 +1,4 @@
-import { Box, Text,Flex } from "@mantine/core";
+import { Box, Text,Flex, Popover, Button, Textarea, TextInput } from "@mantine/core";
 import { useOutletContext} from "react-router-dom";
 
 import type { Employee } from "../Interfaces/Employee";
@@ -44,12 +44,31 @@ function Week(){
                 {dateRange.map((day)=>{
                     const isToday = today === DateTime.fromISO(day.date).toUTC().toISODate()
                     return (
-                        <Box bg={isToday ? 'blue': undefined}  
-                            key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
-                                <Text c={isToday? 'white': undefined} fw={isToday? 'bold': undefined}>
-                                    {`${weekDayFromIndex(day.days_of_week)} ${day.day_of_month}`}
-                                </Text>       
-                        </Box>
+                        <>
+                            <Flex flex={1} direction={'column'}>
+                                <Box bg={isToday ? 'blue': undefined}  
+                                    key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
+                                        <Text c={isToday? 'white': undefined} fw={isToday? 'bold': undefined}>
+                                            {`${weekDayFromIndex(day.days_of_week)} ${day.day_of_month}`}
+                                        </Text>       
+                                </Box>
+
+                               
+                                <TextInput 
+                                    variant="unstyled"
+                                    bd={'1px solid black'}
+                                    p={2}
+                                    styles={{input:{padding:'10px',fontSize:'18px'}}}
+                                    
+                                    
+                                
+                                />
+                                   
+
+
+                            </Flex>
+                            
+                        </>
                     )
                     })}
             </ViewHeader>
