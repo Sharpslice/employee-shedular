@@ -1,4 +1,4 @@
-import { Box, Group, Text } from "@mantine/core"
+import { Group, Text } from "@mantine/core"
 
 
 import { getTimeRange, TimePicker } from "@mantine/dates"
@@ -14,7 +14,7 @@ interface TimeRangePickerProps{
     shift?:Shift
     employee: Employee
     date:string
-    setIsFocused:React.Dispatch<React.SetStateAction<boolean>>
+    //setIsFocused:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
@@ -23,7 +23,7 @@ interface ShiftResponse{
     row?: Shift
     error?:string
 }
-function TimeRangePicker({setIsFocused, employee, date,shift}:TimeRangePickerProps){
+function TimeRangePicker({employee, date,shift}:TimeRangePickerProps){
    
     
  
@@ -33,22 +33,21 @@ function TimeRangePicker({setIsFocused, employee, date,shift}:TimeRangePickerPro
   
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         try{
-            const response = await axios.post<ShiftResponse>
-            (`http://localhost:3000/api/employee/${employee.id}/shift`,
-                slot==='start' 
-                ?{
-                    date:date,
-                    start_time: time,
-                    end_time : null
-                }
+            const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/employee/${employee.id}/shift`,
+                    slot==='start' 
+                    ?{
+                        date:date,
+                        start_time: time,
+                        end_time : null
+                    }
 
-                :{
-                    date:date,
-                    start_time: null,
-                    end_time: time
-                }
-            
-            )
+                    :{
+                        date:date,
+                        start_time: null,
+                        end_time: time
+                    }
+                
+                )
             if(response.data.success){
                 console.log(response.data.row)
             }
@@ -71,10 +70,10 @@ function TimeRangePicker({setIsFocused, employee, date,shift}:TimeRangePickerPro
     }
 
     return (<>
-            <Group w={'100%'} tabIndex={1} className="TimeRangePicker" gap={"sm"}  style={{justifyContent:'center'}} >
-                <TimePicker autoFocus
+            <Group justify="center" flex={1} gap={0} bd={'1px solid black'} >
+                <TimePicker 
                     classNames={{ input: 'david-class'}}
-                    style={{width:'max-content'}}
+                    //style={{width:'max-content'}}
                     value={shift?.start_time}
                     onChange={(e)=>{onChange(e,"start")}}
                     format="12h"
@@ -92,16 +91,15 @@ function TimeRangePicker({setIsFocused, employee, date,shift}:TimeRangePickerPro
                     maxDropdownContentHeight={150}
                 />
 
-                <Box h={'100%'}> <Text>-</Text> </Box>
+                <Text  w={10} style={{textAlign:'center'}}>-</Text>
 
-                <TimePicker onBlur={()=>{setIsFocused(false)}}
+                <TimePicker 
                     classNames={{ input: 'david-class'}}
-                    style={{width:'max-content'}}
+                    //style={{width:'max-content'}}
                     value={shift?.end_time}
                     onChange={(e)=>{onChange(e,"end")}}
                     format="12h"
                     withDropdown
-                    
                     presets={[
                         {label:'morning',values:morning},
                         {label:'Afternoon', values:afternoon }

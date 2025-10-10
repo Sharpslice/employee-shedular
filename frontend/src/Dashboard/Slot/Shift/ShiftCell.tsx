@@ -23,8 +23,13 @@ function ShiftCell({shift}:PlaceholderProp){
     }
 
     return (<>
-        <Flex flex={1} onClick={()=>{onDeleteShift(shift.id!)}}
-        
+        <Flex flex={1}  onKeyDown={(e)=>{
+            if(e.key ==='Backspace' || e.key ==='Delete'){
+                console.log('Delete')
+            }
+
+
+        }}
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
 

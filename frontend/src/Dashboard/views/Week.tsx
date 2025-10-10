@@ -9,6 +9,7 @@ import {DateTime} from 'luxon'
 import ViewHeader from "./View-header";
 import ShiftCell from "../Slot/Shift/ShiftCell";
 import Placeholder from "../Slot/Placeholder";
+import TimeRangePicker from "../Slot/TimeRangePicker/TimeRangePicker";
 
 
 
@@ -81,13 +82,14 @@ function Week(){
                              {dateRange.map((date)=>{
                             
                                     const shift = employee.shifts.find((shift)=>shift.date === date.date)
-                                    const availability = employee.availability.find((availability)=>availability.date === date.date)
-                                    const override = employee.override.find((override)=>override.date === date.date)
+                                    // const availability = employee.availability.find((availability)=>availability.date === date.date)
+                                    // const override = employee.override.find((override)=>override.date === date.date)
                                     console.log(shift)
                                     return( 
                                         <>
-                                            {shift && <ShiftCell shift={shift}/>}
-                                            {(!shift && !availability && !override) && <Placeholder/> }
+                                            {/* {shift && <ShiftCell shift={shift}/>} */}
+                                            {/* {(!shift && !availability && !override) && <Placeholder/> } */}
+                                            <TimeRangePicker employee={employee} date={date.date} shift={shift}/>
                                                
                                         </>
                                         
