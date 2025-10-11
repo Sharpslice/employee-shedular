@@ -1,14 +1,17 @@
 import { Avatar, Flex, Text } from "@mantine/core";
 import type { Employee } from "./Interfaces/Employee";
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import type { Day } from "./Interfaces/Day";
 
 
 
 interface EmployeeRowProps{
     employee: Employee
+    row:number
+   
     dateRange: Day[]
     children: React.ReactNode
+  
 }
 function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
     const childrenArray = React.Children.toArray(children)
@@ -20,6 +23,11 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
     const onAvailabilityclick=()=>{
         setHidden(prev=>!prev)
     }
+
+   
+    
+
+
     return(
     <>
         
@@ -50,8 +58,14 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
                 <Flex  gap={5} flex={1} miw={'100px'} >
                     
                     {dateRange.map((_,index)=>(
-                            <Flex tabIndex={0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}>
-                                {childrenArray[index]}
+                            <Flex bg={'grey'} tabIndex={0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}
+                                
+                            >
+                                
+    
+                                     {childrenArray[index]}
+                                
+                               
                             </Flex>
                     ))}
                 
