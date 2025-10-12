@@ -10,7 +10,8 @@ import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
 import Dashboard from './Dashboard/Dashboard.tsx';
 import Week from './Dashboard/views/Week.tsx';
-import ScheduleRouter from './ScheduleRouter.tsx';
+
+import DayView from './Dashboard/views/DayView/DayView.tsx';
 
 
 
@@ -23,20 +24,34 @@ import ScheduleRouter from './ScheduleRouter.tsx';
       element:<App/>,
       children:[
         {
-          path:"schedule",
-          element: <Dashboard/>,
+          index:true,
+          element: <Navigate to='schedule' replace/>
+        },
+        {
+          path:'schedule',
+          element:<Dashboard/>,
           children:[
             {
-              index: true, element: <Navigate to={'week'}/>
+              index:true,
+              element: <Navigate to='week' replace/>
             },
             {
-              path: 'week' , element: <Week/>
+              path:'week/:date?',
+              element: <Week/>
             },
             {
-              path:':view/:date',element: <ScheduleRouter/>
+              path:'day/:date?',
+              element:<DayView/>
+            },
+            {
+              path:'month/:date?',
+              element:null
             }
-           
+
+
+
           ]
+          
         },
         {
           path:'contacts',

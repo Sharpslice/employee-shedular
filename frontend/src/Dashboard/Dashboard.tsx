@@ -4,7 +4,7 @@ import {DateTime} from 'luxon'
 import axios from "axios";
 import Header from "./Header";
 import { Container} from "@mantine/core";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useMatch, useParams } from "react-router-dom";
 
 import type { Employee } from "./Interfaces/Employee";
 import type { Day } from "./Interfaces/Day";
@@ -20,12 +20,14 @@ interface EmployeeResponse{
 
 
 function Dashboard(){   
-    const {view,date} = useParams();
+    const {date} = useParams();
     const [dateRange,setDateRange] = useState<Day[]>([]) 
     const [employeeList, setEmployeeList] = useState<Employee[]>([])
 
+    const isWeek = useMatch('schedule/week/*')
+    const isDay = useMatch('schedule/day/*')
 
-    const safeView = view ?? 'week'
+    const safeView = isWeek ? 'week' : isDay ? 'day' : ''
     const safeDate = date ?? DateTime.local().toISODate()
 
     
@@ -54,7 +56,7 @@ function Dashboard(){
             
             <Container fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
             
-                <Outlet  context={{dateRange,employeeList}}/>
+                {dateRange.length!=0 && employeeList.length!=0 &&  <Outlet  context={{dateRange,employeeList}}/>}
             
             </Container> 
        

@@ -8,8 +8,9 @@ import EmployeeRow from "../EmployeeRow";
 import {DateTime} from 'luxon'
 import ViewHeader from "./View-header";
 import ShiftCell from "../Slot/Shift/ShiftCell";
-
 import React, { useRef } from "react";
+
+
 
 
 
@@ -39,12 +40,14 @@ function Week(){
     const today = DateTime.now().startOf('day').toISODate()
 
     const cellRefs = useRef(
-            Array.from({length:employeeList.length},()=> Array.from({length:dateRange.length},()=> React.createRef<HTMLDivElement>()))
-    
-    
-        )
-    
-        const handleArrowKey=(key:any,row:number,col:number)=>{
+        Array.from({length: employeeList.length},()=> Array.from({length:dateRange.length},()=> React.createRef<HTMLDivElement>()))
+
+
+    )
+
+        const handleArrowKey=(key:string,row:number,col:number)=>{
+
+            console.log(cellRefs)
             switch(key){
                 case('ArrowUp'):
 
@@ -72,6 +75,8 @@ function Week(){
             }
         }
    
+  
+
     return (<>
         <Flex w={'100%'} gap={5} direction={"column"}>
             
@@ -79,10 +84,10 @@ function Week(){
                 {dateRange.map((day)=>{
                     const isToday = today === DateTime.fromISO(day.date).toUTC().toISODate()
                     return (
-                        <>
-                            <Flex flex={1} direction={'column'}>
-                                <Box bg={isToday ? 'blue': undefined}  
-                                    key={day.date} flex={1} style={{border:'1px solid black', textAlign:"center"}}>
+                       
+                            <Flex key={day.date} flex={1} direction={'column'}>
+                                <Box  bg={isToday ? 'blue': undefined}  
+                                     flex={1} style={{border:'1px solid black', textAlign:"center"}}>
                                         <Text c={isToday? 'white': undefined} fw={isToday? 'bold': undefined}>
                                             {`${weekDayFromIndex(day.days_of_week)} ${day.day_of_month}`}
                                         </Text>       
@@ -103,7 +108,7 @@ function Week(){
 
                             </Flex>
                             
-                        </>
+                       
                     )
                     })}
             </ViewHeader>
@@ -112,19 +117,19 @@ function Week(){
             <Flex gap={10} direction={'column'}>
                 {employeeList.map((employee,row)=>{     
                     return (
-                        <EmployeeRow row={row} employee={employee} dateRange={dateRange} >
+                        <EmployeeRow key={employee.id} row={row} employee={employee} dateRange={dateRange} >
                              {dateRange.map((date,col)=>{
                             
                                     const shift = employee.shifts.find((shift)=>shift.date === date.date)
                                     
-                                    console.log(shift)
+
                                     return( 
                                         <Flex  tabIndex={0} flex={1}
-                                        ref={cellRefs.current?.[row]?.[col]}
+                                            ref={cellRefs.current?.[row]?.[col]}
                                             onKeyDown={(e)=>handleArrowKey(e.key,row,col)}
                                         
                                         >
-                                            <Text>{`${[row,col]}`}</Text>
+                                            {/* <Text>{`${[row,col]}`}</Text> */}
                                              {shift && <ShiftCell shift={shift}/>}
                                         </Flex>
 
