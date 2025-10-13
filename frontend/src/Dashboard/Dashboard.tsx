@@ -26,8 +26,9 @@ function Dashboard(){
 
     const isWeek = useMatch('schedule/week/*')
     const isDay = useMatch('schedule/day/*')
+    const isMonth = useMatch('schedule/month/*')
 
-    const safeView = isWeek ? 'week' : isDay ? 'day' : ''
+    const safeView = isWeek ? 'week' : isDay ? 'day' : isMonth ? 'month' : ''
     const safeDate = date ?? DateTime.local().toISODate()
 
     
@@ -42,7 +43,7 @@ function Dashboard(){
             const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee?date=${safeDate}&view=${safeView}`);
             console.log(employeeResponse.data.employeeList)
             setEmployeeList(employeeResponse.data.employeeList)
-    
+            console.log('remounts')
         }
         fetchData()
     },[safeDate,safeView])

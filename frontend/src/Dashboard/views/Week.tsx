@@ -8,7 +8,7 @@ import EmployeeRow from "../EmployeeRow";
 import {DateTime} from 'luxon'
 import ViewHeader from "./View-header";
 import ShiftCell from "../Slot/Shift/ShiftCell";
-import React, { useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 
 
 
@@ -39,11 +39,14 @@ function Week(){
 
     const today = DateTime.now().startOf('day').toISODate()
 
-    const cellRefs = useRef(
-        Array.from({length: employeeList.length},()=> Array.from({length:dateRange.length},()=> React.createRef<HTMLDivElement>()))
+    const cellRefs = useMemo(() => {
+        return Array.from({ length: employeeList.length }, () =>
+            Array.from({ length: dateRange.length }, () => React.createRef<HTMLDivElement>())
+        );
+    }, [employeeList.length, dateRange.length]);
 
 
-    )
+
 
         const handleArrowKey=(key:string,row:number,col:number)=>{
 
@@ -51,24 +54,24 @@ function Week(){
             switch(key){
                 case('ArrowUp'):
 
-                    cellRefs.current[row-1][col].current?.focus()
+                    cellRefs[row-1][col].current?.focus()
 
                     console.log(row-1,col);
                     console.log('Up')
                     
                     break;
                 case('ArrowDown'):
-                    cellRefs.current[row+1][col].current?.focus()
+                    cellRefs[row+1][col].current?.focus()
                     console.log(row+1,col);
                     console.log('Down')
                     break;
                 case('ArrowLeft'):
-                    cellRefs.current[row][col-1].current?.focus()
+                    cellRefs[row][col-1].current?.focus()
                     console.log(row,col-1);
                     console.log('Left')
                     break;
                 case('ArrowRight'):
-                    cellRefs.current[row][col+1].current?.focus()
+                    cellRefs[row][col+1].current?.focus()
                     console.log(row,col+1);
                     console.log('Right')
                     break;
@@ -76,7 +79,7 @@ function Week(){
         }
    
   
-
+        if (!employeeList.length || !dateRange.length) return null;
     return (<>
         <Flex w={'100%'} gap={5} direction={"column"}>
             
@@ -125,7 +128,7 @@ function Week(){
 
                                     return( 
                                         <Flex  tabIndex={0} flex={1}
-                                            ref={cellRefs.current?.[row]?.[col]}
+                                            ref={cellRefs[row]?.[col]}
                                             onKeyDown={(e)=>handleArrowKey(e.key,row,col)}
                                         
                                         >
