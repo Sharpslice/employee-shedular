@@ -6,14 +6,15 @@ import type { Day } from "./Interfaces/Day";
 
 
 interface EmployeeRowProps{
-    employee: Employee
     row:number
-   
+    employee: Employee
+    cellRefs: React.RefObject<HTMLDivElement | null>[]
+    handleArrowKey:(key:string,row:number,col:number)=> void
     dateRange: Day[]
     children: React.ReactNode
   
 }
-function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
+function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:EmployeeRowProps){
     const childrenArray = React.Children.toArray(children)
 
 
@@ -59,7 +60,8 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
                     
                     {dateRange.map((day,index)=>(
                             <Flex key={day.date} bg={'grey'} tabIndex={0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}
-        
+                                ref={cellRefs[index]}
+                                onKeyDown={(e)=>handleArrowKey(e.key,row,index)}
                             >
                                 
 

@@ -8,7 +8,7 @@ import EmployeeRow from "../EmployeeRow";
 import {DateTime} from 'luxon'
 import ViewHeader from "./View-header";
 import ShiftCell from "../Slot/Shift/ShiftCell";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo} from "react";
 
 
 
@@ -120,7 +120,7 @@ function Week(){
             <Flex gap={10} direction={'column'}>
                 {employeeList.map((employee,row)=>{     
                     return (
-                        <EmployeeRow key={employee.id} row={row} employee={employee} dateRange={dateRange} >
+                        <EmployeeRow row={row} cellRefs ={cellRefs[row]} handleArrowKey={handleArrowKey} key={employee.id} employee={employee} dateRange={dateRange} >
                              {dateRange.map((date,col)=>{
                             
                                     const shift = employee.shifts.find((shift)=>shift.date === date.date)
@@ -128,11 +128,11 @@ function Week(){
 
                                     return( 
                                         <Flex  tabIndex={0} flex={1}
-                                            ref={cellRefs[row]?.[col]}
-                                            onKeyDown={(e)=>handleArrowKey(e.key,row,col)}
+                                            //ref={cellRefs[row]?.[col]}
+                                            //onKeyDown={(e)=>handleArrowKey(e.key,row,col)}
                                         
                                         >
-                                            {/* <Text>{`${[row,col]}`}</Text> */}
+                                           
                                              {shift && <ShiftCell shift={shift}/>}
                                         </Flex>
 
