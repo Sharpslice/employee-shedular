@@ -62,7 +62,7 @@ function DayView(){
         </ViewHeader>
         
         <Flex  direction={'column'} gap={10} flex={1} >
-            {employeeList.map((employee)=>{
+            {employeeList.map((employee,index)=>{
 
                 const todayShift = employee.shifts.find((shift)=> shift.date === dateRange[0].date)
                 let startTime:number;
@@ -74,7 +74,7 @@ function DayView(){
                 
                 return(
                     todayShift ? 
-                        <EmployeeRow employee={employee} dateRange={dateRange}>
+                        <EmployeeRow  employee={employee} dateRange={dateRange}>
                             <Flex flex={1} bg={'blue'} bd={'1px solid black'} pos={'relative'} left={`${((startTime!-9)/9)*100}%`} w={`${((endTime!-startTime!)/9)*100}%`}
                             style={{padding:10}}
                             
