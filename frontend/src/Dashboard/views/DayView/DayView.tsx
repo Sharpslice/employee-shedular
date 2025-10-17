@@ -4,8 +4,8 @@ import { useOutletContext } from "react-router-dom"
 import type { Shift } from "../../Interfaces/Shift"
 import type { Employee } from "../../Interfaces/Employee"
 import { DateTime } from "luxon"
-import EmployeeRow from "../../EmployeeRow"
-import ViewHeader from "../View-header"
+import EmployeeRow from "../EmployeeRow"
+import ViewHeader from "../WeekView/View-header"
 type DayElement ={
     week:number,
     date: string,

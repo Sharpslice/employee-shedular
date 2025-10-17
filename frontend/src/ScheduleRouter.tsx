@@ -1,6 +1,6 @@
 import { Navigate, useParams } from "react-router-dom";
 import DayView from "./Dashboard/views/DayView/DayView";
-import Week from "./Dashboard/views/Week";
+import Week from "./Dashboard/views/WeekView/Week";
 
 
 function ScheduleRouter(){
