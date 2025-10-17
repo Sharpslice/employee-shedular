@@ -1,7 +1,7 @@
 import { Avatar,Flex, Text } from "@mantine/core";
-import type { Employee } from "./Interfaces/Employee";
+import type { Employee } from "../Interfaces/Employee";
 import React, { useState } from 'react'
-import type { Day } from "./Interfaces/Day";
+import type { Day } from "../Interfaces/Day";
 
 
 
@@ -17,19 +17,11 @@ interface EmployeeRowProps{
 }
 function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:EmployeeRowProps){
     const childrenArray = React.Children.toArray(children)
-
-
     const [hidden,setHidden]  = useState(true)
-
-
     const onAvailabilityclick=()=>{
         setHidden(prev=>!prev)
         console.log(childrenArray[1])
     }
-
-   
-  
-
 
     return(
     <>
@@ -63,9 +55,9 @@ function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:E
                     {dateRange.map((day,index)=>{
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const slot = childrenArray[index] as any;
-
-                        // console.log(slot?.props?.children)
-                        const slotExist = slot?.props?.children ?? null
+                        
+                        console.log(slot?.props?.children)
+                        const slotExist = slot?.props?.children?.[0] ?? null
                         return(
                             <Flex key={day.date} bg={'grey'} tabIndex={0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}
                                 ref={cellRefs?.[index]}
@@ -83,8 +75,7 @@ function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:E
 
                                 }}
                             >
-                                
-
+            
                                      {childrenArray[index]}
 
                                 
