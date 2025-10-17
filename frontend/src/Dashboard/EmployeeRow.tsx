@@ -1,19 +1,21 @@
-import { Avatar, Flex, Text } from "@mantine/core";
+import { Avatar,Flex, Text } from "@mantine/core";
 import type { Employee } from "./Interfaces/Employee";
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import type { Day } from "./Interfaces/Day";
 
 
 
 interface EmployeeRowProps{
+    row?:number
     employee: Employee
-    row:number
-   
+    cellRefs?: React.RefObject<HTMLDivElement | null>[]
+    slotRefs?: React.RefObject<HTMLDivElement | null>[]
+    handleArrowKey?:(key:string,row:number,col:number)=> void
     dateRange: Day[]
     children: React.ReactNode
   
 }
-function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
+function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:EmployeeRowProps){
     const childrenArray = React.Children.toArray(children)
 
 
@@ -22,10 +24,11 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
 
     const onAvailabilityclick=()=>{
         setHidden(prev=>!prev)
+        console.log(childrenArray[1])
     }
 
    
-    
+  
 
 
     return(
@@ -47,8 +50,8 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
 
             <Flex flex={1} gap={10} direction={'column'}>
                 <Flex gap={5} style={{display:hidden ? "none":'flex'}}> 
-                    {dateRange.map(()=>(
-                        <Flex bg={'green'} justify={'center'} bd={'1px solid black'} flex={1}>Available 9:00am - 1:00pm</Flex>
+                    {dateRange.map((day)=>(
+                        <Flex key={day.days_of_week} bg={'green'} justify={'center'} bd={'1px solid black'} flex={1}>Available 9:00am - 1:00pm</Flex>
 
                     ))}
                     
@@ -57,17 +60,37 @@ function EmployeeRow({employee,dateRange,children}:EmployeeRowProps){
 
                 <Flex  gap={5} flex={1} miw={'100px'} >
                     
-                    {dateRange.map((_,index)=>(
-                            <Flex bg={'grey'} tabIndex={0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}
-                                
+                    {dateRange.map((day,index)=>{
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const slot = childrenArray[index] as any;
+
+                        // console.log(slot?.props?.children)
+                        const slotExist = slot?.props?.children ?? null
+                        return(
+                            <Flex key={day.date} bg={'grey'} tabIndex={0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}
+                                ref={cellRefs?.[index]}
+                                onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
+                                onFocus={()=>{
+                                    if(slotExist){
+                                        console.log('slot exist')
+                                        console.log(childrenArray[index])
+                                    }
+                                    else{
+                                        console.log('no slot')
+                                    }
+
+
+
+                                }}
                             >
                                 
-    
+
                                      {childrenArray[index]}
+
                                 
                                
                             </Flex>
-                    ))}
+                    )})}
                 
                     
                 </Flex>
