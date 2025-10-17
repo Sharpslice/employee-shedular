@@ -1,8 +1,10 @@
 import { Flex, Text } from "@mantine/core";
 import type { Shift } from "../../Interfaces/Shift";
 import {DateTime} from 'luxon'
+import { useState } from "react";
 
 interface PlaceholderProp{
+  
     shift:Shift
 }
 
@@ -17,25 +19,36 @@ function ShiftCell({shift}:PlaceholderProp){
     const start_time = convertTo12hr(shift.start_time)
     const end_time = convertTo12hr(shift.end_time)
 
-    const onDeleteShift = async(shift_id:number)=>{
-        console.log(shift_id)
-        //await axios.delete(`http://localhost:3000/api/employee/shift/${shift_id}`)
-    }
+    const [activate,setActivate] = useState(false)
 
-    return (<>
-        <Flex flex={1}  onKeyDown={(e)=>{
+    // const onDeleteShift = async(shift_id:number)=>{
+    //     console.log(shift_id)
+    //     //await axios.delete(`http://localhost:3000/api/employee/shift/${shift_id}`)
+    // }
+
+    return (
+    <>
+        <Flex tabIndex={0} flex={1}  onKeyDown={(e)=>{
             if(e.key ==='Backspace' || e.key ==='Delete'){
                 console.log('Delete')
+            }
+            else if (e.key===' ' || e.key ==='Enter'){
+                console.log('space')
             }
 
 
         }}
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
-
-           <Text fz={14}>{start_time}</Text>  
-           <Text fz={14}>-</Text>
-           <Text fz={14}>{end_time}</Text>
+            
+          {
+            <>
+                <Text fz={14}>{start_time}</Text>  
+                <Text fz={14}>-</Text>
+                <Text fz={14}>{end_time}</Text>
+            </>
+          
+          }
 
 
         </Flex>

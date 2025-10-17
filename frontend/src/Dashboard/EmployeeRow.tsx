@@ -1,4 +1,4 @@
-import { Avatar, Flex, Text } from "@mantine/core";
+import { Avatar,Flex, Text } from "@mantine/core";
 import type { Employee } from "./Interfaces/Employee";
 import React, { useState } from 'react'
 import type { Day } from "./Interfaces/Day";
@@ -9,6 +9,7 @@ interface EmployeeRowProps{
     row?:number
     employee: Employee
     cellRefs?: React.RefObject<HTMLDivElement | null>[]
+    slotRefs?: React.RefObject<HTMLDivElement | null>[]
     handleArrowKey?:(key:string,row:number,col:number)=> void
     dateRange: Day[]
     children: React.ReactNode
@@ -23,10 +24,11 @@ function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:E
 
     const onAvailabilityclick=()=>{
         setHidden(prev=>!prev)
+        console.log(childrenArray[1])
     }
 
    
-    
+  
 
 
     return(
@@ -58,18 +60,37 @@ function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:E
 
                 <Flex  gap={5} flex={1} miw={'100px'} >
                     
-                    {dateRange.map((day,index)=>(
+                    {dateRange.map((day,index)=>{
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const slot = childrenArray[index] as any;
+
+                        // console.log(slot?.props?.children)
+                        const slotExist = slot?.props?.children ?? null
+                        return(
                             <Flex key={day.date} bg={'grey'} tabIndex={0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}
                                 ref={cellRefs?.[index]}
                                 onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
+                                onFocus={()=>{
+                                    if(slotExist){
+                                        console.log('slot exist')
+                                        console.log(childrenArray[index])
+                                    }
+                                    else{
+                                        console.log('no slot')
+                                    }
+
+
+
+                                }}
                             >
                                 
 
                                      {childrenArray[index]}
+
                                 
                                
                             </Flex>
-                    ))}
+                    )})}
                 
                     
                 </Flex>

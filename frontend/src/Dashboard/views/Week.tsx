@@ -3,12 +3,12 @@ import { useOutletContext} from "react-router-dom";
 
 import type { Employee } from "../Interfaces/Employee";
 import type { Day } from "../Interfaces/Day";
-import type { Shift } from "../Interfaces/Shift";
 import EmployeeRow from "../EmployeeRow";
 import {DateTime} from 'luxon'
 import ViewHeader from "./View-header";
 import ShiftCell from "../Slot/Shift/ShiftCell";
 import React, { useMemo} from "react";
+
 
 
 
@@ -34,8 +34,11 @@ function weekDayFromIndex(num:number){
     }
 }
 
+
+
+
 function Week(){
-    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],shifts:Map<number,Shift[]>,employeeList:Employee[] }>();
+    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Employee[] }>();
 
     const today = DateTime.now().startOf('day').toISODate()
 
@@ -45,12 +48,12 @@ function Week(){
         );
     }, [employeeList.length, dateRange.length]);
 
-
-
+    
+  
 
         const handleArrowKey=(key:string,row:number,col:number)=>{
 
-            console.log(cellRefs)
+            
             switch(key){
                 case('ArrowUp'):
 
@@ -86,6 +89,7 @@ function Week(){
             <ViewHeader colGap={5}>
                 {dateRange.map((day)=>{
                     const isToday = today === DateTime.fromISO(day.date).toUTC().toISODate()
+                
                     return (
                        
                             <Flex key={day.date} flex={1} direction={'column'}>
@@ -120,29 +124,31 @@ function Week(){
             <Flex gap={10} direction={'column'}>
                 {employeeList.map((employee,row)=>{     
                     return (
-                        <EmployeeRow row={row} cellRefs ={cellRefs[row]} handleArrowKey={handleArrowKey} key={employee.id} employee={employee} dateRange={dateRange} >
-                             {dateRange.map((date,col)=>{
+                        
+                            <EmployeeRow  row={row} cellRefs ={cellRefs[row]} handleArrowKey={handleArrowKey} key={employee.id} employee={employee} dateRange={dateRange} >
+                             {dateRange.map((date)=>{
                             
                                     const shift = employee.shifts.find((shift)=>shift.date === date.date)
                                     
-
                                     return( 
-                                        <Flex  tabIndex={0} flex={1}
-                                            //ref={cellRefs[row]?.[col]}
-                                            //onKeyDown={(e)=>handleArrowKey(e.key,row,col)}
-                                        
-                                        >
+                                       
+                                            <Flex direction={'column'}  flex={1}>
                                            
-                                             {shift && <ShiftCell shift={shift}/>}
-                                        </Flex>
+                                                {shift && <ShiftCell  shift={shift}/>}
+                                          
+                                         
+                                            </Flex>
+
+                                     
+                                        
 
                                     )
                             
                             
                                 })}
-                        </EmployeeRow>
-
-
+                            </EmployeeRow>
+                      
+                        
 
                     )
                 })}
