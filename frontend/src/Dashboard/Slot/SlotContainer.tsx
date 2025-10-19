@@ -2,16 +2,17 @@ import React from "react"
 
 
 interface SlotContainerProps{
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 function SlotContainer({children}:SlotContainerProps){
-    const ChildrenArray = React.Children.toArray(children).filter(Boolean)
+    
     return(
         <>
-            {ChildrenArray.map((children)=>{     
-                return(children)
-            })
-            }
+            {[children].map((child)=>{
+
+                
+                return(child)
+            })}
         </>
     )
 }

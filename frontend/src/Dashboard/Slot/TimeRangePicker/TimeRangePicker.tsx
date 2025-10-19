@@ -32,6 +32,7 @@ function TimeRangePicker(){
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const afternoon = getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'})
 
+    console.log(date)
   
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         try{

@@ -3,13 +3,14 @@ import { useOutletContext} from "react-router-dom";
 
 import type { Employee } from "../../Interfaces/Employee";
 import type { Day } from "../../Interfaces/Day";
-import EmployeeRow from "../EmployeeRow";
+import EmployeeRow from "../EmployeeRow/EmployeeRow";
 import {DateTime} from 'luxon'
 import ViewHeader from "./View-header";
 import ShiftCell from "../../Slot/Shift/ShiftCell";
 import React, { useMemo} from "react";
-import SlotContainer from "../../Slot/SlotContainer";
+
 import {EmployeeProvider} from "../EmployeeContext";
+
 
 
 
@@ -99,20 +100,18 @@ function Week(){
 
             <Flex gap={10} direction={'column'}>
                 {employeeList.map((employee,row)=>{     
+
+
+
+
                     return(
                         <EmployeeRow row={row} cellRefs ={cellRefs[row]} handleArrowKey={handleArrowKey} key={employee.id} employee={employee} dateRange={dateRange} >
                             {dateRange.map((date)=>{
-                        
                                 const shift = employee.shifts.find((shift)=>shift.date === date.date)
-                                
                                 return( 
                                     <EmployeeProvider value={{employee:employee, date:date, shift:shift ? shift : null}}>
-                                        <SlotContainer>
-                                            {shift && <ShiftCell  />}
-                                            {shift && <ShiftCell  />}
-                                        </SlotContainer>
-                                    </EmployeeProvider>
-                                    
+                                      
+                                    </EmployeeProvider>     
                                 )
                             })}
                         </EmployeeRow>
