@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import type { Day } from "../../Interfaces/Day";
 import SlotContainer from "../../Slot/SlotContainer";
 import EmployeeInfo from "./EmployeeInfo";
+import EmployeeAvailabilityRow from "./EmployeeAvailabilityRow";
 
 
 
@@ -33,16 +34,8 @@ function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:E
          
 
             <Flex flex={1} gap={10} direction={'column'}>
-                {!hidden && <Flex gap={5} >
-                    {dateRange.map((day)=>(
-                        <Flex key={day.days_of_week} bg={'green'} justify={'center'} bd={'1px solid black'} flex={1}>
-                            Available 9:00am - 1:00pm
-                        </Flex>
-
-                    ))}
-                    
-                </Flex>}
-
+                
+                <EmployeeAvailabilityRow hidden={hidden} dateRange={dateRange}/>
 
                 <Flex  gap={5} flex={1} miw={'100px'} >
                     {dateRange.map((day,index)=>{
