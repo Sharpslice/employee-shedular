@@ -4,18 +4,20 @@ import { Group, Text } from "@mantine/core"
 import { getTimeRange, TimePicker } from "@mantine/dates"
 import './TimeRangePicker.css'
 import type { Shift } from "../../Interfaces/Shift"
-import type React from "react"
+
 import axios from "axios"
-import type { Employee } from "../../Interfaces/Employee"
+
+import { useContext } from "react"
+import { EmployeeContext } from "../../views/EmployeeContext"
 
 
 
-interface TimeRangePickerProps{
-    shift?:Shift
-    employee: Employee
-    date:string
-    //setIsFocused:React.Dispatch<React.SetStateAction<boolean>>
-}
+// interface TimeRangePickerProps{
+//     shift?:Shift
+//     employee: Employee
+//     date:string
+//     //setIsFocused:React.Dispatch<React.SetStateAction<boolean>>
+// }
 
 
 interface ShiftResponse{
@@ -23,9 +25,9 @@ interface ShiftResponse{
     row?: Shift
     error?:string
 }
-function TimeRangePicker({employee, date,shift}:TimeRangePickerProps){
+function TimeRangePicker(){
    
-    
+    const {employee,date,shift} = useContext(EmployeeContext)
  
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const afternoon = getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'})
@@ -33,7 +35,7 @@ function TimeRangePicker({employee, date,shift}:TimeRangePickerProps){
   
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         try{
-            const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/employee/${employee.id}/shift`,
+            const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/employee/${employee!.id}/shift`,
                     slot==='start' 
                     ?{
                         date:date,

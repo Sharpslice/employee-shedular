@@ -56,7 +56,7 @@ function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:E
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const slot = childrenArray[index] as any;
                         
-                        console.log(slot?.props?.children)
+                        //console.log(slot?.props?.children)
                         const slotExist = slot?.props?.children?.[0] ?? null
                         return(
                             <Flex key={day.date} bg={'grey'} tabIndex={0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}
@@ -65,7 +65,7 @@ function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:E
                                 onFocus={()=>{
                                     if(slotExist){
                                         console.log('slot exist')
-                                        console.log(childrenArray[index])
+                                        //console.log(childrenArray[index])
                                     }
                                     else{
                                         console.log('no slot')

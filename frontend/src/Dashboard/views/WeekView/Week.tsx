@@ -9,6 +9,7 @@ import ViewHeader from "./View-header";
 import ShiftCell from "../../Slot/Shift/ShiftCell";
 import React, { useMemo} from "react";
 import SlotContainer from "../../Slot/SlotContainer";
+import {EmployeeProvider} from "../EmployeeContext";
 
 
 
@@ -105,15 +106,13 @@ function Week(){
                                 const shift = employee.shifts.find((shift)=>shift.date === date.date)
                                 
                                 return( 
-                                    <SlotContainer>
-                                        {shift && <ShiftCell  shift={shift}/>}
-                                        {shift && <ShiftCell  shift={shift}/>}
-                                    </SlotContainer>
-                                        // <Flex direction={'column'}  flex={1}>
-            
-                                        //     {shift && <ShiftCell  shift={shift}/>}
-                                        
-                                        // </Flex>
+                                    <EmployeeProvider value={{employee:employee, date:date, shift:shift ? shift : null}}>
+                                        <SlotContainer>
+                                            {shift && <ShiftCell  />}
+                                            {shift && <ShiftCell  />}
+                                        </SlotContainer>
+                                    </EmployeeProvider>
+                                    
                                 )
                             })}
                         </EmployeeRow>

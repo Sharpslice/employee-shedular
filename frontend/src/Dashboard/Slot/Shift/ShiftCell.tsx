@@ -1,12 +1,11 @@
 import { Flex, Text } from "@mantine/core";
-import type { Shift } from "../../Interfaces/Shift";
-import {DateTime} from 'luxon'
-import { useState } from "react";
 
-interface PlaceholderProp{
-  
-    shift:Shift
-}
+import {DateTime} from 'luxon'
+import { useContext, useState } from "react";
+import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
+import  { EmployeeContext } from "../../views/EmployeeContext";
+
+
 
 const convertTo12hr = (time:string | null)=>{
     if(!time) return ""
@@ -14,12 +13,16 @@ const convertTo12hr = (time:string | null)=>{
     return dt.toFormat('hh:mm a')
 }
 
-function ShiftCell({shift}:PlaceholderProp){
+function ShiftCell(){
 
-    const start_time = convertTo12hr(shift.start_time)
-    const end_time = convertTo12hr(shift.end_time)
+    const {shift} = useContext(EmployeeContext)
+
+    const start_time = convertTo12hr(shift!.start_time)
+    const end_time = convertTo12hr(shift!.end_time)
 
     const [activate,setActivate] = useState(false)
+
+    
 
     // const onDeleteShift = async(shift_id:number)=>{
     //     console.log(shift_id)
@@ -34,6 +37,7 @@ function ShiftCell({shift}:PlaceholderProp){
             }
             else if (e.key===' ' || e.key ==='Enter'){
                 console.log('space')
+                setActivate(prev=>!prev)
             }
 
 
@@ -41,7 +45,7 @@ function ShiftCell({shift}:PlaceholderProp){
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
             
-          {
+          {activate ? <TimeRangePicker/> :
             <>
                 <Text fz={14}>{start_time}</Text>  
                 <Text fz={14}>-</Text>
