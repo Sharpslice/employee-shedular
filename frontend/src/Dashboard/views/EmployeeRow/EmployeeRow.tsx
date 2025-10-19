@@ -26,8 +26,7 @@ function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:E
     
 
     return(
-    <>
-        
+
         <Flex gap={'1rem'} >
           
             <EmployeeInfo onAvailabilityclick={onAvailabilityclick} employee={employee}/>
@@ -63,8 +62,7 @@ function EmployeeRow({row,cellRefs,handleArrowKey,employee,dateRange,children}:E
       
     
     
-    </>
-    
+        
 )
 
 
