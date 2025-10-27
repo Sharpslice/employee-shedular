@@ -32,7 +32,7 @@ interface EmployeeRowProps{
 }
 function EmployeeRow({row,cellRefs,focusedId,setFocusedId,handleArrowKey,employee,gridCellArray}:EmployeeRowProps){
 
-    const {safeView,dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[] }>();
+    const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[] }>();
     const [hidden,setHidden]  = useState(true)
     const onAvailabilityclick= () => setHidden(prev=>!prev)
        
@@ -63,7 +63,7 @@ function EmployeeRow({row,cellRefs,focusedId,setFocusedId,handleArrowKey,employe
                         
                                         <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId}>
                                             {slot.shift && <ShiftCell/>}
-                                            {slot.shift && <ShiftCell/>}
+                                            
                                         </SlotContainer>
                                 
 

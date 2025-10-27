@@ -1,4 +1,4 @@
-import { Box, Button,Flex } from "@mantine/core"
+
 import React from "react"
 import SlotMenu from "./SlotMenu"
 import SlotPlaceholder from "./SlotPlaceholder"
@@ -16,7 +16,9 @@ function SlotContainer({coords,focusedId,children}:SlotContainerProps){
     if(childrenArray.length === 0) return <SlotPlaceholder/>
     return(
         <>
-           
+           {childrenArray.map((slot)=>{
+                return(slot)
+           })}
         </>
     )
 }

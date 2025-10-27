@@ -5,7 +5,7 @@ function SlotMenu(){
     <>
         <Menu>
             <Menu.Target>
-                <Button flex={1}>
+                <Button bg={'grey'} flex={1}>
                     slot
                 </Button>
             </Menu.Target>
