@@ -1,6 +1,7 @@
 import { Box, Button,Flex } from "@mantine/core"
 import React from "react"
 import SlotMenu from "./SlotMenu"
+import SlotPlaceholder from "./SlotPlaceholder"
 
 
 interface SlotContainerProps{
@@ -10,11 +11,12 @@ interface SlotContainerProps{
 }
 function SlotContainer({coords,focusedId,children}:SlotContainerProps){
     const childrenArray = React.Children.toArray(children)
-    console.log(coords)
-    if(focusedId?.row === coords?.row && focusedId?.col===coords?.col) return <SlotMenu/>
+    console.log(childrenArray)
+    if((focusedId?.row === coords?.row && focusedId?.col===coords?.col) && childrenArray.length ===0) return <SlotMenu/>
+    if(childrenArray.length === 0) return <SlotPlaceholder/>
     return(
         <>
-           <Flex flex={1} bg={'blue'} align={'center'} justify={"center"} >slot</Flex>
+           
         </>
     )
 }
