@@ -6,7 +6,7 @@ import type { Shift } from "../Interfaces/Shift"
 interface EmployeeContextObj{
     employee: Employee | null
     date: Date | null
-    shift: Shift | null
+    shift: Shift | undefined
 }
 
 interface EmployeeProviderProp{
@@ -14,7 +14,7 @@ interface EmployeeProviderProp{
     value: EmployeeContextObj
 }
 
-const EmployeeContext = createContext<EmployeeContextObj >({employee:null,date:null,shift:null})
+const EmployeeContext = createContext<EmployeeContextObj >({employee:null,date:null,shift:undefined})
 
 
 

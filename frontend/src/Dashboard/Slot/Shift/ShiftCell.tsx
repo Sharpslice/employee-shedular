@@ -22,13 +22,6 @@ function ShiftCell(){
 
     const [activate,setActivate] = useState(false)
 
-    
-
-    // const onDeleteShift = async(shift_id:number)=>{
-    //     console.log(shift_id)
-    //     //await axios.delete(`http://localhost:3000/api/employee/shift/${shift_id}`)
-    // }
-
     return (
     <>
         <Flex tabIndex={0} flex={1}  onKeyDown={(e)=>{

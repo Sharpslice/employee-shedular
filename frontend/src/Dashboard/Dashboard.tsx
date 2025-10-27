@@ -57,7 +57,7 @@ function Dashboard(){
             
             <Container fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
             
-                {dateRange.length!=0 && employeeList.length!=0 &&  <Outlet  context={{dateRange,employeeList}}/>}
+                {dateRange.length!=0 && employeeList.length!=0 &&  <Outlet  context={{safeView,dateRange,employeeList}}/>}
             
             </Container> 
        

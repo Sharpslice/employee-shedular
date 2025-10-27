@@ -5,9 +5,8 @@ function SlotMenu(){
     <>
         <Menu>
             <Menu.Target>
-                <Button>
+                <Button flex={1}>
                     slot
-
                 </Button>
             </Menu.Target>
 

@@ -7,23 +7,24 @@ import EmployeeRow from "../EmployeeRow/EmployeeRow";
 
 import ViewHeader from "./View-header";
 
-import React, { useMemo} from "react";
+import React, { useMemo, useState} from "react";
 
-import {EmployeeProvider} from "../EmployeeContext";
+
 import WeekHeaderCell from "./WeekHeaderCell";
+
 
 function Week(){
     const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Employee[] }>();
 
     
-
+    
     const cellRefs = useMemo(() => {
         return Array.from({ length: employeeList.length }, () =>
             Array.from({ length: dateRange.length }, () => React.createRef<HTMLDivElement>())
         );
     }, [employeeList.length, dateRange.length]);
 
-    
+    const [focusedId,setFocusedId] = useState({row:100,col:100})
   
 
     const handleArrowKey=(key:string,row:number,col:number)=>{
@@ -45,29 +46,42 @@ function Week(){
    
   
     if (!employeeList.length || !dateRange.length) return null;
-    return (<>
+    return (
         <Flex w={'100%'} gap={5} direction={"column"}>
             <ViewHeader colGap={5}>
-                {dateRange.map((day)=>{
-                    return (
-                        <WeekHeaderCell key={day.days_of_week} day={day}/>
-                    )
-                    })}
+                {dateRange.map((day)=>(
+                    <WeekHeaderCell key={day.days_of_week} day={day}/>
+                ))}
             </ViewHeader>
-
 
             <Flex gap={10} direction={'column'}>
                 {employeeList.map((employee,row)=>{     
                     return(
-                        <EmployeeRow row={row} cellRefs ={cellRefs[row]} handleArrowKey={handleArrowKey} key={employee.id} employee={employee} dateRange={dateRange} >
-                            {dateRange.map((date)=>{
+                        <EmployeeRow 
+                            key={employee.id}
+                            row={row} 
+                            cellRefs ={cellRefs[row]} 
+                            focusedId={focusedId}
+                            setFocusedId={setFocusedId}
+                            handleArrowKey={handleArrowKey}  
+                            employee={employee} 
+                            gridCellArray = {dateRange.map((date)=>{
                                 const shift = employee.shifts.find((shift)=>shift.date === date.date)
-                                return( 
-                                    <EmployeeProvider value={{employee:employee, date:date, shift:shift ? shift : null}}>
-                                      
-                                    </EmployeeProvider>     
+                                const availablility = undefined
+                                const timeOff = undefined
+                                return(
+                                    {
+                                        date:date,
+                                        shift:shift,
+                                        availablility:availablility,
+                                        timeOff:timeOff
+                                    }
                                 )
-                            })}
+                            })}>
+                            
+
+                            
+                            
                         </EmployeeRow>
                     )
                 })}
@@ -78,6 +92,6 @@ function Week(){
             
         </Flex>
       
-    </>)
+    )
 }
 export default Week;

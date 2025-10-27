@@ -50,13 +50,8 @@ function DayView(){
                                 {convertTo12hr(time)}
                             </Flex>
                             <Divider orientation="vertical" color="black" 
-                                
-                            
-                            
                             />
                         </>
-                        
-                
                     )
                 })}
         </ViewHeader>
