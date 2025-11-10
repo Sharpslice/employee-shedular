@@ -28,4 +28,19 @@ shift.post('/:id/shift',async(req,res)=>{
     }
 })
 
+shift.delete('/:id/delete',async(req,res)=>{
+    const shift_id = req.params.id;
+   
+    try{
+        await prisma.employee_Shifts.delete({
+            where:{id:parseInt(shift_id)}
+        })
+    }catch(error:unknown){
+        if(error instanceof Error){
+            console.error('Error',error.message)
+            return res.status(500).json({success:false,error:error.message})
+        }
+    }
+})
+
 export default shift

@@ -4,6 +4,7 @@ import {DateTime} from 'luxon'
 import { useContext, useState } from "react";
 import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 import  { EmployeeContext } from "../../views/EmployeeContext";
+import axios from "axios";
 
 
 
@@ -22,11 +23,16 @@ function ShiftCell(){
 
     const [activate,setActivate] = useState(false)
 
+    const deleteShift = async()=>{
+        await axios.delete(`http://localhost:3000/api/employee/shift/${shift?.id}/delete`)
+    }
+
     return (
     
         <Flex  tabIndex={0} flex={1}  onKeyDown={(e)=>{
             if(e.key ==='Backspace' || e.key ==='Delete'){
                 console.log('Delete')
+                deleteShift()
             }
             else if (e.key===' ' || e.key ==='Enter'){
                 console.log('space')
