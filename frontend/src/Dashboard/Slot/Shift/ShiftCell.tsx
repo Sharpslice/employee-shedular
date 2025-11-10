@@ -1,12 +1,12 @@
 import { Flex, Text } from "@mantine/core";
-import type { Shift } from "../../Interfaces/Shift";
-import {DateTime} from 'luxon'
-import { useState } from "react";
 
-interface PlaceholderProp{
-  
-    shift:Shift
-}
+import {DateTime} from 'luxon'
+import { useContext, useState } from "react";
+import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
+import  { EmployeeContext } from "../../views/EmployeeContext";
+import axios from "axios";
+
+
 
 const convertTo12hr = (time:string | null)=>{
     if(!time) return ""
@@ -14,34 +14,44 @@ const convertTo12hr = (time:string | null)=>{
     return dt.toFormat('hh:mm a')
 }
 
-function ShiftCell({shift}:PlaceholderProp){
+function ShiftCell(){
 
-    const start_time = convertTo12hr(shift.start_time)
-    const end_time = convertTo12hr(shift.end_time)
+    const {shift} = useContext(EmployeeContext)
+
+    const start_time = convertTo12hr(shift!.start_time)
+    const end_time = convertTo12hr(shift!.end_time)
 
     const [activate,setActivate] = useState(false)
 
-    // const onDeleteShift = async(shift_id:number)=>{
-    //     console.log(shift_id)
-    //     //await axios.delete(`http://localhost:3000/api/employee/shift/${shift_id}`)
-    // }
+    const deleteShift = async()=>{
+        await axios.delete(`http://localhost:3000/api/employee/shift/${shift?.id}/delete`)
+    }
 
     return (
-    <>
-        <Flex tabIndex={0} flex={1}  onKeyDown={(e)=>{
+    
+        <Flex  tabIndex={0} flex={1}  onKeyDown={(e)=>{
             if(e.key ==='Backspace' || e.key ==='Delete'){
                 console.log('Delete')
+                deleteShift()
             }
             else if (e.key===' ' || e.key ==='Enter'){
                 console.log('space')
+                setActivate(prev=>!prev)
             }
 
 
         }}
+        onClick={()=>{
+           
+
+
+        }}
+        onBlur={()=>{setActivate(false)}}
+       
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
             
-          {
+          {activate ? <TimeRangePicker/> :
             <>
                 <Text fz={14}>{start_time}</Text>  
                 <Text fz={14}>-</Text>
@@ -56,7 +66,7 @@ function ShiftCell({shift}:PlaceholderProp){
 
 
     
-    </>)
+    )
 }
 
 export default ShiftCell;

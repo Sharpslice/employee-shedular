@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom"
 import type { Shift } from "../../Interfaces/Shift"
 import type { Employee } from "../../Interfaces/Employee"
 import { DateTime } from "luxon"
-import EmployeeRow from "../EmployeeRow"
+import EmployeeRow from "../EmployeeRow/EmployeeRow"
 import ViewHeader from "../WeekView/View-header"
 type DayElement ={
     week:number,
@@ -50,13 +50,8 @@ function DayView(){
                                 {convertTo12hr(time)}
                             </Flex>
                             <Divider orientation="vertical" color="black" 
-                                
-                            
-                            
                             />
                         </>
-                        
-                
                     )
                 })}
         </ViewHeader>
@@ -83,8 +78,6 @@ function DayView(){
                                     {`${convertTo12hrMin(todayShift.start_time)} - ${convertTo12hrMin(todayShift.end_time)}`}
                                 </Text>
                                 
-                                
-
                             </Flex>
                         </EmployeeRow>
 
