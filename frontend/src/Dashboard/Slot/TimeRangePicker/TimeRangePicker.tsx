@@ -31,21 +31,21 @@ function TimeRangePicker(){
  
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const afternoon = getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'})
+   
 
-    console.log(date)
   
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         try{
             const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/employee/${employee!.id}/shift`,
                     slot==='start' 
                     ?{
-                        date:date,
+                        date:date?.date,
                         start_time: time,
                         end_time : null
                     }
 
                     :{
-                        date:date,
+                        date:date?.date,
                         start_time: null,
                         end_time: time
                     }
@@ -73,10 +73,11 @@ function TimeRangePicker(){
     }
 
     return (<>
-            <Group justify="center" flex={1} gap={0} bd={'1px solid black'} >
+            <Group justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} >
                 <TimePicker 
+                    
                     classNames={{ input: 'david-class'}}
-                    //style={{width:'max-content'}}
+                    styles={{input:{backgroundColor:'transparent'}}}
                     value={shift?.start_time}
                     onChange={(e)=>{onChange(e,"start")}}
                     format="12h"
@@ -98,7 +99,7 @@ function TimeRangePicker(){
 
                 <TimePicker 
                     classNames={{ input: 'david-class'}}
-                    //style={{width:'max-content'}}
+                    styles={{input:{backgroundColor:'transparent'}}}
                     value={shift?.end_time}
                     onChange={(e)=>{onChange(e,"end")}}
                     format="12h"

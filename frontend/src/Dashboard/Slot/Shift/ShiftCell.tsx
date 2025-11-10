@@ -23,8 +23,8 @@ function ShiftCell(){
     const [activate,setActivate] = useState(false)
 
     return (
-    <>
-        <Flex tabIndex={0} flex={1}  onKeyDown={(e)=>{
+    
+        <Flex  tabIndex={0} flex={1}  onKeyDown={(e)=>{
             if(e.key ==='Backspace' || e.key ==='Delete'){
                 console.log('Delete')
             }
@@ -35,6 +35,13 @@ function ShiftCell(){
 
 
         }}
+        onClick={()=>{
+           
+
+
+        }}
+        onBlur={()=>{setActivate(false)}}
+       
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
             
@@ -53,7 +60,7 @@ function ShiftCell(){
 
 
     
-    </>)
+    )
 }
 
 export default ShiftCell;

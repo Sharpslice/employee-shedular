@@ -5,6 +5,7 @@ import SlotPlaceholder from "./SlotPlaceholder"
 
 
 interface SlotContainerProps{
+  
     coords?: {row:number, col:number}
     focusedId?: {row:number,col:number}
     children?: React.ReactNode
@@ -12,6 +13,8 @@ interface SlotContainerProps{
 function SlotContainer({coords,focusedId,children}:SlotContainerProps){
     const childrenArray = React.Children.toArray(children)
 
+ 
+    
     if((focusedId?.row === coords?.row && focusedId?.col===coords?.col) && childrenArray.length ===0) return <SlotMenu/>
     
     if(childrenArray.length === 0) return <SlotPlaceholder/>
