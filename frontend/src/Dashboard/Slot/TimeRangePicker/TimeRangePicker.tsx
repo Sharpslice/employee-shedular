@@ -98,6 +98,7 @@ function TimeRangePicker(){
                 <Text  w={10} style={{textAlign:'center'}}>-</Text>
 
                 <TimePicker 
+                
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
                     value={shift?.end_time}

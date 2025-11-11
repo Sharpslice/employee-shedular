@@ -51,30 +51,21 @@ function EmployeeRow({row,cellRefs,focusedId,setFocusedId,handleArrowKey,employe
                 <Flex  gap={5} flex={1} miw={'100px'} >
                     {gridCellArray.map((slot,index)=>{
                         return(
-                            <Flex   key={slot.date.date} bg={'grey'} tabIndex={slot.shift ? -1:0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}
-                                    ref={cellRefs?.[index]}
-                                    onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
-                                    onFocus={()=>{
-                                        setFocusedId({row:row!,col:index})
-                                    }}>
-                                    
-                                <EmployeeProvider value={{employee:employee, date:slot.date, shift: slot.shift}}>
-
-                        
-                                        <SlotContainer  coords ={{row:row!,col:index}} focusedId={focusedId}>
-                                            {slot.shift && <ShiftCell/>}
-                                            
-                                        </SlotContainer>
-                    
-
-
-                                </EmployeeProvider>                   
-
-
-
-                             
-                               
-                            </Flex>
+                            <EmployeeProvider value={{employee:employee, date:slot.date, shift: slot.shift}}>
+                                <Flex   key={slot.date.date} bg={'grey'} tabIndex={slot.shift ? -1:0} flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'}
+                                        ref={cellRefs?.[index]}
+                                        onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
+                                        onFocus={()=>{
+                                            setFocusedId({row:row!,col:index})
+                                        }}>
+                                        
+                                            <SlotContainer  coords ={{row:row!,col:index}} focusedId={focusedId}>
+                                                {slot.shift && <ShiftCell/>}
+                                                
+                                            </SlotContainer>
+    
+                                </Flex>
+                            </EmployeeProvider>     
                     )})}
                 </Flex>
 

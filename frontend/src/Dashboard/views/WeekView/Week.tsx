@@ -11,6 +11,7 @@ import React, { useMemo, useState} from "react";
 
 
 import WeekHeaderCell from "./WeekHeaderCell";
+import useGridNavigation from "../GridNavigation/useGridNavigation";
 
 
 function Week(){
@@ -18,32 +19,7 @@ function Week(){
 
     
     
-    const cellRefs = useMemo(() => {
-        return Array.from({ length: employeeList.length }, () =>
-            Array.from({ length: dateRange.length }, () => React.createRef<HTMLDivElement>())
-        );
-    }, [employeeList.length, dateRange.length]);
-
-    const [focusedId,setFocusedId] = useState({row:100,col:100})
-  
-
-    const handleArrowKey=(key:string,row:number,col:number)=>{
-        switch(key){
-            case('ArrowUp'):
-                cellRefs[row-1][col].current?.focus()
-                break;
-            case('ArrowDown'):
-                cellRefs[row+1][col].current?.focus()
-                break;
-            case('ArrowLeft'):
-                cellRefs[row][col-1].current?.focus()   
-                break;
-            case('ArrowRight'):
-                cellRefs[row][col+1].current?.focus()
-                break;
-        }
-    }
-   
+    const {cellRefs,focusedId,setFocusedId,handleArrowKey} = useGridNavigation();
   
     if (!employeeList.length || !dateRange.length) return null;
     return (

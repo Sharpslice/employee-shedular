@@ -42,11 +42,15 @@ function ShiftCell(){
 
         }}
         onClick={()=>{
-           
+
 
 
         }}
-        onBlur={()=>{setActivate(false)}}
+        onBlur={()=>{
+            console.log('you tabbed off')
+            setActivate(false)
+        
+        }}
        
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
