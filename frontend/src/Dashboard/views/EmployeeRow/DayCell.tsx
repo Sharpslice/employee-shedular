@@ -39,7 +39,7 @@ function DayCell({row,index,slot}:DayProps){
 
                  onParentFocus(e)
               
-                // setFocusedId({row:row!,col:index})
+                setFocusedId({row:row!,col:index})
             }}>
                                         
             <SlotContainer  coords ={{row:row!,col:index}} focusedId={focusedId}>
