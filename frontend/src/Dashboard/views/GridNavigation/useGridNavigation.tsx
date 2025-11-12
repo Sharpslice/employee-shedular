@@ -3,10 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import type { Day } from "../../Interfaces/Day";
 import type { Employee } from "../../Interfaces/Employee";
 
-// interface useGridNavigationProp{
-//     employeeList: []
-//     dateRange: []
-// }
+
 
 function useGridNavigation(){
     const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Employee[] }>();
@@ -19,6 +16,7 @@ function useGridNavigation(){
             );
         }, [employeeList.length, dateRange.length]);
 
+    console.log(cellRefs)
     const handleArrowKey=(key:string,row:number,col:number)=>{
         switch(key){
             case('ArrowUp'):
