@@ -1,6 +1,6 @@
 import { Flex } from "@mantine/core";
 import type { Employee } from "../../Interfaces/Employee";
-import React, {  useState } from 'react'
+import {  useState } from 'react'
 import type { Day } from "../../Interfaces/Day";
 
 import EmployeeInfo from "./EmployeeInfo";

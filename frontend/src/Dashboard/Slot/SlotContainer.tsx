@@ -13,7 +13,7 @@ interface SlotContainerProps{
 function SlotContainer({coords,focusedId,children}:SlotContainerProps){
     const childrenArray = React.Children.toArray(children)
 
- 
+    
     
     if((focusedId?.row === coords?.row && focusedId?.col===coords?.col) && childrenArray.length ===0) return <SlotMenu/>
     

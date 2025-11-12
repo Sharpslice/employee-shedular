@@ -29,7 +29,7 @@ function ShiftCell(){
 
     return (
     
-        <Flex  tabIndex={0} flex={1}  onKeyDown={(e)=>{
+        <Flex className="slot" tabIndex={0} flex={1}  onKeyDown={(e)=>{
             if(e.key ==='Backspace' || e.key ==='Delete'){
                 console.log('Delete')
                 deleteShift()
