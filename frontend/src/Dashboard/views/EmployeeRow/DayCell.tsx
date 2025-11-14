@@ -37,7 +37,7 @@ function DayCell({row,index,slot}:DayProps){
             onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
             onFocus={(e)=>{
 
-                 onParentFocus(e)
+                onParentFocus(e)
               
                 setFocusedId({row:row!,col:index})
             }}>

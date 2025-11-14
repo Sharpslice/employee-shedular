@@ -7,7 +7,7 @@ import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
 
-import { useContext } from "react"
+import React, { useContext } from "react"
 import { EmployeeContext } from "../../views/EmployeeContext"
 
 
@@ -25,7 +25,11 @@ interface ShiftResponse{
     row?: Shift
     error?:string
 }
-function TimeRangePicker(){
+
+type TimeRangePickerProps={
+    setActivate: React.Dispatch<React.SetStateAction<boolean>>
+}
+function TimeRangePicker({setActivate} : TimeRangePickerProps){
    
     const {employee,date,shift} = useContext(EmployeeContext)
  
@@ -73,8 +77,13 @@ function TimeRangePicker(){
     }
 
     return (<>
-            <Group justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} >
+            <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} 
+                
+                onBlur={()=>{console.log('hello')}}
+                
+                >
                 <TimePicker 
+                    onFocus={()=>{console.log('timepicker 1')}}
                     
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
@@ -98,7 +107,8 @@ function TimeRangePicker(){
                 <Text  w={10} style={{textAlign:'center'}}>-</Text>
 
                 <TimePicker 
-                
+                    onFocus={()=>{console.log('timepicker 2')}}
+                    
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
                     value={shift?.end_time}

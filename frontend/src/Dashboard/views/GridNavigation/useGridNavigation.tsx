@@ -16,7 +16,7 @@ function useGridNavigation(){
             );
         }, [employeeList.length, dateRange.length]);
 
-    console.log(cellRefs)
+
     const handleArrowKey=(key:string,row:number,col:number)=>{
         switch(key){
             case('ArrowUp'):

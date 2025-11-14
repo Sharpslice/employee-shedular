@@ -46,16 +46,20 @@ function ShiftCell(){
 
 
         }}
-        onBlur={()=>{
-            console.log('you tabbed off')
-            setActivate(false)
-        
+        onBlur={(e)=>{
+
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                setActivate(false)
+            }
+
+
         }}
+       
        
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
             
-          {activate ? <TimeRangePicker/> :
+          {activate ? <TimeRangePicker setActivate={setActivate}/> :
             <>
                 <Text fz={14}>{start_time}</Text>  
                 <Text fz={14}>-</Text>
