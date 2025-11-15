@@ -3,7 +3,7 @@ import { useContext } from "react"
 import { EmployeeContext } from "../views/EmployeeContext"
 import axios from "axios"
 
-function SlotMenu(){
+function SlotMenuBtn(){
 
     const employeeContext = useContext(EmployeeContext)
     
@@ -11,12 +11,17 @@ function SlotMenu(){
         await axios.post(`http://localhost:3000/api/employee/shift/${employeeContext.employee?.id}/shift`,{date:employeeContext.date?.date})
     }
 
-
+    const focusRef =(element:HTMLButtonElement)=>{
+        if(element){
+            
+            element.focus()
+        }
+    }
     return(
     <>
-        <Menu withArrow>
-            <Menu.Target>
-                <Button bg={'grey'} flex={1}>
+        <Menu  withArrow>
+            <Menu.Target >
+                <Button ref={focusRef} className="menuBtn" bg={'grey'} flex={1}>
                     slot
                 </Button>
             </Menu.Target>
@@ -41,4 +46,4 @@ function SlotMenu(){
     )
 }
 
-export default SlotMenu
+export default SlotMenuBtn

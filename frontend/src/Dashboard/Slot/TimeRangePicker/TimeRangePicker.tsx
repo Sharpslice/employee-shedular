@@ -26,10 +26,8 @@ interface ShiftResponse{
     error?:string
 }
 
-type TimeRangePickerProps={
-    setActivate: React.Dispatch<React.SetStateAction<boolean>>
-}
-function TimeRangePicker({setActivate} : TimeRangePickerProps){
+
+function TimeRangePicker(){
    
     const {employee,date,shift} = useContext(EmployeeContext)
  

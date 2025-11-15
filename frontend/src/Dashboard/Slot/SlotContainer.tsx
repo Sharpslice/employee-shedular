@@ -1,11 +1,11 @@
 
 import React from "react"
-import SlotMenu from "./SlotMenu"
+import SlotMenuBtn from "./SlotMenuBtn"
 import SlotPlaceholder from "./SlotPlaceholder"
 
 
 interface SlotContainerProps{
-  
+   
     coords?: {row:number, col:number}
     focusedId?: {row:number,col:number}
     children?: React.ReactNode
@@ -15,7 +15,10 @@ function SlotContainer({coords,focusedId,children}:SlotContainerProps){
 
     
     
-    if((focusedId?.row === coords?.row && focusedId?.col===coords?.col) && childrenArray.length ===0) return <SlotMenu/>
+    if((focusedId?.row === coords?.row && focusedId?.col===coords?.col) && childrenArray.length ===0){
+        
+        return <SlotMenuBtn/>
+    } 
     
     if(childrenArray.length === 0) return <SlotPlaceholder/>
     return(

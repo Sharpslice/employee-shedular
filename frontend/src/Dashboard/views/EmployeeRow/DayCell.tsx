@@ -5,6 +5,9 @@ import { useContext} from "react"
 import { GridNavigationContext } from "../GridNavigation/GridNavigationContext"
 import type { Day } from "../../Interfaces/Day"
 import type { Shift } from "../../Interfaces/Shift"
+
+
+
 interface slotObj{
     date: Day
     shift: Shift | undefined
@@ -20,32 +23,38 @@ interface DayProps{
 function DayCell({row,index,slot}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey} = useContext(GridNavigationContext)!
 
+    
+
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         if(e.target === e.currentTarget){
             const firstSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".slot")
-            console.log('parent-redirect')
+          
             firstSlot?.focus()
+            
+            
         }
-        
     }
+
     return(
         <Flex  
             key={slot.date.date}  
             flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
-            tabIndex={slot.shift?1:0} 
+            tabIndex={-1}
             ref={cellRefs?.[row][index]}
             onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
             onFocus={(e)=>{
-
+                
                 onParentFocus(e)
-              
                 setFocusedId({row:row!,col:index})
             }}>
                                         
-            <SlotContainer  coords ={{row:row!,col:index}} focusedId={focusedId}>
-                {slot.shift && <ShiftCell/>}
-               
-            </SlotContainer>
+            
+              <SlotContainer   coords ={{row:row!,col:index}} focusedId={focusedId}>
+                    {slot.shift && <ShiftCell/>}
+                    {slot.shift && <ShiftCell/>}
+                </SlotContainer> 
+
+            
 
         </Flex>
     )

@@ -59,7 +59,7 @@ function ShiftCell(){
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
             
-          {activate ? <TimeRangePicker setActivate={setActivate}/> :
+          {activate ? <TimeRangePicker/> :
             <>
                 <Text fz={14}>{start_time}</Text>  
                 <Text fz={14}>-</Text>
