@@ -6,15 +6,15 @@ import type { Employee } from "../../Interfaces/Employee";
 
 
 function useGridNavigation(){
-    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Employee[] }>();
+    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee> }>();
 
     const [focusedId,setFocusedId] = useState({row:100,col:100})
 
     const cellRefs = useMemo(() => {
-            return Array.from({ length: employeeList.length }, () =>
+            return Array.from({ length: employeeList.size }, () =>
                 Array.from({ length: dateRange.length }, () => React.createRef<HTMLDivElement>())
             );
-        }, [employeeList.length, dateRange.length]);
+        }, [employeeList.size, dateRange.length]);
 
 
     const handleArrowKey=(key:string,row:number,col:number)=>{

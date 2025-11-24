@@ -34,7 +34,7 @@ function DayCell({row,index,slot}:DayProps){
             
         }
     }
-
+   
     return(
         <Flex  
             key={slot.date.date}  

@@ -1,6 +1,6 @@
 import express from 'express';
 import prisma from '../../db/db'
-
+import {io} from '../../src/app'
 const shift = express.Router();
 
 
@@ -16,6 +16,8 @@ shift.post('/:id/shift',async(req,res)=>{
                 end_time:null
            }
         })
+
+        io.emit("shiftUpdated",row)
         res.json({success:true,row})
     }
     catch(error:unknown){

@@ -12,6 +12,7 @@ import Dashboard from './Dashboard/Dashboard.tsx';
 import Week from './Dashboard/views/WeekView/Week.tsx';
 
 import DayView from './Dashboard/views/DayView/DayView.tsx';
+import { SocketProvider } from './SocketContext.tsx';
 
 
 
@@ -84,11 +85,11 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
 
       <MantineProvider 
-    
-      
-      
       >
-        <RouterProvider router ={router}/>
+        <SocketProvider>
+            <RouterProvider router ={router}/>
+        </SocketProvider>
+        
       </MantineProvider>
     
   </StrictMode>,

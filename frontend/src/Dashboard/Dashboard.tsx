@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
 import {DateTime} from 'luxon'
 import axios from "axios";
 import Header from "./Header";
@@ -8,6 +8,9 @@ import { Outlet, useMatch, useParams } from "react-router-dom";
 
 import type { Employee } from "./Interfaces/Employee";
 import type { Day } from "./Interfaces/Day";
+import { useSocket } from "../SocketContext";
+import { ArrayToMap } from "./views/ArrayToMap";
+
 
 
 
@@ -22,7 +25,7 @@ interface EmployeeResponse{
 function Dashboard(){   
     const {date} = useParams();
     const [dateRange,setDateRange] = useState<Day[]>([]) 
-    const [employeeList, setEmployeeList] = useState<Employee[]>([])
+    const [employeeList, setEmployeeList] = useState<Map<number,Employee>>(new Map())
 
     const isWeek = useMatch('schedule/week/*')
     const isDay = useMatch('schedule/day/*')
@@ -30,8 +33,15 @@ function Dashboard(){
 
     const safeView = isWeek ? 'week' : isDay ? 'day' : isMonth ? 'month' : ''
     const safeDate = date ?? DateTime.local().toISODate()
+  
 
-    
+    const socket = useSocket()
+    useEffect(()=>{
+        socket?.on('shiftUpdated',(data)=>{
+            console.log(data)
+            
+        })
+    },[socket])
 
     useEffect(()=>{
         const fetchData =async() =>{
@@ -41,8 +51,8 @@ function Dashboard(){
        
     
             const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee?date=${safeDate}&view=${safeView}`);
-            console.log(employeeResponse.data.employeeList)
-            setEmployeeList(employeeResponse.data.employeeList)
+            console.log(ArrayToMap(  employeeResponse.data.employeeList))
+            setEmployeeList(ArrayToMap(  employeeResponse.data.employeeList))
             console.log('remounts')
         }
         fetchData()
@@ -57,7 +67,7 @@ function Dashboard(){
             
             <Container fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
             
-                {dateRange.length!=0 && employeeList.length!=0 &&  <Outlet  context={{safeView,dateRange,employeeList}}/>}
+                {dateRange.length!=0 && employeeList.size!=0 &&  <Outlet  context={{safeView,dateRange,employeeList}}/>}
             
             </Container> 
        

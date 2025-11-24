@@ -15,11 +15,13 @@ import { GridNavigationProvider } from "../GridNavigation/GridNavigationContext"
 
 
 function Week(){
-    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Employee[] }>();
+    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee> }>();
 
   
   
-    if (!employeeList.length || !dateRange.length) return null;
+    if (!employeeList.size || !dateRange.length) return null;
+
+    console.log([...employeeList])
     return (
         <Flex w={'100%'} gap={5} direction={"column"}>
             <ViewHeader colGap={5}>
@@ -30,11 +32,11 @@ function Week(){
 
             <GridNavigationProvider>
                 <Flex gap={10} direction={'column'}>
-                
-                    {employeeList.map((employee,row)=>{     
+                    
+                    {[...employeeList].map(([id,employee],row)=>{     
                         return(
                             <EmployeeRow 
-                                key={employee.id}
+                                key={id}
                                 row={row}  
                                 employee={employee} 
                                 gridCellArray = {dateRange.map((date)=>{
