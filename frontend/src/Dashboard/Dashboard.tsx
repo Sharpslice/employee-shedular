@@ -37,9 +37,26 @@ function Dashboard(){
 
     const socket = useSocket()
     useEffect(()=>{
-        socket?.on('shiftUpdated',(data)=>{
+        socket?.on('shiftAdded',(data)=>{
             console.log(data)
-            
+
+            setEmployeeList((oldMap)=>{
+                const employee = oldMap.get(data.employee_id)!
+
+                const newShiftArray = [...employee.shifts, data]
+
+                const updatedEmployeeInfo = {
+                    ...employee,
+                    shifts: newShiftArray
+                }
+
+                const newMap = new Map(oldMap);
+                newMap.set(data.employee_id,updatedEmployeeInfo)
+                
+
+
+                return newMap
+            })
         })
     },[socket])
 
@@ -51,7 +68,7 @@ function Dashboard(){
        
     
             const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee?date=${safeDate}&view=${safeView}`);
-            console.log(ArrayToMap(  employeeResponse.data.employeeList))
+            console.log(ArrayToMap( employeeResponse.data.employeeList))
             setEmployeeList(ArrayToMap(  employeeResponse.data.employeeList))
             console.log('remounts')
         }
