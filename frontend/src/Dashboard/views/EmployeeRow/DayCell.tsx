@@ -51,7 +51,7 @@ function DayCell({row,index,slot}:DayProps){
             
               <SlotContainer   coords ={{row:row!,col:index}} focusedId={focusedId}>
                     {slot.shift && <ShiftCell/>}
-                    {slot.shift && <ShiftCell/>}
+                   
                 </SlotContainer> 
 
             

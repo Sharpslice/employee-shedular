@@ -21,7 +21,7 @@ function Week(){
   
     if (!employeeList.size || !dateRange.length) return null;
 
-    console.log([...employeeList])
+    
     return (
         <Flex w={'100%'} gap={5} direction={"column"}>
             <ViewHeader colGap={5}>

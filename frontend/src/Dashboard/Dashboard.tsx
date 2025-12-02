@@ -38,8 +38,8 @@ function Dashboard(){
     const socket = useSocket()
     useEffect(()=>{
         socket?.on('shiftAdded',(data)=>{
-            console.log(data)
-
+            console.log("adding shift")
+            console.log(employeeList)
             setEmployeeList((oldMap)=>{
                 const employee = oldMap.get(data.employee_id)!
 
@@ -58,6 +58,27 @@ function Dashboard(){
                 return newMap
             })
         })
+        socket?.on('shiftDeleted',(data)=>{
+            console.log("deleting shift", data)
+            setEmployeeList((oldMap)=>{
+                const employee = oldMap.get(data.employee_id)!
+
+                const newShiftArray = employee.shifts.filter((shift)=>shift.id !== data.shift_id)
+
+                const updatedEmployeeInfo = {
+                    ...employee,
+                    shifts:newShiftArray
+                }
+                const newMap = new Map(oldMap);
+                newMap.set(data.employee_id,updatedEmployeeInfo)
+                console.log('newMap', newMap)
+                return newMap
+            })
+            
+        })
+       
+  
+        
     },[socket])
 
     useEffect(()=>{
