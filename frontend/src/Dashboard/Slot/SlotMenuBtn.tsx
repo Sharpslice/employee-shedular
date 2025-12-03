@@ -1,14 +1,16 @@
 import { Button, Menu } from "@mantine/core"
-import { useContext } from "react"
-import { EmployeeContext } from "../views/EmployeeContext"
+
 import axios from "axios"
+import type { Employee } from "../Interfaces/Employee"
+import type { Day } from "../Interfaces/Day"
 
-function SlotMenuBtn(){
 
-    const employeeContext = useContext(EmployeeContext)
+function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
+
+  
     
     const createShift =async()=>{
-        await axios.post(`http://localhost:3000/api/employee/shift/${employeeContext.employee?.id}/shift`,{date:employeeContext.date?.date})
+        await axios.post(`http://localhost:3000/api/employee/shift/${employee.id}/shift`,{date:date.date})
     }
 
     const focusRef =(element:HTMLButtonElement)=>{

@@ -8,7 +8,7 @@ import type { Shift } from "../../Interfaces/Shift"
 import axios from "axios"
 
 import React, { useContext } from "react"
-import { EmployeeContext } from "../../views/EmployeeContext"
+
 
 
 
@@ -29,7 +29,7 @@ interface ShiftResponse{
 
 function TimeRangePicker(){
    
-    const {employee,date,shift} = useContext(EmployeeContext)
+    
  
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const afternoon = getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'})
@@ -75,7 +75,7 @@ function TimeRangePicker(){
     }
 
     return (<>
-            <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} 
+            {/* <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} 
                 
                 onBlur={()=>{console.log('hello')}}
                 
@@ -127,7 +127,7 @@ function TimeRangePicker(){
                 />
 
             </Group>
-   
+    */}
         </>)
     
 }

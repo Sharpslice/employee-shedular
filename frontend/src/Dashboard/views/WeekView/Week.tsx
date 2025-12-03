@@ -35,25 +35,7 @@ function Week(){
                     
                     {[...employeeList].map(([id,employee],row)=>{     
                         return(
-                            <EmployeeRow 
-                                key={id}
-                                row={row}  
-                                employee={employee} 
-                                gridCellArray = {dateRange.map((date)=>{
-                                    const shift = employee.shifts.find((shift)=>shift.date === date.date)
-                                    const availablility = undefined
-                                    const timeOff = undefined
-                                    return(
-                                        {
-                                            date:date,
-                                            shift:shift,
-                                            availablility:availablility,
-                                            timeOff:timeOff
-                                        }
-                                    )
-                                })}>
-
-                            </EmployeeRow>
+                            <EmployeeRow key={id} row={row} employee={employee} />
                         )
                     })}
                 </Flex>

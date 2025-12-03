@@ -5,6 +5,8 @@ import { useContext} from "react"
 import { GridNavigationContext } from "../GridNavigation/GridNavigationContext"
 import type { Day } from "../../Interfaces/Day"
 import type { Shift } from "../../Interfaces/Shift"
+import type { Date } from "../../Interfaces/Date"
+import type { Employee } from "../../Interfaces/Employee"
 
 
 
@@ -17,10 +19,11 @@ interface slotObj{
 interface DayProps{
     row:number
     index:number
-    slot:slotObj
+    employee:Employee
+    date: Date
 }
 
-function DayCell({row,index,slot}:DayProps){
+function DayCell({row,index,employee,date}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey} = useContext(GridNavigationContext)!
 
     
@@ -31,13 +34,14 @@ function DayCell({row,index,slot}:DayProps){
           
             firstSlot?.focus()
             
-            
         }
     }
+
+    const hasShift = employee.shifts.filter((shift)=> shift.date === date.date)
    
     return(
         <Flex  
-            key={slot.date.date}  
+            key={`${employee.id} - ${date.date}`}  
             flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
             tabIndex={-1}
             ref={cellRefs?.[row][index]}
@@ -47,11 +51,15 @@ function DayCell({row,index,slot}:DayProps){
                 onParentFocus(e)
                 setFocusedId({row:row!,col:index})
             }}>
-                                        
+                                    
             
-              <SlotContainer   coords ={{row:row!,col:index}} focusedId={focusedId}>
-                    {slot.shift && <ShiftCell/>}
-                   
+                <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
+                    {hasShift.map((shift)=>{
+                        return(
+                            <ShiftCell shift={shift}/>
+                        )
+                    })}
+                    
                 </SlotContainer> 
 
             

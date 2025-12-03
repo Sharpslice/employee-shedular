@@ -37,6 +37,9 @@ function Dashboard(){
 
     const socket = useSocket()
     useEffect(()=>{
+        socket?.on('shiftUpdated',(data)=>{
+            console.log('shiftUpdated',(data))
+        })
         socket?.on('shiftAdded',(data)=>{
             console.log("adding shift")
             console.log(employeeList)
