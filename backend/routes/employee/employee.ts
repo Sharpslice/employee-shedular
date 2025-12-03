@@ -7,10 +7,6 @@ const employee = express.Router();
 
 employee.get('/',async(req,res)=>{
 
-  
-
-    
-
     const employeeList = await prisma.employee.findMany({
         select:{
             id:true,
@@ -47,7 +43,7 @@ employee.delete('/shift/:shift_id',async(req,res)=>{
 
 employee.post('/:employee_id/shift',async(req,res)=>{
     const employee_id = req.params.employee_id;
-    console.log(employee_id)
+   
     const {date,start_time,end_time} = req.body;
 
     try{
@@ -55,7 +51,7 @@ employee.post('/:employee_id/shift',async(req,res)=>{
             where:{
                 employee_id_date:{ 
                     employee_id: parseInt(employee_id),
-                    date: new Date(date) 
+                    date: date
                 }
             },
             update:
@@ -69,7 +65,7 @@ employee.post('/:employee_id/shift',async(req,res)=>{
                 },
             create:{
                 employee_id: parseInt(employee_id),
-                date: new Date(date),
+                date: date,
                 start_time: start_time || null,
                 end_time: end_time || null,
                 

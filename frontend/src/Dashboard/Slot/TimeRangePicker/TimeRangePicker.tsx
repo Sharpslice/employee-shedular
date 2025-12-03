@@ -7,17 +7,11 @@ import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
 
-import React, { useContext } from "react"
 
 
 
 
-// interface TimeRangePickerProps{
-//     shift?:Shift
-//     employee: Employee
-//     date:string
-//     //setIsFocused:React.Dispatch<React.SetStateAction<boolean>>
-// }
+
 
 
 interface ShiftResponse{
@@ -27,7 +21,7 @@ interface ShiftResponse{
 }
 
 
-function TimeRangePicker(){
+function TimeRangePicker({shift}:{shift:Shift}){
    
     
  
@@ -38,16 +32,16 @@ function TimeRangePicker(){
   
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         try{
-            const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/employee/${employee!.id}/shift`,
+            const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/employee/${shift.employee_id}/shift`,
                     slot==='start' 
                     ?{
-                        date:date?.date,
+                        date:new Date(shift.date),
                         start_time: time,
                         end_time : null
                     }
 
                     :{
-                        date:date?.date,
+                        date:new Date(shift.date),
                         start_time: null,
                         end_time: time
                     }
@@ -75,7 +69,7 @@ function TimeRangePicker(){
     }
 
     return (<>
-            {/* <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} 
+            <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} 
                 
                 onBlur={()=>{console.log('hello')}}
                 
@@ -127,7 +121,7 @@ function TimeRangePicker(){
                 />
 
             </Group>
-    */}
+   
         </>)
     
 }
