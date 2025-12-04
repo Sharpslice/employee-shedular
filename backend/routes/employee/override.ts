@@ -1,5 +1,6 @@
 import express from 'express';
 import prisma from '../../db/db'
+import {io} from '../../src/app'
 const override = express.Router()
 
 override.post('/:id/:date',async(req,res)=>{
@@ -31,7 +32,7 @@ override.post('/:id/:date',async(req,res)=>{
         }
 
         })
-
+        io.emit('overrideCreated',row)
         res.json({success:true,row})
     }catch(err){
         console.error(err)
