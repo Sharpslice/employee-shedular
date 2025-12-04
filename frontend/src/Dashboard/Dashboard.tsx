@@ -38,7 +38,30 @@ function Dashboard(){
     const socket = useSocket()
     useEffect(()=>{
         socket?.on('shiftUpdated',(data)=>{
-            console.log('shiftUpdated',(data))
+            console.log('shiftUpdated')
+            
+            setEmployeeList((oldMap)=>{
+               console.log("adding shift")
+            
+            
+                const employee = oldMap.get(data.employee_id)!
+
+                const newShiftArray = employee.shifts.map((shift) => 
+                    shift.id === data.id ? data : shift
+                );
+                const updatedEmployeeInfo = {
+                    ...employee,
+                    shifts: newShiftArray
+                }
+
+                const newMap = new Map(oldMap);
+                newMap.set(data.employee_id,updatedEmployeeInfo)
+                
+
+
+                return newMap
+            
+            })
         })
         socket?.on('shiftAdded',(data)=>{
             console.log("adding shift")

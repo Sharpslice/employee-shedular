@@ -2,6 +2,7 @@ import express from 'express';
 import prisma from '../../db/db'
 import { DateTime } from 'luxon';
 
+import {io} from '../../src/app'
 const employee = express.Router();
 
 
@@ -71,6 +72,7 @@ employee.post('/:employee_id/shift',async(req,res)=>{
                 
             }
         })
+        io.emit('shiftUpdated',row)
         res.json({success:true,row})
     }
     catch(error:unknown){

@@ -3,24 +3,18 @@ import SlotContainer from "../../Slot/SlotContainer"
 import ShiftCell from "../../Slot/Shift/ShiftCell"
 import { useContext} from "react"
 import { GridNavigationContext } from "../GridNavigation/GridNavigationContext"
-import type { Day } from "../../Interfaces/Day"
-import type { Shift } from "../../Interfaces/Shift"
-import type { Date } from "../../Interfaces/Date"
+
 import type { Employee } from "../../Interfaces/Employee"
+import type { Day } from "../../Interfaces/Day"
 
 
 
-interface slotObj{
-    date: Day
-    shift: Shift | undefined
-    availablility: undefined
-    timeOff: undefined
-}
+
 interface DayProps{
     row:number
     index:number
     employee:Employee
-    date: Date
+    date: Day
 }
 
 function DayCell({row,index,employee,date}:DayProps){
@@ -54,9 +48,10 @@ function DayCell({row,index,employee,date}:DayProps){
                                     
             
                 <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
-                    {hasShift.map((shift)=>{
+                    {hasShift.map((shift,index)=>{
+                        
                         return(
-                            <ShiftCell shift={shift}/>
+                            <ShiftCell key={`${shift.id}-${index}`} shift={shift}/>
                         )
                     })}
                     
