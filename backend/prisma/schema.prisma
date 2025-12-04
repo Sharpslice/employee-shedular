@@ -71,11 +71,15 @@ model Availability_Override{
     id                      Int         @id @default(autoincrement())
     employee_id             Int
     date                    DateTime    @db.Date
+    start_time              DateTime?
+    end_time                DateTime?
     is_available            Boolean
+    note                    String?
 
     employee                Employee @relation(fields:[employee_id],references:id)
     calendar                Calendar @relation(fields:[date],references:date)
 
+    @@unique([employee_id,date])
     @@map("availability_override")
 }
 
