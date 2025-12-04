@@ -7,6 +7,9 @@ import { GridNavigationContext } from "../GridNavigation/GridNavigationContext"
 import type { Employee } from "../../Interfaces/Employee"
 import type { Day } from "../../Interfaces/Day"
 
+import { ContextMenuContext } from "../../Slot/ContextMenu/ContextMenuProvider"
+
+
 
 
 
@@ -20,7 +23,7 @@ interface DayProps{
 function DayCell({row,index,employee,date}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey} = useContext(GridNavigationContext)!
 
-    
+    const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         if(e.target === e.currentTarget){
@@ -36,13 +39,27 @@ function DayCell({row,index,employee,date}:DayProps){
     return(
         <Flex  
             key={`${employee.id} - ${date.date}`}  
+
+
+
             flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
             tabIndex={-1}
             ref={cellRefs?.[row][index]}
             onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
+            onContextMenu={(e)=>{
+                e.preventDefault()
+                console.log('hel')
+                setActive(true)
+                console.log(e.clientX,e.clientY)
+                setCoords({x:e.clientX,y:e.clientY})
+                setSelectedCell({employee:employee,date:date})
+
+
+            }}
             onFocus={(e)=>{
                 
                 onParentFocus(e)
+                console.log('click')
                 setFocusedId({row:row!,col:index})
             }}>
                                     

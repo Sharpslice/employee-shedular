@@ -11,6 +11,8 @@ import type { Day } from "./Interfaces/Day";
 import { useSocket } from "../SocketContext";
 import { ArrayToMap } from "./views/ArrayToMap";
 
+import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
+import ContextMenu from "./Slot/ContextMenu/ContextMenu";
 
 
 
@@ -128,13 +130,15 @@ function Dashboard(){
 
         
             <Header view={safeView} date={safeDate} />
-            
-            <Container fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
-            
-                {dateRange.length!=0 && employeeList.size!=0 &&  <Outlet  context={{safeView,dateRange,employeeList}}/>}
-            
-            </Container> 
-       
+            <ContextMenuProvider>
+
+                <ContextMenu/>
+                <Container  fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
+
+                    {dateRange.length!=0 && employeeList.size!=0 &&  <Outlet  context={{safeView,dateRange,employeeList}}/>}
+                
+                </Container> 
+            </ContextMenuProvider>
             
 
 

@@ -65,9 +65,7 @@ function TimeRangePicker({shift}:{shift:Shift}){
     return (<>
             <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} 
                 
-               onBlur={()=>{
-                
-               }}
+                onBlur={()=>{console.log('hello')}}
                 
                 >
                 <TimePicker 

@@ -1,18 +1,31 @@
-import { Flex } from "@mantine/core"
+import { Button, Flex} from "@mantine/core"
 import { useContext } from "react"
 import { ContextMenuContext } from "./ContextMenuProvider"
 
+import axios from "axios"
+
 function ContextMenu(){
-    const menu = useContext(ContextMenuContext)!
+    const {selectedCell,coords,isActive} = useContext(ContextMenuContext)!
+
+    const createShift =async()=>{
+        await axios.post(`http://localhost:3000/api/employee/shift/${selectedCell.employee?.id}/shift`,{date:selectedCell.date?.date})
+        console.log('hey')
+    }
+
     return(
         <>
             
-                {menu.isActive && <Flex style={{position:'absolute', top:menu.coords.y,left:menu.coords.x,zIndex:1}}
-                
-                    w={'100px'} h={'100px'} bg={'green'}
+                {isActive && 
+                    <Flex 
+                        style={{position:'absolute', top:coords.y,left:coords.x,zIndex:1}}
+                        w={'125x'}  bg={'green'}
+
+                        direction={'column'}
                 >
-                    
-                hello
+                  <Button onClick={createShift}>Shift</Button>
+                  <Button>Availability</Button>
+                  <Button>Override</Button>
+                
                 </Flex>}
             
         </>
