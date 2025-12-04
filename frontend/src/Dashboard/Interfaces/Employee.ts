@@ -1,3 +1,4 @@
+import type { Override } from "./Override"
 import type { Shift } from "./Shift"
 
 export interface Employee{
@@ -7,5 +8,5 @@ export interface Employee{
     position: string
     shifts: Shift[]
     availability : []
-    override : []
+    override : Override[]
 }

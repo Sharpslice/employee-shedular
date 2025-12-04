@@ -2,12 +2,12 @@ import express from 'express';
 import prisma from '../../db/db'
 const override = express.Router()
 
-override.post('/:id/:date',(req,res)=>{
+override.post('/:id/:date',async(req,res)=>{
     const employee_id = parseInt(req.params.id);
     const date = new Date(req.params.date)
     const {isAvailable,start_time,end_time,note} = req.body
     try{
-        const row = prisma.availability_Override.upsert({
+        const row = await prisma.availability_Override.upsert({
         where:{
             employee_id_date:{ 
                     employee_id: employee_id,

@@ -8,6 +8,8 @@ import type { Employee } from "../../Interfaces/Employee"
 import type { Day } from "../../Interfaces/Day"
 
 import { ContextMenuContext } from "../../Slot/ContextMenu/ContextMenuProvider"
+import OverrideCell from "../../Slot/Availability_override/OverrideCell"
+
 
 
 
@@ -35,7 +37,7 @@ function DayCell({row,index,employee,date}:DayProps){
     }
 
     const hasShift = employee.shifts.filter((shift)=> shift.date === date.date)
-   
+    const override = employee.override.filter((override)=>override.date===date.date)
     return(
         <Flex  
             key={`${employee.id} - ${date.date}`}  
@@ -70,6 +72,12 @@ function DayCell({row,index,employee,date}:DayProps){
                         return(
                             <ShiftCell key={`${shift.id}-${index}`} shift={shift}/>
                         )
+                    })}
+                    {override.map((override,index)=>{
+                        return(
+                            <OverrideCell key={`override-id-${override.id}`} override={override}/>
+                        )
+                        
                     })}
                     
                 </SlotContainer> 
