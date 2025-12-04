@@ -1,22 +1,29 @@
 import { Button, Menu } from "@mantine/core"
-import { useContext } from "react"
-import { EmployeeContext } from "../views/EmployeeContext"
+
 import axios from "axios"
+import type { Employee } from "../Interfaces/Employee"
+import type { Day } from "../Interfaces/Day"
 
-function SlotMenu(){
 
-    const employeeContext = useContext(EmployeeContext)
+function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
+
+  
     
     const createShift =async()=>{
-        await axios.post(`http://localhost:3000/api/employee/shift/${employeeContext.employee?.id}/shift`,{date:employeeContext.date?.date})
+        await axios.post(`http://localhost:3000/api/employee/shift/${employee.id}/shift`,{date:date.date})
     }
 
-
+    const focusRef =(element:HTMLButtonElement)=>{
+        if(element){
+            
+            element.focus()
+        }
+    }
     return(
     <>
-        <Menu withArrow>
-            <Menu.Target>
-                <Button bg={'grey'} flex={1}>
+        <Menu  withArrow>
+            <Menu.Target >
+                <Button ref={focusRef} className="menuBtn" bg={'grey'} flex={1}>
                     slot
                 </Button>
             </Menu.Target>
@@ -41,4 +48,4 @@ function SlotMenu(){
     )
 }
 
-export default SlotMenu
+export default SlotMenuBtn

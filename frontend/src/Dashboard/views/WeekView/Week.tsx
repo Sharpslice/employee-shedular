@@ -7,45 +7,21 @@ import EmployeeRow from "../EmployeeRow/EmployeeRow";
 
 import ViewHeader from "./View-header";
 
-import React, { useMemo, useState} from "react";
 
 
 import WeekHeaderCell from "./WeekHeaderCell";
 
+import { GridNavigationProvider } from "../GridNavigation/GridNavigationContext";
+
 
 function Week(){
-    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Employee[] }>();
+    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee> }>();
+
+  
+  
+    if (!employeeList.size || !dateRange.length) return null;
 
     
-    
-    const cellRefs = useMemo(() => {
-        return Array.from({ length: employeeList.length }, () =>
-            Array.from({ length: dateRange.length }, () => React.createRef<HTMLDivElement>())
-        );
-    }, [employeeList.length, dateRange.length]);
-
-    const [focusedId,setFocusedId] = useState({row:100,col:100})
-  
-
-    const handleArrowKey=(key:string,row:number,col:number)=>{
-        switch(key){
-            case('ArrowUp'):
-                cellRefs[row-1][col].current?.focus()
-                break;
-            case('ArrowDown'):
-                cellRefs[row+1][col].current?.focus()
-                break;
-            case('ArrowLeft'):
-                cellRefs[row][col-1].current?.focus()   
-                break;
-            case('ArrowRight'):
-                cellRefs[row][col+1].current?.focus()
-                break;
-        }
-    }
-   
-  
-    if (!employeeList.length || !dateRange.length) return null;
     return (
         <Flex w={'100%'} gap={5} direction={"column"}>
             <ViewHeader colGap={5}>
@@ -54,39 +30,16 @@ function Week(){
                 ))}
             </ViewHeader>
 
-            <Flex gap={10} direction={'column'}>
-                {employeeList.map((employee,row)=>{     
-                    return(
-                        <EmployeeRow 
-                            key={employee.id}
-                            row={row} 
-                            cellRefs ={cellRefs[row]} 
-                            focusedId={focusedId}
-                            setFocusedId={setFocusedId}
-                            handleArrowKey={handleArrowKey}  
-                            employee={employee} 
-                            gridCellArray = {dateRange.map((date)=>{
-                                const shift = employee.shifts.find((shift)=>shift.date === date.date)
-                                const availablility = undefined
-                                const timeOff = undefined
-                                return(
-                                    {
-                                        date:date,
-                                        shift:shift,
-                                        availablility:availablility,
-                                        timeOff:timeOff
-                                    }
-                                )
-                            })}>
-                            
-
-                            
-                            
-                        </EmployeeRow>
-                    )
-                })}
-            </Flex>
-            
+            <GridNavigationProvider>
+                <Flex gap={10} direction={'column'}>
+                    
+                    {[...employeeList].map(([id,employee],row)=>{     
+                        return(
+                            <EmployeeRow key={id} row={row} employee={employee} />
+                        )
+                    })}
+                </Flex>
+            </GridNavigationProvider>
             
                 
             

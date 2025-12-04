@@ -7,45 +7,35 @@ import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
 
-import { useContext } from "react"
-import { EmployeeContext } from "../../views/EmployeeContext"
-
-
-
-// interface TimeRangePickerProps{
-//     shift?:Shift
-//     employee: Employee
-//     date:string
-//     //setIsFocused:React.Dispatch<React.SetStateAction<boolean>>
-// }
-
 
 interface ShiftResponse{
     success:boolean
     row?: Shift
     error?:string
 }
-function TimeRangePicker(){
+
+
+function TimeRangePicker({shift}:{shift:Shift}){
    
-    const {employee,date,shift} = useContext(EmployeeContext)
+    
  
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const afternoon = getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'})
    
+    
 
-  
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         try{
-            const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/employee/${employee!.id}/shift`,
+            const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/employee/${shift.employee_id}/shift`,
                     slot==='start' 
                     ?{
-                        date:date?.date,
+                        date:new Date(shift.date),
                         start_time: time,
                         end_time : null
                     }
 
                     :{
-                        date:date?.date,
+                        date:new Date(shift.date),
                         start_time: null,
                         end_time: time
                     }
@@ -73,8 +63,15 @@ function TimeRangePicker(){
     }
 
     return (<>
-            <Group justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} >
+            <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} 
+                
+               onBlur={()=>{
+                
+               }}
+                
+                >
                 <TimePicker 
+                    
                     
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
@@ -98,6 +95,8 @@ function TimeRangePicker(){
                 <Text  w={10} style={{textAlign:'center'}}>-</Text>
 
                 <TimePicker 
+                    
+                    
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
                     value={shift?.end_time}
