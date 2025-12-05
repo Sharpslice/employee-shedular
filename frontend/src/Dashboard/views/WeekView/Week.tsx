@@ -14,10 +14,11 @@ import WeekHeaderCell from "./WeekHeaderCell";
 import { GridNavigationProvider } from "../GridNavigation/GridNavigationContext";
 
 
+
 function Week(){
     const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee> }>();
 
-  
+   
   
     if (!employeeList.size || !dateRange.length) return null;
 
@@ -31,14 +32,23 @@ function Week(){
             </ViewHeader>
 
             <GridNavigationProvider>
-                <Flex gap={10} direction={'column'}>
+                
+
+                <Flex gap={10} direction={'column'}
+                    onContextMenu={(e)=>e.preventDefault()}
+                
+                >
+                
                     
+    
                     {[...employeeList].map(([id,employee],row)=>{     
                         return(
                             <EmployeeRow key={id} row={row} employee={employee} />
                         )
                     })}
+                    
                 </Flex>
+                
             </GridNavigationProvider>
             
                 

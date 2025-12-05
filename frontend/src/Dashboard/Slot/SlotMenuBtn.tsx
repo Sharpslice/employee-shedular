@@ -3,7 +3,13 @@ import { Button, Menu } from "@mantine/core"
 import axios from "axios"
 import type { Employee } from "../Interfaces/Employee"
 import type { Day } from "../Interfaces/Day"
+import type { Override } from "../Interfaces/Override"
 
+
+type response ={
+    success:boolean;
+    row: Override
+}
 
 function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
 
@@ -11,6 +17,23 @@ function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
     
     const createShift =async()=>{
         await axios.post(`http://localhost:3000/api/employee/shift/${employee.id}/shift`,{date:date.date})
+        console.log('hey')
+    }
+
+    const createOverride = async()=>{
+        try{
+           const response=  await axios.post<response>(`http://localhost:3000/api/employee/override/${employee.id}/${date.date}`,
+            {isAvailable:false}
+        )
+            if(response.data.success){
+                console.log('created override',response.data.row)
+                
+            }
+        }catch(err){
+            console.error(err)
+        }
+        
+        
     }
 
     const focusRef =(element:HTMLButtonElement)=>{
@@ -33,11 +56,11 @@ function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
                 Shift
             </Menu.Item>
 
-            <Menu.Item onClick={()=>{console.log('availability')}}>
+            <Menu.Item onClick={()=>{}}>
                 availability
             </Menu.Item>
 
-            <Menu.Item>
+            <Menu.Item onClick={()=>{createOverride()}}>
                 override
             </Menu.Item>
 

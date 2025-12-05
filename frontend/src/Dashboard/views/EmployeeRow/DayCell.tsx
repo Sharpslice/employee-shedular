@@ -7,6 +7,11 @@ import { GridNavigationContext } from "../GridNavigation/GridNavigationContext"
 import type { Employee } from "../../Interfaces/Employee"
 import type { Day } from "../../Interfaces/Day"
 
+import { ContextMenuContext } from "../../Slot/ContextMenu/ContextMenuProvider"
+import OverrideCell from "../../Slot/Availability_override/OverrideCell"
+
+
+
 
 
 
@@ -20,19 +25,26 @@ interface DayProps{
 function DayCell({row,index,employee,date}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey} = useContext(GridNavigationContext)!
 
-    
+    const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         if(e.target === e.currentTarget){
             const firstSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".slot")
-          
-            firstSlot?.focus()
+            const overrideSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".overrideSlot")
+            if(firstSlot){
+                firstSlot?.focus()
+            }
+            else{
+                overrideSlot?.focus()
+            
+            }
+            
             
         }
     }
 
     const hasShift = employee.shifts.filter((shift)=> shift.date === date.date)
-   
+    const override = employee.override.filter((override)=>override.date===date.date)
     return(
         <Flex  
             key={`${employee.id} - ${date.date}`}  
@@ -40,6 +52,16 @@ function DayCell({row,index,employee,date}:DayProps){
             tabIndex={-1}
             ref={cellRefs?.[row][index]}
             onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
+            onContextMenu={(e)=>{
+                e.preventDefault()
+                console.log('hel')
+                setActive(true)
+                console.log(e.clientX,e.clientY)
+                setCoords({x:e.clientX,y:e.clientY})
+                setSelectedCell({employee:employee,date:date})
+
+
+            }}
             onFocus={(e)=>{
                 
                 onParentFocus(e)
@@ -53,6 +75,12 @@ function DayCell({row,index,employee,date}:DayProps){
                         return(
                             <ShiftCell key={`${shift.id}-${index}`} shift={shift}/>
                         )
+                    })}
+                    {override.map((override,index)=>{
+                        return(
+                            <OverrideCell key={`override-id-${override.id}`} override={override}/>
+                        )
+                        
                     })}
                     
                 </SlotContainer> 

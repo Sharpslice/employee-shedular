@@ -1,12 +1,13 @@
 import { Flex } from "@mantine/core";
 import type { Employee } from "../../Interfaces/Employee";
-import {  useState } from 'react'
+import {  useContext, useState } from 'react'
 import type { Day } from "../../Interfaces/Day";
 
 import EmployeeInfo from "./EmployeeInfo";
 import EmployeeAvailabilityRow from "./EmployeeAvailabilityRow";
 
 
+import { ContextMenuContext } from "../../Slot/ContextMenu/ContextMenuProvider";
 
 
 import { useOutletContext } from "react-router-dom";
@@ -33,10 +34,9 @@ function EmployeeRow({row,employee}:EmployeeRowProps){
     const [hidden,setHidden]  = useState(true)
     const onAvailabilityclick= () => setHidden(prev=>!prev)
        
-    
-
+    const {setActive} = useContext(ContextMenuContext)!
     return(
-        <Flex gap={'1rem'} >
+        <Flex onClick={()=>setActive(false)} gap={'1rem'} >
           
             <EmployeeInfo onAvailabilityclick={onAvailabilityclick} employee={employee}/>
          

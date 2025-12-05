@@ -3,7 +3,7 @@ import {  useEffect, useState } from "react"
 import {DateTime} from 'luxon'
 import axios from "axios";
 import Header from "./Header";
-import { Container} from "@mantine/core";
+import { Container, em} from "@mantine/core";
 import { Outlet, useMatch, useParams } from "react-router-dom";
 
 import type { Employee } from "./Interfaces/Employee";
@@ -11,6 +11,9 @@ import type { Day } from "./Interfaces/Day";
 import { useSocket } from "../SocketContext";
 import { ArrayToMap } from "./views/ArrayToMap";
 
+import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
+import ContextMenu from "./Slot/ContextMenu/ContextMenu";
+import type { Override } from "./Interfaces/Override";
 
 
 
@@ -37,6 +40,26 @@ function Dashboard(){
 
     const socket = useSocket()
     useEffect(()=>{
+        socket?.on('overrideCreated',(ovveride:Override)=>{
+
+            setEmployeeList((oldMap)=>{
+
+
+                const employee = oldMap.get(ovveride.employee_id)!
+
+                const newOverrideArray = [...employee.override,ovveride ]
+
+                const updatedEmployeeInfo  = {
+                    ...employee,
+                    override:newOverrideArray
+                }
+
+                const newMap = new Map(oldMap)
+                newMap.set(employee.id,updatedEmployeeInfo)
+                return newMap
+            })
+
+        })
         socket?.on('shiftUpdated',(data)=>{
             console.log('shiftUpdated')
             
@@ -128,13 +151,15 @@ function Dashboard(){
 
         
             <Header view={safeView} date={safeDate} />
-            
-            <Container fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
-            
-                {dateRange.length!=0 && employeeList.size!=0 &&  <Outlet  context={{safeView,dateRange,employeeList}}/>}
-            
-            </Container> 
-       
+            <ContextMenuProvider>
+
+                <ContextMenu/>
+                    <Container  fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
+
+                        {dateRange.length!=0 && employeeList.size!=0 &&  <Outlet  context={{safeView,dateRange,employeeList}}/>}
+                    
+                    </Container> 
+            </ContextMenuProvider>
             
 
 
