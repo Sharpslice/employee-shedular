@@ -11,6 +11,21 @@ function ContextMenu(){
         await axios.post(`http://localhost:3000/api/employee/shift/${selectedCell.employee?.id}/shift`,{date:selectedCell.date?.date})
         console.log('hey')
     }
+    const createOverride = async()=>{
+        try{
+           const response=  await axios.post(`http://localhost:3000/api/employee/override/${selectedCell.employee?.id}/${selectedCell.date?.date}`,
+            {isAvailable:false}
+        )
+            if(response.data.success){
+                console.log('created override',response.data.row)
+                
+            }
+        }catch(err){
+            console.error(err)
+        }
+        
+        
+    }
 
     return(
         <>
@@ -23,7 +38,7 @@ function ContextMenu(){
                         direction={'column'}
                 >
                   <Button onClick={createShift}>Shift</Button>
-                  <Button>Availability</Button>
+                  <Button onClick={createOverride}>Availability</Button>
                   <Button>Override</Button>
                 
                 </Flex>}

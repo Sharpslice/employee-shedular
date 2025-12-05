@@ -30,8 +30,15 @@ function DayCell({row,index,employee,date}:DayProps){
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         if(e.target === e.currentTarget){
             const firstSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".slot")
-          
-            firstSlot?.focus()
+            const overrideSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".overrideSlot")
+            if(firstSlot){
+                firstSlot?.focus()
+            }
+            else{
+                overrideSlot?.focus()
+            
+            }
+            
             
         }
     }
@@ -41,9 +48,6 @@ function DayCell({row,index,employee,date}:DayProps){
     return(
         <Flex  
             key={`${employee.id} - ${date.date}`}  
-
-
-
             flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
             tabIndex={-1}
             ref={cellRefs?.[row][index]}
