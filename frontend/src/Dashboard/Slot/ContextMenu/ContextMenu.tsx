@@ -38,8 +38,8 @@ function ContextMenu(){
                         direction={'column'}
                 >
                   <Button onClick={createShift}>Shift</Button>
-                  <Button onClick={createOverride}>Availability</Button>
-                  <Button>Override</Button>
+                  <Button >Availability</Button>
+                  <Button onClick={createOverride}>Override</Button>
                 
                 </Flex>}
             
