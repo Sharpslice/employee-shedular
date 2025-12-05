@@ -65,7 +65,6 @@ function DayCell({row,index,employee,date}:DayProps){
             onFocus={(e)=>{
                 
                 onParentFocus(e)
-                console.log('click')
                 setFocusedId({row:row!,col:index})
             }}>
                                     

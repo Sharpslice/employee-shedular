@@ -17,8 +17,6 @@ const convertTo12hr = (time:string | null)=>{
 
 function ShiftCell({shift}:{shift:Shift}){
 
-    
-
     const start_time = convertTo12hr(shift!.start_time)
     const end_time = convertTo12hr(shift!.end_time)
 
@@ -43,7 +41,7 @@ function ShiftCell({shift}:{shift:Shift}){
 
         }}
         onClick={()=>{
-
+            setActivate(true)
 
 
         }}
