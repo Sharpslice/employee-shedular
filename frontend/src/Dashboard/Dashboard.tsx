@@ -150,7 +150,7 @@ function Dashboard(){
         
 
         
-            <Header view={safeView} date={safeDate} />
+            <Header view={safeView} selectedDate={safeDate} />
             <ContextMenuProvider>
 
                 <ContextMenu/>

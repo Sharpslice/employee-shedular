@@ -1,6 +1,7 @@
 import express from 'express';
 import prisma from '../../db/db'
 import {io} from '../../src/app'
+import { DateTime } from 'luxon';
 const shift = express.Router();
 
 
@@ -49,6 +50,61 @@ shift.delete('/:id/delete',async(req,res)=>{
             return res.status(500).json({success:false,error:error.message})
         }
     }
+})
+
+shift.post('/copyOverLastWeek',async(req,res)=>{
+    //const startOfWeekDate = req.params.startOfWeek;
+    //console.log('body:', req.body)
+    const {lastWeekArray} = req.body
+    //console.log(lastWeekArray)
+    const shifts = await prisma.employee_Shifts.findMany({
+        select:{
+            employee_id:true,
+            date:true,
+            start_time:true,
+            end_time:true,
+        },
+        where:{
+            date:{
+                in:lastWeekArray.map((date:string)=> new Date(date))
+            }
+            }
+    });
+
+    const newShifts = shifts.map((shift)=>{
+        return(
+            {
+                employee_id:shift.employee_id,
+                date: DateTime.fromJSDate(shift.date).plus({week:1}).toJSDate() ,
+                start_time:shift.start_time,
+                end_time:shift.start_time,
+
+            }
+        )
+        
+    })
+
+    //console.log(newShifts)
+    
+
+     await prisma.employee_Shifts.createMany({
+
+        data:newShifts
+
+
+    })
+    
+    const data = await prisma.employee_Shifts.findMany({
+        where:{
+            date:{
+                in: newShifts.map((shift)=>shift.date)
+            }
+        }
+    })
+    console.log(data)
+    io.emit('copyOverLastWeekshift',data)
+    res.json({success:true,shifts:shifts})
+    
 })
 
 export default shift
