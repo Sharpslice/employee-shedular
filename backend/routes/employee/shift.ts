@@ -1,6 +1,7 @@
 import express from 'express';
 import prisma from '../../db/db'
 import {io} from '../../src/app'
+import { DateTime } from 'luxon';
 const shift = express.Router();
 
 
@@ -49,6 +50,85 @@ shift.delete('/:id/delete',async(req,res)=>{
             return res.status(500).json({success:false,error:error.message})
         }
     }
+})
+
+shift.post('/copyOverLastWeek',async(req,res)=>{
+  
+    const {lastWeekArray} = req.body
+    const thisWeekArray= lastWeekArray.map((date:string)=>{
+        return(
+            DateTime.fromISO(date).plus({week:1}).toJSDate()
+        )
+    })
+
+    await prisma.$transaction(async(tx)=>{
+
+        // grabs all shifts from last week using last weeks dates sun-sat
+        const prevShifts = await tx.employee_Shifts.findMany({
+            select:{
+                employee_id:true,
+                date:true,
+                start_time:true,
+                end_time:true,
+            },
+            where:{
+                date:{
+                    in:lastWeekArray.map((date:string)=> new Date(date))
+                }
+                }
+        });
+    
+        //takes all the shifts found last week and updates their dates to match current week
+        const newShifts = prevShifts.map((shift)=>{
+           
+            return(
+                {
+                    employee_id:shift.employee_id,
+                    date: DateTime.fromJSDate(shift.date).plus({week:1}).toJSDate() ,
+                    start_time:shift.start_time,
+                    end_time:shift.end_time,
+
+                }
+            )
+            
+        })
+
+        await tx.employee_Shifts.deleteMany({
+            where:{
+                date: {
+                    in: thisWeekArray
+                }
+            }
+        })
+        await tx.employee_Shifts.createMany({
+
+            data:newShifts,
+       
+
+
+        })
+    
+        const data = await tx.employee_Shifts.findMany({
+            where:{
+                date:{
+                    in: thisWeekArray
+                }
+            }
+        })
+
+        io.emit('copyOverLastWeekshift',data)
+        res.json({success:true,shifts:prevShifts})
+    })
+    
+
+    
+   
+    
+
+    
+    
+    
+    
 })
 
 export default shift

@@ -14,6 +14,7 @@ import { ArrayToMap } from "./views/ArrayToMap";
 import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
 import ContextMenu from "./Slot/ContextMenu/ContextMenu";
 import type { Override } from "./Interfaces/Override";
+import type { Shift } from "./Interfaces/Shift";
 
 
 
@@ -40,6 +41,56 @@ function Dashboard(){
 
     const socket = useSocket()
     useEffect(()=>{
+        socket?.on('copyOverLastWeekshift',(shiftsArray:Shift[])=>{
+            console.log('copy over')
+            console.log(shiftsArray)
+            
+            setEmployeeList((oldMap)=>{
+             
+                const newMap = new Map(oldMap)
+
+                    //const employees = shiftsArray.map((shift)=>shift.employee_id)
+
+                    oldMap.forEach((_,key)=>{
+                        const newShiftArray = shiftsArray.filter((shift)=>{
+                            return(shift.employee_id === key)
+                        })
+                        const employee = oldMap.get(key)!;
+                        const newEmployeeInfo = {
+                            ...employee,
+                            shifts: newShiftArray//[...employee.shifts, ...newShiftArray]
+                        }
+                        newMap.set(key,newEmployeeInfo)
+                    })
+
+
+
+
+
+                
+                console.log(newMap)
+                return newMap
+            })
+
+// const employees = shiftsArray.map((shift)=>shift.employee_id)
+
+                    // employees.forEach((id)=>{
+                    //     const newShiftArray = shiftsArray.filter((shift)=>{
+                    //         return(shift.employee_id === id)
+                    //     })
+                    //     const employee = oldMap.get(id)!;
+                    //     const newEmployeeInfo = {
+                    //         ...employee,
+                    //         shifts: newShiftArray//[...employee.shifts, ...newShiftArray]
+                    //     }
+                    //     newMap.set(id,newEmployeeInfo)
+                    // })
+
+
+
+
+
+        })
         socket?.on('overrideCreated',(ovveride:Override)=>{
 
             setEmployeeList((oldMap)=>{
@@ -150,7 +201,7 @@ function Dashboard(){
         
 
         
-            <Header view={safeView} date={safeDate} />
+            <Header view={safeView} selectedDate={safeDate} />
             <ContextMenuProvider>
 
                 <ContextMenu/>
