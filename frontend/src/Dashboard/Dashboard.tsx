@@ -14,6 +14,7 @@ import { ArrayToMap } from "./views/ArrayToMap";
 import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
 import ContextMenu from "./Slot/ContextMenu/ContextMenu";
 import type { Override } from "./Interfaces/Override";
+import type { Shift } from "./Interfaces/Shift";
 
 
 
@@ -40,6 +41,42 @@ function Dashboard(){
 
     const socket = useSocket()
     useEffect(()=>{
+        socket?.on('copyOverLastWeekshift',(shiftsArray:Shift[])=>{
+            console.log(shiftsArray)
+            
+            setEmployeeList((oldMap)=>{
+             
+                const newMap = new Map(oldMap)
+
+                    const employees = shiftsArray.map((shift)=>shift.employee_id)
+
+                    employees.forEach((id)=>{
+                        const newShiftArray = shiftsArray.filter((shift)=>{
+                            return(shift.employee_id === id)
+                        })
+                        const employee = oldMap.get(id)!;
+                        const newEmployeeInfo = {
+                            ...employee,
+                            shifts:[...employee.shifts, ...newShiftArray]
+                        }
+                        newMap.set(id,newEmployeeInfo)
+                    })
+
+
+
+
+
+                
+                console.log(newMap)
+                return newMap
+            })
+
+
+
+
+
+
+        })
         socket?.on('overrideCreated',(ovveride:Override)=>{
 
             setEmployeeList((oldMap)=>{
