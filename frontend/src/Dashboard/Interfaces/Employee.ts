@@ -5,6 +5,9 @@ export interface Employee{
     id:number,
     name: string
     isWorking: boolean
+    picture?:string
+    role: "USER" | "ADMIN"
+    color?:string 
     position: string
     shifts: Shift[]
     availability : []

@@ -1,9 +1,10 @@
-import { Text } from "@mantine/core";
+
 import axios from "axios";
 import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { Employee } from "./Dashboard/Interfaces/Employee";
 
-const AuthenticatedUser = createContext<Employee | null>(null)
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthenticatedUser = createContext<Employee | null>(null)
 
 type response={
     user: Employee

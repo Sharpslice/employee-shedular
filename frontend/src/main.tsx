@@ -13,7 +13,7 @@ import Week from './Dashboard/views/WeekView/Week.tsx';
 
 import DayView from './Dashboard/views/DayView/DayView.tsx';
 import { SocketProvider } from './SocketContext.tsx';
-import AuthProvider from './AuthenticatedUserContext.tsx';
+
 
 
 
