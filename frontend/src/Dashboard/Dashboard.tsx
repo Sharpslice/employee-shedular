@@ -184,11 +184,11 @@ function Dashboard(){
     useEffect(()=>{
         const fetchData =async() =>{
             
-            const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`)
+            const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`,{withCredentials:true})
             setDateRange(response.data.dateArray)
        
     
-            const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee?date=${safeDate}&view=${safeView}`);
+            const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee?date=${safeDate}&view=${safeView}`,{withCredentials:true});
             console.log(ArrayToMap( employeeResponse.data.employeeList))
             setEmployeeList(ArrayToMap(  employeeResponse.data.employeeList))
             console.log('remounts')

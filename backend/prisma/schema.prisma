@@ -33,6 +33,7 @@ model Employee {
   position        Position?   
   color           String?
   isWorking       Boolean
+  picture         String?
 
   shifts          Employee_Shifts[]
   availability    Employee_Availability[]

@@ -3,9 +3,8 @@ import cors from 'cors';
 import {Server} from 'socket.io';
 import http from 'http';
 
-
-
-
+import passport from 'passport';
+import session from "express-session";
 import google from '../routes/auth/google';
 import calendarApi from '../routes/calendar/calendar';
 import dotenv from "dotenv";
@@ -29,12 +28,29 @@ app.use(express.json())
 
 dotenv.config();
 
+app.use(
+  session({
+    secret: "keyboard cat", // must exist
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }, // true if using HTTPS
+  } as any)  // type assertion
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 const googleRouter = google;
 const calendarRoute = calendarApi
 const indexRoute = index
 app.use('/auth/google',googleRouter);
 app.use('/api/calendar',calendarRoute)
 app.use('/api/employee',indexRoute)
+
+app.get("/api/test", (req, res) => {
+  console.log("req.user:", req.user);
+  res.json({ user: req.user });
+});
 
 io.on("connection",(socket)=>{
   console.log('New client connected:', socket.id);
