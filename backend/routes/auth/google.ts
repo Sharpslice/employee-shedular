@@ -80,4 +80,11 @@ google.get('/callback',passport.authenticate('google'),(req,res)=>{
     //res.json({user,token})
     res.redirect("http://localhost:5173/schedule")
 })
+
+google.get('/logged-in-user',(req,res)=>{
+  console.log(req.user)
+  res.json({user:req.user});
+})
+
+
 export default google;
