@@ -2,6 +2,7 @@ import { Container, Group } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import classes from './header.module.css'
 import { useState } from 'react';
+import UserGroup from './UserGroup';
 
 type Links={
     link:string,
@@ -37,10 +38,13 @@ function Header(){
 
 
     return(<>
-        <Container className={classes.inner} fluid style={{width:'100%',height:'3.2rem', backgroundColor:'grey'}}>
+        <Container className={classes.inner}  fluid style={{width:'100%',height:'3.2rem', backgroundColor:'grey' ,display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center', padding:' 2rem 1rem'}}>
             <Group>
                 {items}
             </Group>
+            <UserGroup/>
         </Container>
     </>)
 }   

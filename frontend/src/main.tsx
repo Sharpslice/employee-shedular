@@ -19,6 +19,7 @@ import { SocketProvider } from './SocketContext.tsx';
 
 
 
+
  const router = createBrowserRouter([
     {
       path:"/",
@@ -87,7 +88,10 @@ createRoot(document.getElementById('root')!).render(
       <MantineProvider 
       >
         <SocketProvider>
+          
             <RouterProvider router ={router}/>
+          
+            
         </SocketProvider>
         
       </MantineProvider>

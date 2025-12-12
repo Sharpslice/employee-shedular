@@ -14,7 +14,7 @@ function Login(){
         <Box style={{border: "1px solid black"}}>
 
             <Button onClick={googleSignUpClick}>
-                Sign up with Google
+                Sign in with Google
             </Button>
 
         </Box>

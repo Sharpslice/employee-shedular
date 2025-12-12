@@ -80,4 +80,21 @@ google.get('/callback',passport.authenticate('google'),(req,res)=>{
     //res.json({user,token})
     res.redirect("http://localhost:5173/schedule")
 })
+
+google.get('/logged-in-user',(req,res)=>{
+  console.log(req.user)
+  res.json({user:req.user});
+})
+
+google.get('/logout',(req,res)=>{
+   req.logout((err) => {   // Passport 0.6+ requires a callback
+    if (err) return res.status(500).send(err);
+    req.session.destroy(() => {
+      res.clearCookie("connect.sid"); // clear session cookie
+      res.redirect("http://localhost:5173/schedule"); // or wherever you want after logout
+    });
+  });
+})
+
+
 export default google;
