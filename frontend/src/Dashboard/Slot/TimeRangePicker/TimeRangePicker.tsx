@@ -38,7 +38,8 @@ function TimeRangePicker({shift}:{shift:Shift}){
                         date:new Date(shift.date),
                         start_time: null,
                         end_time: time
-                    }
+                    },
+                    {withCredentials:true}
                 
                 )
             if(response.data.success){

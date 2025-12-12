@@ -1,9 +1,11 @@
 import {Box, Button} from '@mantine/core';
 
+
 function Login(){
 
     const googleSignUpClick = async()=>{
         window.location.href = "http://localhost:3000/auth/google/"
+       
     }
 
 

@@ -44,9 +44,8 @@ employee.delete('/shift/:shift_id',async(req,res)=>{
 
 employee.post('/:employee_id/shift',async(req,res)=>{
     const employee_id = req.params.employee_id;
-   
     const {date,start_time,end_time} = req.body;
-
+    console.log(req.user);
     try{
        const row =  await prisma.employee_Shifts.upsert({
             where:{
@@ -94,6 +93,7 @@ employee.get('/schedule/:view/:date',async(req,res)=>{
   
     const view = req.params.view;
     const date = req.params.date
+    console.log(req.user);
   
     const selectedDate = DateTime.fromISO(date as string)
         let beginDate = selectedDate
