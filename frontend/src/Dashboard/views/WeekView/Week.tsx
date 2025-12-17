@@ -6,7 +6,7 @@ import type { Day } from "../../Interfaces/Day";
 import EmployeeRow from "../EmployeeRow/EmployeeRow";
 
 import ViewHeader from "./View-header";
-
+import { DndContext, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 
 
 import WeekHeaderCell from "./WeekHeaderCell";
@@ -18,10 +18,17 @@ import { GridNavigationProvider } from "../GridNavigation/GridNavigationContext"
 function Week(){
     const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee> }>();
 
-   
+   const sensors = useSensors(
+    useSensor(PointerSensor, {
+        activationConstraint: {
+        delay: 250,       // milliseconds to hold before drag starts
+        tolerance: 5,     // pixels pointer can move before drag starts
+        },
+    })
+    );
   
     if (!employeeList.size || !dateRange.length) return null;
-
+    
     
     return (
         <Flex w={'100%'} gap={5} direction={"column"}>
@@ -32,23 +39,19 @@ function Week(){
             </ViewHeader>
 
             <GridNavigationProvider>
-                
-
-                <Flex gap={10} direction={'column'}
-                    onContextMenu={(e)=>e.preventDefault()}
-                
-                >
-                
+                <DndContext sensors ={sensors}>
+                    <Flex gap={10} direction={'column'}
+                        onContextMenu={(e)=>e.preventDefault()}
                     
-    
-                    {[...employeeList].map(([id,employee],row)=>{     
-                        return(
-                            <EmployeeRow key={id} row={row} employee={employee} />
-                        )
-                    })}
-                    
-                </Flex>
-                
+                    >
+                        {[...employeeList].map(([id,employee],row)=>{     
+                            return(
+                                <EmployeeRow key={id} row={row} employee={employee} />
+                            )
+                        })}
+                        
+                    </Flex>
+                </DndContext>
             </GridNavigationProvider>
             
                 

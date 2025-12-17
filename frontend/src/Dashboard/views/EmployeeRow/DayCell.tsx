@@ -76,7 +76,7 @@ function DayCell({row,index,employee,date}:DayProps){
                             <ShiftCell key={`${shift.id}-${index}`} shift={shift}/>
                         )
                     })}
-                    {override.map((override,index)=>{
+                    {override.map((override)=>{
                         return(
                             <OverrideCell key={`override-id-${override.id}`} override={override}/>
                         )

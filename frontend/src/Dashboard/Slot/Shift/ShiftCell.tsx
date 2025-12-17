@@ -6,7 +6,8 @@ import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 
 import axios from "axios";
 import type { Shift } from "../../Interfaces/Shift";
-
+import { useDraggable } from "@dnd-kit/core";
+import {CSS} from '@dnd-kit/utilities'
 
 
 const convertTo12hr = (time:string | null)=>{
@@ -26,33 +27,55 @@ function ShiftCell({shift}:{shift:Shift}){
         await axios.delete(`http://localhost:3000/api/employee/shift/${shift?.id}/delete`)
     }
     
+    const {attributes,listeners,setNodeRef,transform,isDragging} = useDraggable({id: shift.id})
+
+    const style = {
+        width: '100%',
+    height: 50,
+    background: "tomato",
+    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    opacity: isDragging ? 0.8 : 1,
+    boxShadow: isDragging ? "0 5px 15px rgba(0,0,0,0.3)" : "none",
+    zIndex: isDragging ? 999 : "auto",
+    cursor: isDragging ? "grabbing" : "grab",
+    }
+
+
     return (
     
-        <Flex className="slot" tabIndex={0} flex={1}  onKeyDown={(e)=>{
-            if(e.key ==='Backspace' || e.key ==='Delete'){
-                console.log('Delete')
-                deleteShift()
-            }
-            else if (e.key===' ' || e.key ==='Enter'){
-                console.log('space')
+        <Flex 
+            ref={setNodeRef} style={style} {...listeners} {...attributes}
+
+
+
+            className="slot" 
+            tabIndex={0} flex={1}  
+            onKeyDown={(e)=>{
+                if(e.key ==='Backspace' || e.key ==='Delete'){
+                    console.log('Delete')
+                    deleteShift()
+                }
+                else if (e.key===' ' || e.key ==='Enter'){
+                    console.log('space')
+                    setActivate(prev=>!prev)
+                }
+
+
+            }}
+            onClick={()=>{
+                console.log('shift click')
                 setActivate(prev=>!prev)
-            }
 
 
-        }}
-        onClick={()=>{
-            setActivate(true)
+            }}
+            onBlur={(e)=>{
+
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                    setActivate(false)
+                }
 
 
-        }}
-        onBlur={(e)=>{
-
-            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                setActivate(false)
-            }
-
-
-        }}
+            }}
        
        
         
