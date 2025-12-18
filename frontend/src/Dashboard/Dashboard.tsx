@@ -207,7 +207,7 @@ function Dashboard(){
                 <ContextMenu/>
                     <Container  fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
 
-                        {dateRange.length!=0 && employeeList.size!=0 &&  <Outlet  context={{safeView,dateRange,employeeList}}/>}
+                        {dateRange.length!=0 && employeeList.size!=0 &&  <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList}}/>}
                     
                     </Container> 
             </ContextMenuProvider>

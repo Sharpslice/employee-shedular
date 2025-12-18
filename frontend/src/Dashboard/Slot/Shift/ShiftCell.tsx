@@ -27,7 +27,13 @@ function ShiftCell({shift}:{shift:Shift}){
         await axios.delete(`http://localhost:3000/api/employee/shift/${shift?.id}/delete`)
     }
     
-    const {attributes,listeners,setNodeRef,transform,isDragging} = useDraggable({id: shift.id})
+    const {attributes,listeners,setNodeRef,transform,isDragging} = useDraggable({
+        id: shift.id,
+        data:{
+            employee_id: shift.employee_id,
+            date: shift.date
+        }
+    })
 
     const style = {
         width: '100%',
@@ -63,7 +69,7 @@ function ShiftCell({shift}:{shift:Shift}){
 
             }}
             onClick={()=>{
-                console.log('shift click')
+                console.log(shift)
                 setActivate(prev=>!prev)
 
 
