@@ -52,6 +52,22 @@ shift.delete('/:id/delete',async(req,res)=>{
     }
 })
 
+shift.patch('/moveShift/:id',async(req,res)=>{
+    const shift_id = parseInt(req.params.id);
+    const {employee_id,date} = req.body
+
+
+    await prisma.employee_Shifts.update({
+        where:{
+            id:shift_id
+        },
+        data:{
+            employee_id:employee_id,
+            date: new Date(date)
+        }
+    })
+})
+
 shift.post('/copyOverLastWeek',async(req,res)=>{
   
     const {lastWeekArray} = req.body
