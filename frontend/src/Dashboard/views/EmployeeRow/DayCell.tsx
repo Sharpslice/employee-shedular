@@ -9,6 +9,7 @@ import type { Day } from "../../Interfaces/Day"
 
 import { ContextMenuContext } from "../../Slot/ContextMenu/ContextMenuProvider"
 import OverrideCell from "../../Slot/Availability_override/OverrideCell"
+import { useDroppable } from "@dnd-kit/core"
 
 
 
@@ -43,14 +44,29 @@ function DayCell({row,index,employee,date}:DayProps){
         }
     }
 
+    const {isOver,setNodeRef} = useDroppable({
+        id:`(${row},${index})`,
+        data:{
+            employee_id:employee.id,
+            employee_name: employee.name,
+            date:date
+        }
+
+    })
+    const style = {
+        opacity:isOver ? 1:0.5
+    }
+
+
     const hasShift = employee.shifts.filter((shift)=> shift.date === date.date)
     const override = employee.override.filter((override)=>override.date===date.date)
     return(
         <Flex  
+            ref={setNodeRef} style={style}
             key={`${employee.id} - ${date.date}`}  
             flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
             tabIndex={-1}
-            ref={cellRefs?.[row][index]}
+            //ref={cellRefs?.[row][index]}
             onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
             onContextMenu={(e)=>{
                 e.preventDefault()
@@ -63,7 +79,7 @@ function DayCell({row,index,employee,date}:DayProps){
 
             }}
             onFocus={(e)=>{
-                
+               
                 onParentFocus(e)
                 setFocusedId({row:row!,col:index})
             }}>
@@ -76,7 +92,7 @@ function DayCell({row,index,employee,date}:DayProps){
                             <ShiftCell key={`${shift.id}-${index}`} shift={shift}/>
                         )
                     })}
-                    {override.map((override,index)=>{
+                    {override.map((override)=>{
                         return(
                             <OverrideCell key={`override-id-${override.id}`} override={override}/>
                         )
