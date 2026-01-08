@@ -47,18 +47,11 @@ app.use('/auth/google',googleRouter);
 app.use('/api/calendar',calendarRoute)
 app.use('/api/employee',indexRoute)
 
-app.get("/api/test", (req, res) => {
-  console.log("req.user:", req.user);
-  res.json({ user: req.user });
-});
+
 
 io.on("connection",(socket)=>{
   console.log('New client connected:', socket.id);
   socket.emit("Welcome","Hello from server!");
-  socket.on("updateShift",(data)=>{
-    console.log("Shift updated:", data);
-    io.emit("shiftUpdated",data);
-  })
   socket.on("disconnect",()=>{
     console.log("client disconnected:", socket.id)
   })

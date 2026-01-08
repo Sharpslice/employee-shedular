@@ -54,18 +54,36 @@ shift.delete('/:id/delete',async(req,res)=>{
 
 shift.patch('/moveShift/:id',async(req,res)=>{
     const shift_id = parseInt(req.params.id);
-    const {employee_id,date} = req.body
+    const {employee_id,date,socketId} = req.body
 
 
-    await prisma.employee_Shifts.update({
-        where:{
-            id:shift_id
-        },
-        data:{
-            employee_id:employee_id,
-            date: new Date(date)
-        }
-    })
+    try{
+        const originalShift = await prisma.employee_Shifts.findUnique({
+            where:{id:shift_id}
+        })
+
+        if (!originalShift) return res.status(404).json({ error: "Shift not found" });
+
+
+        const updatedShift = await prisma.employee_Shifts.update({
+            where:{
+                id:shift_id
+            },
+            data:{
+                employee_id:employee_id,
+                date: new Date(date)
+            }
+        })
+        console.log(`${originalShift.employee_id} -> ${updatedShift.employee_id}`)
+
+        io.emit('shiftMoved',{ oldShift: originalShift, updatedShift })
+        res.status(200).json({ oldShift: originalShift, updatedShift });
+
+    }catch(error){
+        console.error("Error updating shift:", error);
+        res.status(500).json({ error: "Failed to update shift" });
+    }
+
 })
 
 shift.post('/copyOverLastWeek',async(req,res)=>{

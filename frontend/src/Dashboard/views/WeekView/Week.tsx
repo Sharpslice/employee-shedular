@@ -17,9 +17,12 @@ import axios from "axios";
 
 
 
+
 function Week(){
     const { dateRange,employeeList,setEmployeeList } = 
     useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>> }>();
+
+   
 
    const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -65,7 +68,10 @@ function Week(){
                 dragArray = dragEmployee.shifts.filter((shift)=>shift.id !==active.id)
             
             
-                dropArray = [...dropEmployee.shifts,updateShift]
+                dropArray = [
+    ...dropEmployee.shifts.filter(s => s.id !== updateShift.id),
+    updateShift
+]
 
                 newMap.set(dragEmployee.id,{...dragEmployee,shifts:dragArray})
         
@@ -79,9 +85,20 @@ function Week(){
 
         })
 
-        await axios.patch(`http://localhost:3000/api/employee/shift/moveShift/${active.id}`, 
-            {employee_id:over.data.current.employee_id, date:over.data.current.date.date})
+        try {
+            await axios.patch(
+                `http://localhost:3000/api/employee/shift/moveShift/${active.id}`,
+                {
+                employee_id: over.data.current.employee_id,
+                date: over.data.current.date.date,
 
+                }
+            );
+       
+        } catch (error) {
+            console.error("Failed to update shift:", error);
+            alert("Failed to move shift. Please try again.");
+        }
     
     };
 
