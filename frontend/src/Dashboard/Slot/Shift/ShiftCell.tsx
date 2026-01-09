@@ -7,7 +7,7 @@ import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 import axios from "axios";
 import type { Shift } from "../../Interfaces/Shift";
 import { useDraggable } from "@dnd-kit/core";
-import {CSS} from '@dnd-kit/utilities'
+
 
 
 const convertTo12hr = (time:string | null)=>{
@@ -69,8 +69,7 @@ function ShiftCell({shift}:{shift:Shift}){
 
             }}
             onClick={()=>{
-                console.log(shift)
-                setActivate(prev=>!prev)
+                 setActivate(true)
 
 
             }}

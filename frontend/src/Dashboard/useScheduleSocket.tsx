@@ -81,7 +81,7 @@ function useScheduleSocket(setEmployeeList: React.Dispatch<React.SetStateAction<
             console.log('shiftUpdated')
             
             setEmployeeList((oldMap)=>{
-               console.log("adding shift")
+               //console.log("adding shift")
             
             
                 const employee = oldMap.get(data.employee_id)!
