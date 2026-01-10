@@ -11,7 +11,7 @@ import { ContextMenuContext } from "../../Slot/ContextMenu/ContextMenuProvider"
 import OverrideCell from "../../Slot/Availability_override/OverrideCell"
 import { useDroppable } from "@dnd-kit/core"
 
-
+import { mergeRefs } from "@react-aria/utils";
 
 
 
@@ -62,7 +62,8 @@ function DayCell({row,index,employee,date}:DayProps){
     const override = employee.override.filter((override)=>override.date===date.date)
     return(
         <Flex  
-            ref={setNodeRef} style={style}
+            ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
+            style={style}
             key={`${employee.id} - ${date.date}`}  
             flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
             tabIndex={-1}

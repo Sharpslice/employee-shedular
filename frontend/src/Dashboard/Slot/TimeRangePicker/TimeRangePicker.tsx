@@ -6,6 +6,7 @@ import './TimeRangePicker.css'
 import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
+import type React from "react"
 
 
 interface ShiftResponse{
@@ -25,6 +26,7 @@ function TimeRangePicker({shift}:{shift:Shift}){
     
 
     const onChange = async(time: string, slot: 'start' | 'end')=>{
+        
         try{
             const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/employee/${shift.employee_id}/shift`,
                     slot==='start' 
@@ -64,18 +66,20 @@ function TimeRangePicker({shift}:{shift:Shift}){
     }
 
     return (<>
-            <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'} onClick={()=>{console.log('timepicker')}} 
+            <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'}  
                 
                 onBlur={()=>{console.log('hello')}}
                 
                 >
-                <TimePicker 
+                <TimePicker data-interactive
                     
                     
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
                     value={shift?.start_time}
+                     onPointerDown={(e) => e.stopPropagation()}
                     onChange={(e)=>{onChange(e,"start")}}
+                  
                     format="12h"
                     withDropdown
                     presets={[
