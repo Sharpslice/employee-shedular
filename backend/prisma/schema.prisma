@@ -37,7 +37,7 @@ model Employee {
 
   shifts          Employee_Shifts[]
   availability    Employee_Availability[]
-  override        Availability_Override[]
+  override        Employee_Time_Override[]
 
   @@map("employee")
 }
@@ -59,21 +59,25 @@ model Employee_Shifts{
 model Employee_Availability{
     id                      Int       @id @default(autoincrement())
     employee_id             Int
-    date                    DateTime  @db.Date
-    start_time              DateTime
-    end_time                DateTime
-
+    day_of_week             Int
+    is_available            Boolean
     employee                Employee  @relation(fields:[employee_id],references:id)
 
     @@map("employee_availability")
 }
 
-model Availability_Override{
+model Employee_Availability_Time_Block{
+    id                      Int       @id @default(autoincrement())
+    start_time              DateTime
+    end_time                DateTime
+
+    @@map("employee_availability_time_block")
+}
+
+model Employee_Time_Override{
     id                      Int         @id @default(autoincrement())
     employee_id             Int
     date                    DateTime    @db.Date
-    start_time              DateTime?
-    end_time                DateTime?
     is_available            Boolean
     note                    String?
 
@@ -81,7 +85,15 @@ model Availability_Override{
     calendar                Calendar @relation(fields:[date],references:date)
 
     @@unique([employee_id,date])
-    @@map("availability_override")
+    @@map("employee_time_override")
+}
+
+model Employee_Override_Time_Block{
+    id                      Int         @id @default(autoincrement())
+    start_time              DateTime
+    end_time                DateTime
+
+    @@map("employee_override_time_block")
 }
 
 model Calendar{
@@ -96,7 +108,7 @@ model Calendar{
     holiday_name      String?
 
     shift_dates       Employee_Shifts[]
-    override_dates    Availability_Override[]
+    override_dates    Employee_Time_Override[]
 
     @@map("calendar")
 }

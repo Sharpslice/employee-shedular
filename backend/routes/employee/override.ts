@@ -8,7 +8,7 @@ override.post('/:id/:date',async(req,res)=>{
     const date = new Date(req.params.date)
     const {isAvailable,start_time,end_time,note} = req.body
     try{
-        const row = await prisma.availability_Override.upsert({
+        const row = await prisma.employee_Time_Override.upsert({
         where:{
             employee_id_date:{ 
                     employee_id: employee_id,
@@ -18,17 +18,12 @@ override.post('/:id/:date',async(req,res)=>{
         update:{
             is_available:isAvailable,
             note:note ?? undefined,
-            start_time:start_time ?? undefined,
-            end_time:end_time ?? undefined
-
         },
         create:{
             employee_id:employee_id,
             date: date,
             is_available:isAvailable,
             note:note ?? null,
-            start_time:start_time ?? null,
-            end_time:end_time ?? null
         }
 
         })
