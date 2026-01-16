@@ -12,6 +12,7 @@ import OverrideCell from "../../Slot/Availability_override/OverrideCell"
 import { useDroppable } from "@dnd-kit/core"
 
 import { mergeRefs } from "@react-aria/utils";
+import type { Shift } from "../../Interfaces/Shift"
 
 
 
@@ -21,9 +22,10 @@ interface DayProps{
     index:number
     employee:Employee
     date: Day
+    shifts:Shift[]
 }
 
-function DayCell({row,index,employee,date}:DayProps){
+function DayCell({row,index,employee,date,shifts}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey} = useContext(GridNavigationContext)!
 
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
@@ -58,8 +60,8 @@ function DayCell({row,index,employee,date}:DayProps){
     }
 
 
-    const hasShift = employee.shifts.filter((shift)=> shift.date === date.date)
-    const override = employee.override.filter((override)=>override.date===date.date)
+     const hasShift = shifts.filter((shift)=> shift.date === date.date)
+    //const override = employee.override.filter((override)=>override.date===date.date)
     return(
         <Flex  
             ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
@@ -93,12 +95,12 @@ function DayCell({row,index,employee,date}:DayProps){
                             <ShiftCell key={`${shift.id}-${index}`} shift={shift}/>
                         )
                     })}
-                    {override.map((override)=>{
+                    {/* {override.map((override)=>{
                         return(
                             <OverrideCell key={`override-id-${override.id}`} override={override}/>
                         )
                         
-                    })}
+                    })} */}
                     
                 </SlotContainer> 
 

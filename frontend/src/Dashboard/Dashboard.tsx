@@ -14,6 +14,7 @@ import { ArrayToMap } from "./views/ArrayToMap";
 import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
 import ContextMenu from "./Slot/ContextMenu/ContextMenu";
 import useScheduleSocket from "./useScheduleSocket";
+import type { Shift } from "./Interfaces/Shift";
 
 
 
@@ -23,14 +24,18 @@ type CalendarResponse ={
 }
 interface EmployeeResponse{
     employeeList: Employee[]
+    shifts: Shift[]
 }
 
 
 function Dashboard(){   
     const {date} = useParams();
     const [dateRange,setDateRange] = useState<Day[]>([]) 
-    const [employeeList, setEmployeeList] = useState<Map<number,Employee>>(new Map())
 
+    
+
+    const [employeeList,setEmployeeList] = useState<Map<number,Employee>>(new Map())
+    const [shifts,setShifts] = useState<Shift[]>([])
     const isWeek = useMatch('schedule/week/*')
     const isDay = useMatch('schedule/day/*')
     const isMonth = useMatch('schedule/month/*')
@@ -39,7 +44,7 @@ function Dashboard(){
     const safeDate = date ?? DateTime.local().toISODate()
   
 
-    useScheduleSocket(setEmployeeList);
+    //useScheduleSocket(setEmployeeList);
 
     useEffect(()=>{
         const fetchData =async() =>{
@@ -48,10 +53,12 @@ function Dashboard(){
             setDateRange(response.data.dateArray)
        
     
-            const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee?date=${safeDate}&view=${safeView}`,{withCredentials:true});
+            const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee/${safeDate}/${safeView}`,{withCredentials:true});
             console.log(ArrayToMap( employeeResponse.data.employeeList))
-            setEmployeeList(ArrayToMap(  employeeResponse.data.employeeList))
-            console.log('remounts')
+            setEmployeeList(ArrayToMap( employeeResponse.data.employeeList))
+            setShifts(employeeResponse.data.shifts);
+            
+
         }
         fetchData()
     },[safeDate,safeView])
@@ -63,11 +70,14 @@ function Dashboard(){
         
             <Header view={safeView} selectedDate={safeDate} />
             <ContextMenuProvider>
-
+                
                 <ContextMenu/>
                     <Container  fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
 
-                        {dateRange.length!=0 && employeeList.size!=0 &&  <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList}}/>}
+                        {       dateRange.length!=0 
+                            &&  employeeList.size!=0 
+                            &&  <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts}}/>
+                        }
                     
                     </Container> 
             </ContextMenuProvider>

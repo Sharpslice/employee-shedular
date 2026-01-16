@@ -6,7 +6,32 @@ import {io} from '../../src/app'
 const employee = express.Router();
 
 
-employee.get('/',async(req,res)=>{
+employee.get('/:date/:view',async(req,res)=>{
+    const view = req.params.view;
+    const date = req.params.date
+    console.log(req.user);
+  
+    const selectedDate = DateTime.fromISO(date as string)
+        let beginDate = selectedDate
+        let endDate = selectedDate
+        
+        switch(view){
+            case 'day':
+                beginDate = selectedDate.startOf('day');
+                endDate = selectedDate.startOf('day');
+                break;
+            case 'week':
+                beginDate = selectedDate.startOf('week',{useLocaleWeeks:true})
+                endDate = selectedDate.endOf('week',{useLocaleWeeks:true}).startOf('day')
+                break;
+            case 'month':
+                beginDate = selectedDate.startOf('month').startOf('week',{useLocaleWeeks:true})
+                endDate = selectedDate.endOf('month').endOf('week',{useLocaleWeeks:true}).startOf('day')
+                break;
+            default:
+               
+        }
+
 
     const employeeList = await prisma.employee.findMany({
         select:{
@@ -14,22 +39,21 @@ employee.get('/',async(req,res)=>{
             name:true,
             isWorking:true,
             position:true,
-            shifts:{
-               
-            },
-            availability:{
-
-            },
-            override:{
-
-            }
         },
-        
-        
+    })
 
+
+    const shifts = await prisma.employee_Shifts.findMany({
+        where:{
+            date:{
+                gte: beginDate.toJSDate(),
+                lte: endDate.toJSDate()
+            }
+            
+        }
     })
    
-    res.json({employeeList})
+    res.json({employeeList,shifts})
 })
 
 employee.delete('/shift/:shift_id',async(req,res)=>{

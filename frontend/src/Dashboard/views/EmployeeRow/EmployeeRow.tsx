@@ -13,22 +13,16 @@ import { ContextMenuContext } from "../../Slot/ContextMenu/ContextMenuProvider";
 import { useOutletContext } from "react-router-dom";
 
 import DayCell from "./DayCell";
+import type { Shift } from "../../Interfaces/Shift";
 
 
-// interface slotObj{
-//     date: Day
-//     shift: Shift | undefined
-//     availablility: undefined
-//     timeOff: undefined
-// }
 
 interface EmployeeRowProps{
     row?:number
     employee: Employee
-    //gridCellArray : slotObj[]
-  
+    shifts: Shift[]
 }
-function EmployeeRow({row,employee}:EmployeeRowProps){
+function EmployeeRow({row,employee,shifts}:EmployeeRowProps){
 
     const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[] }>();
     const [hidden,setHidden]  = useState(true)
@@ -47,7 +41,7 @@ function EmployeeRow({row,employee}:EmployeeRowProps){
                     <Flex gap={5} flex={1} miw={'100px'} >
                         {dateRange.map((date,index)=>{
                             return(
-                                <DayCell key={`${employee.id}-${date}-${index}`} row={row!} employee={employee} date={date} index={index}/>
+                                <DayCell key={`${employee.id}-${date}-${index}`} row={row!} employee={employee} shifts={shifts} date={date} index={index}/>
                             )
                         })}
                                     
