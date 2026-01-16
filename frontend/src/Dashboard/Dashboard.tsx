@@ -9,7 +9,7 @@ import { Outlet, useMatch, useParams } from "react-router-dom";
 import type { Employee } from "./Interfaces/Employee";
 import type { Day } from "./Interfaces/Day";
 
-import { ArrayToMap } from "./views/ArrayToMap";
+import { EmployeeArrayToMap,ShiftArrayToMap } from "./views/ArrayToMap";
 
 import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
 import ContextMenu from "./Slot/ContextMenu/ContextMenu";
@@ -35,7 +35,7 @@ function Dashboard(){
     
 
     const [employeeList,setEmployeeList] = useState<Map<number,Employee>>(new Map())
-    const [shifts,setShifts] = useState<Shift[]>([])
+    const [shifts,setShifts] = useState<Map<number,Shift>>(new Map())
     const isWeek = useMatch('schedule/week/*')
     const isDay = useMatch('schedule/day/*')
     const isMonth = useMatch('schedule/month/*')
@@ -54,10 +54,12 @@ function Dashboard(){
        
     
             const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee/${safeDate}/${safeView}`,{withCredentials:true});
-            console.log(ArrayToMap( employeeResponse.data.employeeList))
-            setEmployeeList(ArrayToMap( employeeResponse.data.employeeList))
-            setShifts(employeeResponse.data.shifts);
             
+            setEmployeeList(EmployeeArrayToMap( employeeResponse.data.employeeList))
+            setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
+            console.log(EmployeeArrayToMap( employeeResponse.data.employeeList))
+            console.log(ShiftArrayToMap(employeeResponse.data.shifts))
+            console.log('fetching api call')
 
         }
         fetchData()

@@ -14,6 +14,7 @@ import WeekHeaderCell from "./WeekHeaderCell";
 import { GridNavigationProvider } from "../GridNavigation/GridNavigationContext";
 import type { Shift } from "../../Interfaces/Shift";
 import axios from "axios";
+import { useMemo } from "react";
 
 
 
@@ -22,7 +23,22 @@ function Week(){
     const { dateRange,employeeList,setEmployeeList,shifts } = 
     useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Shift[] }>();
 
-   
+    const shiftsByEmployee = useMemo(()=>{
+        const map = new Map<number,Shift[]>();
+
+
+        for(const shift of shifts.values()){
+            if(map.has(shift.employee_id)){
+                
+                map.get(shift.employee_id)?.push(shift)
+            }
+            else{
+                map.set(shift.employee_id, [shift])
+            }
+        }
+        console.log('new map: ',map)
+        return map
+    },[shifts])
 
    const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -37,6 +53,10 @@ function Week(){
         if (!over) return;
 
         console.log(`Dragged shift ${active.id} into droppable ${over.id} owned by ${over.data.current?.employee_name}`);
+
+
+
+
 
 //         setEmployeeList((oldMap)=>{
 //             const newMap = new Map(oldMap); 
@@ -122,10 +142,9 @@ function Week(){
                     >
                         {[...employeeList].map(([id,employee],row)=>{     
 
-                            const employeeShift = shifts.filter((shift)=> shift.employee_id === employee.id)
-                            console.log(employeeShift)
+                            const employeeShifts = shiftsByEmployee.get(id) ?? [];
                             return(
-                                <EmployeeRow key={id} row={row} employee={employee} shifts={employeeShift}  />
+                                <EmployeeRow key={id} row={row} employee={employee} shifts={employeeShifts}  />
                             )
                         })}
                         
