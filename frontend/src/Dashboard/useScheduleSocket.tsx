@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { useSocket } from "../SocketContext";
-import type { Employee } from "./Interfaces/Employee";
 import type { Shift } from "./Interfaces/Shift";
 import type { Override } from "./Interfaces/Override";
 
-function useScheduleSocket(setEmployeeList: React.Dispatch<React.SetStateAction<Map<number,Employee>>>){
+function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<number,Shift>>>){
     const socket = useSocket()
     useEffect(()=>{
         socket?.on('copyOverLastWeekshift',(shiftsArray:Shift[])=>{
@@ -147,49 +146,20 @@ function useScheduleSocket(setEmployeeList: React.Dispatch<React.SetStateAction<
 
             const {oldShift, updatedShift} = data;
 
+            setShifts((oldMap)=>{
+                const newMap = new Map(oldMap)
+
+                newMap.set(updatedShift.id,updatedShift);
 
 
-            setEmployeeList((oldMap)=>{
-                const newMap = new Map(oldMap); 
 
+                return newMap
+            })
 
-                const oldEmployee = oldMap.get(oldShift.employee_id)!
-                const updatedEmployee = oldMap.get(updatedShift.employee_id)!
-
-
-                const oldArray = oldEmployee.shifts.filter((shift)=>shift.id !== updatedShift.id)
-               
-                 const updatedArray = [
-    ...updatedEmployee.shifts.filter(
-      (shift) => shift.id !== updatedShift.id
-    ),
-    updatedShift,
-  ];
-
-                if(oldEmployee.id === updatedEmployee.id){
-                    const withoutArray = oldEmployee.shifts.filter((shift)=>shift.id !== oldShift.id)
-                    const updatedArray =[...withoutArray,updatedShift]
-
-                    
-                    newMap.set(oldEmployee.id,{...oldEmployee,shifts:updatedArray})
-                }
-                else{
-                    newMap.set(oldEmployee.id,{...oldEmployee,shifts:oldArray})
-                    newMap.set(updatedEmployee.id,{...updatedEmployee,shifts:updatedArray})
-                }
-                
-           
-
-            
-
-            
-            return newMap;
-
-        })
        })
   
         
-    },[socket,setEmployeeList])
+    },[socket,setShifts])
 }
 
 export default useScheduleSocket;

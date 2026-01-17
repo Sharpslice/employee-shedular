@@ -54,8 +54,7 @@ function Week(){
 
         console.log(`Dragged shift ${active.id} into droppable ${over.id} owned by ${over.data.current?.employee_name}: ${over.data.current?.employee_id}`);
 
-        //active.id == shift id
-        //over.id == coords
+     
         const shiftId = Number(active.id)
         const droppedDate = over.data.current.date.date;
         const droppedEmployee = over.data.current?.employee_id
@@ -71,7 +70,6 @@ function Week(){
                 employee_id: droppedEmployee,  
                 date: droppedDate
                
-                
             }
 
             newMap.set(shiftId, updatedShift)
@@ -80,59 +78,13 @@ function Week(){
             return newMap
         })
            
-//         setEmployeeList((oldMap)=>{
-//             const newMap = new Map(oldMap); 
-    
-//             const dragEmployee = oldMap.get(active.data.current.employee_id)!;
-//             const dropEmployee = oldMap.get(over.data.current.employee_id)!;
-
-//             const selectedShift = dragEmployee.shifts.find((shift)=>shift.id === active.id)
-//             if(!selectedShift) return oldMap;
-
-//             const updateShift = {
-//                 ...selectedShift,
-//                 date:over.data.current.date.date,
-//                 employee_id: dropEmployee.id
-//             }
-
-
-//             let dragArray:Shift[] =[];
-//             let dropArray:Shift[] = [];
-//             if(dragEmployee.id === dropEmployee.id)
-//             {
-//                 const withoutArray = dragEmployee.shifts.filter((shift)=>shift.id !==active.id)
-//                 const updatedArray = [...withoutArray,updateShift]
-//                 newMap.set(dragEmployee.id,{...dragEmployee,shifts:updatedArray})
-            
-//             }
-//             else
-//             {
-//                 dragArray = dragEmployee.shifts.filter((shift)=>shift.id !==active.id)
-            
-            
-//                 dropArray = [
-//     ...dropEmployee.shifts.filter(s => s.id !== updateShift.id),
-//     updateShift
-// ]
-
-//                 newMap.set(dragEmployee.id,{...dragEmployee,shifts:dragArray})
         
-
-//                 newMap.set(dropEmployee.id,{...dropEmployee,shifts:dropArray})
-//             }
-            
-
-            
-//             return newMap;
-
-//         })
-
         try {
             await axios.patch(
-                `http://localhost:3000/api/employee/shift/moveShift/${active.id}`,
+                `http://localhost:3000/api/employee/shift/moveShift/${shiftId}`,
                 {
-                employee_id: over.data.current.employee_id,
-                date: over.data.current.date.date,
+                    employee_id: droppedEmployee,
+                    date: droppedDate,
 
                 }
             );

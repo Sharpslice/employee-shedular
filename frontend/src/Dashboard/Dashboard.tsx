@@ -44,7 +44,7 @@ function Dashboard(){
     const safeDate = date ?? DateTime.local().toISODate()
   
 
-    //useScheduleSocket(setEmployeeList);
+    useScheduleSocket(setShifts);
 
     useEffect(()=>{
         const fetchData =async() =>{
