@@ -18,7 +18,7 @@ shift.post('/:id/shift',async(req,res)=>{
            }
         })
 
-        io.emit("shiftAdded",row)
+        io.emit("shiftAdded",{shift:row})
         
         console.log('backend socket emit')
         res.json({success:true,row})
@@ -39,10 +39,10 @@ shift.delete('/:id/delete',async(req,res)=>{
     try{
         const deletedShift = await prisma.employee_Shifts.delete({
             where:{id:shift_id},
-            select:{id:true,employee_id:true}
+            select:{id:true}
         })
         
-        io.emit("shiftDeleted",{employee_id:deletedShift.employee_id, shift_id:deletedShift.id})
+        io.emit("shiftDeleted",{shift_id:deletedShift.id})
 
     }catch(error:unknown){
         if(error instanceof Error){
@@ -54,17 +54,9 @@ shift.delete('/:id/delete',async(req,res)=>{
 
 shift.patch('/moveShift/:id',async(req,res)=>{
     const shift_id = parseInt(req.params.id);
-    const {employee_id,date,socketId} = req.body
-
-
+    const {employee_id,date} = req.body
     try{
-        const originalShift = await prisma.employee_Shifts.findUnique({
-            where:{id:shift_id}
-        })
-
-        if (!originalShift) return res.status(404).json({ error: "Shift not found" });
-
-
+       
         const updatedShift = await prisma.employee_Shifts.update({
             where:{
                 id:shift_id
@@ -74,10 +66,10 @@ shift.patch('/moveShift/:id',async(req,res)=>{
                 date: new Date(date)
             }
         })
-        console.log(`${originalShift.employee_id} -> ${updatedShift.employee_id}`)
+       
 
-        io.emit('shiftMoved',{ oldShift: originalShift, updatedShift })
-        res.status(200).json({ oldShift: originalShift, updatedShift });
+        io.emit('shiftMoved',{ updatedShift })
+        res.status(200).json({ updatedShift });
 
     }catch(error){
         console.error("Error updating shift:", error);

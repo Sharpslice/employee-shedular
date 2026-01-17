@@ -9,7 +9,7 @@ function ContextMenu(){
 
     const createShift =async()=>{
         await axios.post(`http://localhost:3000/api/employee/shift/${selectedCell.employee?.id}/shift`,{date:selectedCell.date?.date})
-        console.log('hey')
+        console.log(selectedCell.employee?.id)
     }
     const createOverride = async()=>{
         try{

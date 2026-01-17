@@ -17,7 +17,7 @@ function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
     
     const createShift =async()=>{
         await axios.post(`http://localhost:3000/api/employee/shift/${employee.id}/shift`,{date:date.date})
-        console.log('hey')
+    
     }
 
     const createOverride = async()=>{
