@@ -10,50 +10,16 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
             console.log('copy over')
             console.log(shiftsArray)
             
-            setEmployeeList((oldMap)=>{
-             
-                const newMap = new Map(oldMap)
+           setShifts((oldMap)=>{
+                const newMap = new Map()
 
-                    //const employees = shiftsArray.map((shift)=>shift.employee_id)
-
-                    oldMap.forEach((_,key)=>{
-                        const newShiftArray = shiftsArray.filter((shift)=>{
-                            return(shift.employee_id === key)
-                        })
-                        const employee = oldMap.get(key)!;
-                        const newEmployeeInfo = {
-                            ...employee,
-                            shifts: newShiftArray//[...employee.shifts, ...newShiftArray]
-                        }
-                        newMap.set(key,newEmployeeInfo)
-                    })
+                shiftsArray.map((shift)=>{
+                    newMap.set(shift.id,shift)
+                })
 
 
-
-
-
-                
-                console.log(newMap)
-                return newMap
-            })
-
-// const employees = shiftsArray.map((shift)=>shift.employee_id)
-
-                    // employees.forEach((id)=>{
-                    //     const newShiftArray = shiftsArray.filter((shift)=>{
-                    //         return(shift.employee_id === id)
-                    //     })
-                    //     const employee = oldMap.get(id)!;
-                    //     const newEmployeeInfo = {
-                    //         ...employee,
-                    //         shifts: newShiftArray//[...employee.shifts, ...newShiftArray]
-                    //     }
-                    //     newMap.set(id,newEmployeeInfo)
-                    // })
-
-
-
-
+                return newMap;
+           })
 
         })
         socket?.on('overrideCreated',(ovveride:Override)=>{
