@@ -10,7 +10,7 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
             console.log('copy over')
             console.log(shiftsArray)
             
-           setShifts((oldMap)=>{
+           setShifts(()=>{
                 const newMap = new Map()
 
                 shiftsArray.map((shift)=>{
@@ -22,26 +22,7 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
            })
 
         })
-        socket?.on('overrideCreated',(ovveride:Override)=>{
-
-            setEmployeeList((oldMap)=>{
-
-
-                const employee = oldMap.get(ovveride.employee_id)!
-
-                const newOverrideArray = [...employee.override,ovveride ]
-
-                const updatedEmployeeInfo  = {
-                    ...employee,
-                    override:newOverrideArray
-                }
-
-                const newMap = new Map(oldMap)
-                newMap.set(employee.id,updatedEmployeeInfo)
-                return newMap
-            })
-
-        })
+        
         socket?.on('shiftUpdated',(data)=>{
             console.log('shiftUpdated',data)
             const {shift} = data
