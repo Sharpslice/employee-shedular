@@ -39,10 +39,10 @@ shift.delete('/:id/delete',async(req,res)=>{
     try{
         const deletedShift = await prisma.employee_Shifts.delete({
             where:{id:shift_id},
-            select:{id:true,employee_id:true}
+            select:{id:true}
         })
         
-        io.emit("shiftDeleted",{employee_id:deletedShift.employee_id, shift_id:deletedShift.id})
+        io.emit("shiftDeleted",{shift_id:deletedShift.id})
 
     }catch(error:unknown){
         if(error instanceof Error){
