@@ -77,30 +77,16 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
 
         })
         socket?.on('shiftUpdated',(data)=>{
-            console.log('shiftUpdated')
-            
-            setEmployeeList((oldMap)=>{
-               //console.log("adding shift")
-            
-            
-                const employee = oldMap.get(data.employee_id)!
-
-                const newShiftArray = employee.shifts.map((shift) => 
-                    shift.id === data.id ? data : shift
-                );
-                const updatedEmployeeInfo = {
-                    ...employee,
-                    shifts: newShiftArray
-                }
-
+            console.log('shiftUpdated',data)
+            const {shift} = data
+            setShifts((oldMap)=>{
                 const newMap = new Map(oldMap);
-                newMap.set(data.employee_id,updatedEmployeeInfo)
-                
+                newMap.set(shift.id,shift)
 
 
-                return newMap
-            
+                return newMap;
             })
+            
         })
         socket?.on('shiftAdded',(data)=>{
             console.log("adding shift")

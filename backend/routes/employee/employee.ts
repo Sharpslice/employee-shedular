@@ -95,7 +95,7 @@ employee.post('/:employee_id/shift',async(req,res)=>{
                 
             }
         })
-        io.emit('shiftUpdated',row)
+        io.emit('shiftUpdated',{shift:row})
         res.json({success:true,row})
     }
     catch(error:unknown){
