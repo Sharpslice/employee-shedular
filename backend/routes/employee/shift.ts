@@ -18,7 +18,7 @@ shift.post('/:id/shift',async(req,res)=>{
            }
         })
 
-        io.emit("shiftAdded",row)
+        io.emit("shiftAdded",{shift:row})
         
         console.log('backend socket emit')
         res.json({success:true,row})
