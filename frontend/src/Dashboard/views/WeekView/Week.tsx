@@ -20,8 +20,8 @@ import { useMemo } from "react";
 
 
 function Week(){
-    const { dateRange,employeeList,setEmployeeList,shifts } = 
-    useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Shift[] }>();
+    const { dateRange,employeeList,setShifts,shifts } = 
+    useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Map<number,Shift>,setShifts:React.Dispatch<React.SetStateAction<Map<number,Shift>>> }>();
 
     const shiftsByEmployee = useMemo(()=>{
         const map = new Map<number,Shift[]>();
@@ -52,12 +52,34 @@ function Week(){
         const { active,over } = event;
         if (!over) return;
 
-        console.log(`Dragged shift ${active.id} into droppable ${over.id} owned by ${over.data.current?.employee_name}`);
+        console.log(`Dragged shift ${active.id} into droppable ${over.id} owned by ${over.data.current?.employee_name}: ${over.data.current?.employee_id}`);
 
+        //active.id == shift id
+        //over.id == coords
+        const shiftId = Number(active.id)
+        const droppedDate = over.data.current.date.date;
+        const droppedEmployee = over.data.current?.employee_id
+        setShifts((oldMap)=>{
+            const newMap = new Map(oldMap)
 
+            //find the selected shift and replace the date and employee
+            const selectedShift = oldMap.get(shiftId)!;
+            
+            const updatedShift = {
+                ...selectedShift,
+                id: selectedShift.id,          
+                employee_id: droppedEmployee,  
+                date: droppedDate
+               
+                
+            }
 
+            newMap.set(shiftId, updatedShift)
+            console.log(updatedShift)
 
-
+            return newMap
+        })
+           
 //         setEmployeeList((oldMap)=>{
 //             const newMap = new Map(oldMap); 
     
