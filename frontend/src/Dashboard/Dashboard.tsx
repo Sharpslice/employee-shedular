@@ -74,7 +74,7 @@ function Dashboard(){
             <ContextMenuProvider>
                 
                 <ContextMenu/>
-                    <Container  fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
+                    <Container  fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{display:'flex',justifyContent:'center',backgroundColor:'lightgray'}}>
 
                         {       dateRange.length!=0 
                             &&  employeeList.size!=0 
