@@ -33,16 +33,15 @@ function Dashboard(){
     const [dateRange,setDateRange] = useState<Day[]>([]) 
 
     
-
-    const [employeeList,setEmployeeList] = useState<Map<number,Employee>>(new Map())
-    const [shifts,setShifts] = useState<Map<number,Shift>>(new Map())
     const isWeek = useMatch('schedule/week/*')
     const isDay = useMatch('schedule/day/*')
     const isMonth = useMatch('schedule/month/*')
-
-    const safeView = isWeek ? 'week' : isDay ? 'day' : isMonth ? 'month' : ''
+    const isCalendar = useMatch('schedule/calendar/*')
+    const safeView = isWeek ? 'week' : isDay ? 'day' : isMonth ? 'month' : isCalendar ? 'month' : 'week'
     const safeDate = date ?? DateTime.local().toISODate()
   
+    const [employeeList,setEmployeeList] = useState<Map<number,Employee>>(new Map())
+    const [shifts,setShifts] = useState<Map<number,Shift>>(new Map())
 
     useScheduleSocket(setShifts);
 
@@ -59,7 +58,7 @@ function Dashboard(){
             setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
             console.log(EmployeeArrayToMap( employeeResponse.data.employeeList))
             console.log(ShiftArrayToMap(employeeResponse.data.shifts))
-            console.log('fetching api call')
+
 
         }
         fetchData()
@@ -74,11 +73,10 @@ function Dashboard(){
             <ContextMenuProvider>
                 
                 <ContextMenu/>
-                    <Container  fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{backgroundColor:'lightgray'}}>
+                    <Container  fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{display:'flex',justifyContent:'center',backgroundColor:'lightgray'}}>
 
-                        {       dateRange.length!=0 
-                            &&  employeeList.size!=0 
-                            &&  <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts}}/>
+                        {   
+                            <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts}}/>
                         }
                     
                     </Container> 

@@ -48,7 +48,12 @@ import { SocketProvider } from './SocketContext.tsx';
             {
               path:'month/:date?',
               element:null
+            },
+            {
+              path:'calendar/:date?',
+              element: <Calendar/>
             }
+            
 
 
 
@@ -63,10 +68,7 @@ import { SocketProvider } from './SocketContext.tsx';
           path:"availability",
           element: null
         },
-        {
-          path:'calendar',
-          element: <Calendar/>
-        }
+        
 
       ]
       

@@ -167,7 +167,7 @@ function Header({view,selectedDate}:HeaderProps){
                 </Button>
 
 
-                <ActionIcon size={36} component={Link} to="/calendar">
+                <ActionIcon size={36} component={Link} to="/schedule/calendar">
                     <IconCalendar />
                 </ActionIcon>
             </Group>
