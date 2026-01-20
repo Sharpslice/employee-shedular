@@ -57,6 +57,9 @@ function Dashboard(){
             
             setEmployeeList(EmployeeArrayToMap( employeeResponse.data.employeeList))
             setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
+
+
+            
             console.log(EmployeeArrayToMap( employeeResponse.data.employeeList))
             console.log(ShiftArrayToMap(employeeResponse.data.shifts))
             console.log('fetching api call')

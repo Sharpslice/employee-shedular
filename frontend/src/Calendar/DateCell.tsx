@@ -17,7 +17,8 @@ type MonthElement = {
 type Props ={
    
     day: MonthElement
-    shifts: Shift[]
+    employeeList: Map<number,Employee>
+    shiftsByEmployee: Map<number,Shift[]>
 }
 function getMonthName(monthNumber:number){
         const month = new Date(2000,monthNumber-1,1);
@@ -30,10 +31,10 @@ function getMonthName(monthNumber:number){
         return dt.toFormat('hh:mm a')
     }
 
-function DateCell({day,shifts}: PropsWithChildren<Props>){
+function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>){
    
-    const {employeeList} = useOutletContext<{employeeList:Map<number,Employee>}>();
-    console.log("employees",employeeList)
+    
+    
     return (<>
         <Flex 
             direction={'column'}
@@ -50,22 +51,47 @@ function DateCell({day,shifts}: PropsWithChildren<Props>){
 
 
             <Flex direction={'column'} >
-                {shifts.map((shift)=>(
-                    <Flex justify={'center'}>
-                        <Text>{employeeList.get(shift.employee_id)?.name}</Text>
+                {
+                    [...employeeList.values()].map((employee)=>{
+
+                        return(
+                            shiftsByEmployee.has(employee.id)
+                            ?   <Flex mih={15}>
+                                    <Text>{employee.name}</Text>
+                                    <Text>{" - "}</Text>
+                                    {
+                                        shiftsByEmployee.get(employee.id)?.map((shift)=>{
+                                            return(<Text>{shift.start_time} - {shift.end_time}</Text>)
+                                        })
+                                    }
+                                </Flex>
+
+                            :
+
+                                <Flex  mih={15} >
+                                    {''}
+                                </Flex>
+                        )
+
+
+                    })
+                
+                
+                
+                
+                
+                }
+
+
+
+
+            </Flex>
+{/* 
+/* <Text>{employeeList.get(shift.employee_id)?.name}</Text>
                         <Text >-</Text>
                         <Text >{convertTo12hr( shift.start_time)}</Text>  
                         <Text >-</Text>
-                        <Text >{convertTo12hr( shift.end_time)}</Text>
-
-
-
-                    </Flex>
-                    
-                ))}
-            </Flex>
-
-
+                        <Text >{convertTo12hr( shift.end_time)}</Text> */}
             
         </Flex>
     </>)

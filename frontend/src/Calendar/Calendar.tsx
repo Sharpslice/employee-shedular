@@ -7,6 +7,7 @@ import DateCell from './DateCell';
 import { useOutletContext } from 'react-router-dom';
 import type { Shift } from '../Dashboard/Interfaces/Shift';
 import { DateTime } from 'luxon';
+import type { Employee } from '../Dashboard/Interfaces/Employee';
 
 
 
@@ -32,20 +33,25 @@ function Calendar(){
     const [daysInAMonth,setDayInAMonth] = useState<MonthElement[]>([])
     // const [currentMonth,setCurrentMonth] = useState<string>('')
 
-    const {shifts} = useOutletContext<{shifts: Map<number,Shift>}>();
+    const {shifts,employeeList} = useOutletContext<{shifts: Map<number,Shift>,employeeList:Map<number,Employee>}>();
     
-    const shiftsByDate = useMemo(()=>{
-        const map = new Map<string,Shift[]>();
+    const shiftsByDateAndEmployee = useMemo(()=>{
+        const map = new Map<string,Map<number,Shift[]>>();
 
         for(const shift of shifts.values()){
-            const date = DateTime.fromISO(shift.date,{zone:'utc'}).toISODate()
+            const date = DateTime.fromISO(shift.date,{zone:'utc'}).toISODate()!
             
-            if(map.has(date!)){
-                console.log(`date: ${date} and shift_date: ${shift.date}`)
-                map.get(date!)?.push(shift)
+            if(!map.has(date)){
+                map.set(date,new Map<number,Shift[]>())
+            }
+
+            const employeeWShift = map.get(date)
+
+            if(employeeWShift?.has(shift.employee_id)){
+                employeeWShift.get(shift.employee_id)?.push(shift)
             }
             else{
-                map.set(date!,[shift])
+                employeeWShift?.set(shift.employee_id,[shift])
             }
 
             
@@ -86,7 +92,7 @@ function Calendar(){
             </Box> */}
 
             {daysOfTheWeek.map((days) => (
-                <Flex key={days} h={'50px'} justify={'center'} align={'center'} bd={'1px solid grey'}>
+                <Flex key={days} flex={1} justify={'center'} align={'center'} bd={'1px solid grey'}>
                     {days}
                 </Flex>
             ))}
@@ -95,8 +101,12 @@ function Calendar(){
             
                 daysInAMonth.map((dayObj: MonthElement) => {
                     const date = DateTime.fromISO(dayObj.date,{zone:'utc'}).toISODate()
-                    const dayShifts = shiftsByDate.get(date!)
-                    return <DateCell day={dayObj} shifts={dayShifts ?? []}/>
+                    const dailyEmployeeShift = shiftsByDateAndEmployee.get(date!)
+                    return <DateCell 
+                        day={dayObj} 
+                        shiftsByEmployee={dailyEmployeeShift ?? new Map() } 
+                        employeeList={employeeList} 
+                        />
                 })}
 
 
