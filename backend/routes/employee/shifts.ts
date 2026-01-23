@@ -2,6 +2,7 @@ import express from 'express';
 import prisma from '../../db/db'
 import {io} from '../../src/app'
 import { DateTime } from 'luxon';
+import { moveShift } from '../../controllers/shiftsController';
 const shifts = express.Router();
 
 
@@ -52,31 +53,7 @@ shifts.delete('/:id',async(req,res)=>{
     }
 })
 
-shifts.patch('/:id',async(req,res)=>{
-    const shift_id = parseInt(req.params.id);
-    const {employee_id,date} = req.body
-    try{
-       
-        const updatedShift = await prisma.employee_Shifts.update({
-            where:{
-                id:shift_id
-            },
-            data:{
-                employee_id:employee_id,
-                date: new Date(date)
-            }
-        })
-       
-
-        io.emit('shiftMoved',{ updatedShift })
-        res.status(200).json({ updatedShift });
-
-    }catch(error){
-        console.error("Error updating shift:", error);
-        res.status(500).json({ error: "Failed to update shift" });
-    }
-
-})
+shifts.patch('/:id',moveShift)
 
 shifts.post('/copyOverLastWeek',async(req,res)=>{
   
