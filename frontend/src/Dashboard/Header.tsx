@@ -70,7 +70,7 @@ function Header({view,selectedDate}:HeaderProps){
         })
         console.log(lastWeekArray)
         try{
-            await axios.post(`http://localhost:3000/api/employee/shift/copyOverLastWeek`,
+            await axios.post(`http://localhost:3000/api/v1/shifts/copyOverLastWeek`,
                 {
                     lastWeekArray
                 },{withCredentials:true}

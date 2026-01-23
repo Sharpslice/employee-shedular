@@ -3,10 +3,10 @@ import prisma from '../../db/db'
 import { DateTime } from 'luxon';
 
 import {io} from '../../src/app'
-const employee = express.Router();
+const employees = express.Router();
 
 
-employee.get('/:date/:view',async(req,res)=>{
+employees.get('/:date/:view',async(req,res)=>{
     const view = req.params.view;
     const date = req.params.date
     console.log(req.user);
@@ -56,17 +56,8 @@ employee.get('/:date/:view',async(req,res)=>{
     res.json({employeeList,shifts})
 })
 
-employee.delete('/shift/:shift_id',async(req,res)=>{
-    const shift_id = req.params.shift_id;
 
-    console.log(`delete ${shift_id}`)
-    await prisma.employee_Shifts.delete({
-        where:{id: parseInt(shift_id)}
-    })
-    res.json({success:true})
-})
-
-employee.post('/:employee_id/shift',async(req,res)=>{
+employees.post('/:employee_id/shifts',async(req,res)=>{
     const employee_id = req.params.employee_id;
     const {date,start_time,end_time} = req.body;
     console.log(req.user);
@@ -113,7 +104,7 @@ employee.post('/:employee_id/shift',async(req,res)=>{
 })
 
 
-employee.get('/schedule/:view/:date',async(req,res)=>{
+employees.get('/schedule/:view/:date',async(req,res)=>{
   
     const view = req.params.view;
     const date = req.params.date
@@ -179,5 +170,5 @@ interface ScheduleArray{
     start_time:string | null,
     end_time:string | null
 }
-export default employee;
+export default employees;
 

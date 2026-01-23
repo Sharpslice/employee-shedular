@@ -2,10 +2,10 @@ import express from 'express';
 import prisma from '../../db/db'
 import {io} from '../../src/app'
 import { DateTime } from 'luxon';
-const shift = express.Router();
+const shifts = express.Router();
 
 
-shift.post('/:id/shift',async(req,res)=>{
+shifts.post('/:id',async(req,res)=>{
     const employee_id = parseInt(req.params.id)
     const {date} = req.body;
     try{
@@ -33,7 +33,7 @@ shift.post('/:id/shift',async(req,res)=>{
     }
 })
 
-shift.delete('/:id/delete',async(req,res)=>{
+shifts.delete('/:id',async(req,res)=>{
     const shift_id = parseInt(req.params.id);
    
     try{
@@ -52,7 +52,7 @@ shift.delete('/:id/delete',async(req,res)=>{
     }
 })
 
-shift.patch('/moveShift/:id',async(req,res)=>{
+shifts.patch('/:id',async(req,res)=>{
     const shift_id = parseInt(req.params.id);
     const {employee_id,date} = req.body
     try{
@@ -78,7 +78,7 @@ shift.patch('/moveShift/:id',async(req,res)=>{
 
 })
 
-shift.post('/copyOverLastWeek',async(req,res)=>{
+shifts.post('/copyOverLastWeek',async(req,res)=>{
   
     const {lastWeekArray} = req.body
     const thisWeekArray= lastWeekArray.map((date:string)=>{
@@ -157,4 +157,4 @@ shift.post('/copyOverLastWeek',async(req,res)=>{
     
 })
 
-export default shift
+export default shifts
