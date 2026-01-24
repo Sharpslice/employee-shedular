@@ -2,9 +2,10 @@ import express from 'express';
 import prisma from '../../db/db'
 import {io} from '../../src/app'
 import { DateTime } from 'luxon';
-import { moveShift } from '../../controllers/shiftsController';
+import { copyOverLastWeek, deleteShift, moveShift } from '../../controllers/shiftsController';
 const shifts = express.Router();
 
+shifts.post('/copyOverLastWeek',copyOverLastWeek)
 
 shifts.post('/:id',async(req,res)=>{
     const employee_id = parseInt(req.params.id)
@@ -34,104 +35,10 @@ shifts.post('/:id',async(req,res)=>{
     }
 })
 
-shifts.delete('/:id',async(req,res)=>{
-    const shift_id = parseInt(req.params.id);
-   
-    try{
-        const deletedShift = await prisma.employee_Shifts.delete({
-            where:{id:shift_id},
-            select:{id:true}
-        })
-        
-        io.emit("shiftDeleted",{shift_id:deletedShift.id})
-
-    }catch(error:unknown){
-        if(error instanceof Error){
-            console.error('Error',error.message)
-            return res.status(500).json({success:false,error:error.message})
-        }
-    }
-})
+shifts.delete('/:id',deleteShift)
 
 shifts.patch('/:id',moveShift)
 
-shifts.post('/copyOverLastWeek',async(req,res)=>{
-  
-    const {lastWeekArray} = req.body
-    const thisWeekArray= lastWeekArray.map((date:string)=>{
-        return(
-            DateTime.fromISO(date).plus({week:1}).toJSDate()
-        )
-    })
 
-    await prisma.$transaction(async(tx)=>{
-
-        // grabs all shifts from last week using last weeks dates sun-sat
-        const prevShifts = await tx.employee_Shifts.findMany({
-            select:{
-                employee_id:true,
-                date:true,
-                start_time:true,
-                end_time:true,
-            },
-            where:{
-                date:{
-                    in:lastWeekArray.map((date:string)=> new Date(date))
-                }
-                }
-        });
-    
-        //takes all the shifts found last week and updates their dates to match current week
-        const newShifts = prevShifts.map((shift)=>{
-           
-            return(
-                {
-                    employee_id:shift.employee_id,
-                    date: DateTime.fromJSDate(shift.date).plus({week:1}).toJSDate() ,
-                    start_time:shift.start_time,
-                    end_time:shift.end_time,
-
-                }
-            )
-            
-        })
-
-        await tx.employee_Shifts.deleteMany({
-            where:{
-                date: {
-                    in: thisWeekArray
-                }
-            }
-        })
-        await tx.employee_Shifts.createMany({
-
-            data:newShifts,
-       
-
-
-        })
-    
-        const data = await tx.employee_Shifts.findMany({
-            where:{
-                date:{
-                    in: thisWeekArray
-                }
-            }
-        })
-
-        io.emit('copyOverLastWeekshift',data)
-        res.json({success:true,shifts:prevShifts})
-    })
-    
-
-    
-   
-    
-
-    
-    
-    
-    
-})
 
 export default shifts
