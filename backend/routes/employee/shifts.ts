@@ -6,7 +6,6 @@ import { copyOverLastWeek, deleteShift, moveShift } from '../../controllers/shif
 const shifts = express.Router();
 
 shifts.post('/copyOverLastWeek',copyOverLastWeek)
-
 shifts.post('/:id',async(req,res)=>{
     const employee_id = parseInt(req.params.id)
     const {date} = req.body;
@@ -34,7 +33,6 @@ shifts.post('/:id',async(req,res)=>{
 
     }
 })
-
 shifts.delete('/:id',deleteShift)
 
 shifts.patch('/:id',moveShift)

@@ -28,7 +28,7 @@ function TimeRangePicker({shift}:{shift:Shift}){
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         
         try{
-            const response = await axios.post<ShiftResponse>(`http://localhost:3000/api/v1/employees/${shift.employee_id}/shifts`,
+            const response = await axios.patch<ShiftResponse>(`http://localhost:3000/api/v1/employees/${shift.employee_id}/shifts/${shift.id}`,
                     slot==='start' 
                     ?{
                         date:new Date(shift.date),

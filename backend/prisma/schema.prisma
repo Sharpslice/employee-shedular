@@ -52,7 +52,6 @@ model Employee_Shifts{
     employee          Employee  @relation(fields: [employee_id], references:id)
     calendar          Calendar  @relation(fields: [date],references:date)
 
-    @@unique([employee_id,date])
     @@map("employee_shifts")
 }
 
