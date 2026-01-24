@@ -1,6 +1,7 @@
 import express from 'express';
-import prisma from '../../db/db'
-import {io} from '../../src/app'
+import prisma from '../../../db/db';
+import { io } from '../../app';
+
 const overrides = express.Router()
 
 overrides.post('/:id/:date',async(req,res)=>{

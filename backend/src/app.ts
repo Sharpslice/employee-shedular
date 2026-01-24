@@ -5,11 +5,11 @@ import http from 'http';
 
 import passport from 'passport';
 import session from "express-session";
-import googleRouter from '../routes/auth/google';
-import calendarRouter from '../routes/calendar/calendar';
+import googleRouter from './v1Api/routes/auth/google';
+import calendarRouter from './v1Api/routes/calendar/calendar';
 import dotenv from "dotenv";
 
-import apiV1Router from '../routes/employee/v1Index'
+import apiV1Router from './v1Api/routes/v1Index'
 const app = express();
 const server = http.createServer(app)
 const io = new Server(server, {

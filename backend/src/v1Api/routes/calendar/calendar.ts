@@ -1,5 +1,5 @@
 import express from 'express'
-import prisma from '../../db/db';
+import prisma from '../../../../db/db';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 import {DateTime} from 'luxon'

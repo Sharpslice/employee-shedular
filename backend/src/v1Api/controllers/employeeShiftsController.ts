@@ -1,7 +1,7 @@
 import {Request,Response} from 'express';
-import prisma from '../db/db';
+import prisma from '../../../db/db';
 import { DateTime } from 'luxon';
-import { io } from '../src/app';
+import { io } from '../../app';
 
 
 

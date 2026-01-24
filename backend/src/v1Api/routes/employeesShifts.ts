@@ -1,8 +1,8 @@
 import express from "express"; 
 import { Request,Response } from "express";
-import prisma from "../../db/db";
-import { io } from "../../src/app";
-import { createShift, updateShiftTimes } from "../../controllers/employeeShiftsController";
+import prisma from "../../../db/db";
+import { io } from "../../app";
+import { createShift, updateShiftTimes } from "../controllers/employeeShiftsController";
 
 
 const employeeShifts = express.Router({mergeParams:true});
