@@ -1,10 +1,10 @@
 import express from 'express';
 import passport from 'passport'
 import {Strategy as GoogleStrategy} from 'passport-google-oauth20';
-import prisma from '../../db/db';
+import prisma from '../../../../db/db';
 import dotenv from "dotenv";
 import jwt from 'jsonwebtoken';
-import { Employee } from '../../src/generated/prisma';
+import { Employee } from '../../../generated/prisma';
 const google = express.Router();
 dotenv.config();
 

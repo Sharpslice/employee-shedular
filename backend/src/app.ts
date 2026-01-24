@@ -5,11 +5,11 @@ import http from 'http';
 
 import passport from 'passport';
 import session from "express-session";
-import google from '../routes/auth/google';
-import calendarApi from '../routes/calendar/calendar';
+import googleRouter from './v1Api/routes/auth/google';
+import calendarRouter from './v1Api/routes/calendar/calendar';
 import dotenv from "dotenv";
 
-import index from '../routes/employee/index'
+import apiV1Router from './v1Api/routes/v1Index'
 const app = express();
 const server = http.createServer(app)
 const io = new Server(server, {
@@ -40,12 +40,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-const googleRouter = google;
-const calendarRoute = calendarApi
-const indexRoute = index
+
 app.use('/auth/google',googleRouter);
-app.use('/api/calendar',calendarRoute)
-app.use('/api/employee',indexRoute)
+app.use('/api/calendar',calendarRouter)
+app.use('/api/v1',apiV1Router)
 
 
 

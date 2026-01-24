@@ -8,12 +8,12 @@ function ContextMenu(){
     const {selectedCell,coords,isActive} = useContext(ContextMenuContext)!
 
     const createShift =async()=>{
-        await axios.post(`http://localhost:3000/api/employee/shift/${selectedCell.employee?.id}/shift`,{date:selectedCell.date?.date})
+        await axios.post(`http://localhost:3000/api/v1/employees/${selectedCell.employee?.id}/shifts/`,{date:selectedCell.date?.date})
         console.log(selectedCell.employee?.id)
     }
     const createOverride = async()=>{
         try{
-           const response=  await axios.post(`http://localhost:3000/api/employee/override/${selectedCell.employee?.id}/${selectedCell.date?.date}`,
+           const response=  await axios.post(`http://localhost:3000/api/v1/overrides/${selectedCell.employee?.id}/${selectedCell.date?.date}`,
             {isAvailable:false}
         )
             if(response.data.success){

@@ -80,8 +80,9 @@ function Week(){
            
         
         try {
+            //moves shift
             await axios.patch(
-                `http://localhost:3000/api/employee/shift/moveShift/${shiftId}`,
+                `http://localhost:3000/api/v1/shifts/${shiftId}`,
                 {
                     employee_id: droppedEmployee,
                     date: droppedDate,

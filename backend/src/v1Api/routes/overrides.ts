@@ -1,9 +1,10 @@
 import express from 'express';
-import prisma from '../../db/db'
-import {io} from '../../src/app'
-const override = express.Router()
+import prisma from '../../../db/db';
+import { io } from '../../app';
 
-override.post('/:id/:date',async(req,res)=>{
+const overrides = express.Router()
+
+overrides.post('/:id/:date',async(req,res)=>{
     const employee_id = parseInt(req.params.id);
     const date = new Date(req.params.date)
     const {isAvailable,start_time,end_time,note} = req.body
@@ -37,4 +38,4 @@ override.post('/:id/:date',async(req,res)=>{
 
 })
 
-export default override
+export default overrides

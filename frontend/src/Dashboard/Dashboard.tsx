@@ -52,7 +52,7 @@ function Dashboard(){
             setDateRange(response.data.dateArray)
        
     
-            const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/employee/${safeDate}/${safeView}`,{withCredentials:true});
+            const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`,{withCredentials:true});
             
             setEmployeeList(EmployeeArrayToMap( employeeResponse.data.employeeList))
             setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
