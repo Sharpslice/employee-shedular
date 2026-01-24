@@ -3,58 +3,11 @@ import prisma from '../../db/db'
 import { DateTime } from 'luxon';
 
 import {io} from '../../src/app'
+import { schedule } from '../../controllers/employeeControllers';
 const employees = express.Router();
 
 
-employees.get('/:date/:view',async(req,res)=>{
-    const view = req.params.view;
-    const date = req.params.date
-    console.log(req.user);
-  
-    const selectedDate = DateTime.fromISO(date as string)
-        let beginDate = selectedDate
-        let endDate = selectedDate
-        
-        switch(view){
-            case 'day':
-                beginDate = selectedDate.startOf('day');
-                endDate = selectedDate.startOf('day');
-                break;
-            case 'week':
-                beginDate = selectedDate.startOf('week',{useLocaleWeeks:true})
-                endDate = selectedDate.endOf('week',{useLocaleWeeks:true}).startOf('day')
-                break;
-            case 'month':
-                beginDate = selectedDate.startOf('month').startOf('week',{useLocaleWeeks:true})
-                endDate = selectedDate.endOf('month').endOf('week',{useLocaleWeeks:true}).startOf('day')
-                break;
-            default:
-               
-        }
-
-
-    const employeeList = await prisma.employee.findMany({
-        select:{
-            id:true,
-            name:true,
-            isWorking:true,
-            position:true,
-        },
-    })
-
-
-    const shifts = await prisma.employee_Shifts.findMany({
-        where:{
-            date:{
-                gte: beginDate.toJSDate(),
-                lte: endDate.toJSDate()
-            }
-            
-        }
-    })
-   
-    res.json({employeeList,shifts})
-})
+employees.get('/schedule-overview/:view/:date',schedule)
 
 
 employees.post('/:employee_id/shifts',async(req,res)=>{
@@ -104,71 +57,6 @@ employees.post('/:employee_id/shifts',async(req,res)=>{
 })
 
 
-employees.get('/schedule/:view/:date',async(req,res)=>{
-  
-    const view = req.params.view;
-    const date = req.params.date
-    console.log(req.user);
-  
-    const selectedDate = DateTime.fromISO(date as string)
-        let beginDate = selectedDate
-        let endDate = selectedDate
-        
-        switch(view){
-            case 'day':
-                beginDate = selectedDate.startOf('day');
-                endDate = selectedDate.startOf('day');
-                break;
-            case 'week':
-                beginDate = selectedDate.startOf('week',{useLocaleWeeks:true})
-                endDate = selectedDate.endOf('week',{useLocaleWeeks:true}).startOf('day')
-                break;
-            case 'month':
-                beginDate = selectedDate.startOf('month').startOf('week',{useLocaleWeeks:true})
-                endDate = selectedDate.endOf('month').endOf('week',{useLocaleWeeks:true}).startOf('day')
-                break;
-            default:
-               
-        }
 
-      
-    
-    const scheduleArray = await prisma.employee_Shifts.findMany({
-        select:{
-            employee_id:true,
-            date:true,
-            start_time:true,
-            end_time:true
-        },
-        where:{
-        date:{
-            gte: beginDate.toJSDate(),
-            lte: endDate.toJSDate()
-        }
-    }
-    });
-    
-    const scheduleObject = scheduleArray.reduce<{[key:number]:ScheduleArray[]}>((map,schedule)=>{
-        if(! map[schedule.employee_id]){
-            map[schedule.employee_id] = []
-        }
-        
-        map[schedule.employee_id]?.push(schedule)
-        return map 
-    },{})
-   
-
-
-
-    res.json({scheduleObject})
-
-
-})
-interface ScheduleArray{
-    employee_id:number,
-    date:Date,
-    start_time:string | null,
-    end_time:string | null
-}
 export default employees;
 
