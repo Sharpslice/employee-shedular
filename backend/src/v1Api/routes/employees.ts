@@ -1,5 +1,5 @@
 import express from 'express';
-import { schedule } from '../controllers/employeeControllers';
+import { schedule } from '../controllers/employee.controllers';
 import employeeShiftsRoute from './employeesShifts';
 const employees = express.Router();
 

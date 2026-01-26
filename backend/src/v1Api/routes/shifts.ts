@@ -1,6 +1,7 @@
 import express from 'express';
+import { copyOverLastWeek, deleteShift, moveShift } from '../controllers/shift.controller';
 
-import { copyOverLastWeek, deleteShift, moveShift } from '../controllers/shiftsController';
+
 const shifts = express.Router();
 
 shifts.post('/copyOverLastWeek',copyOverLastWeek)
