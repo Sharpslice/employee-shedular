@@ -1,9 +1,10 @@
-import {  em, Flex,Text } from '@mantine/core';
+import { Flex,Text } from '@mantine/core';
 import {  type PropsWithChildren } from "react";
 import type { Shift } from '../Dashboard/Interfaces/Shift';
-import { useOutletContext } from 'react-router-dom';
+
 import type { Employee } from '../Dashboard/Interfaces/Employee';
 import { DateTime } from 'luxon';
+import {  useNavigate } from 'react-router-dom';
 
 
 
@@ -31,9 +32,21 @@ function getMonthName(monthNumber:number){
         return dt.toFormat('hh:mm a')
     }
 
+
+
+
+
 function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>){
    
-    
+    const navigate =useNavigate()
+
+    function navigateTo(view:'day' | 'week', date:string){
+
+        const formattedDate = DateTime.fromISO(date).toISODate()
+        navigate(`/schedule/${view}/${formattedDate}`)
+      
+        
+    }
     
     return (<>
         <Flex 
@@ -45,7 +58,7 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
 
 
 
-            <Flex  justify={'center'} bd={'1px solid black'}>
+            <Flex onDoubleClick={()=>{navigateTo('day',day.date)}} justify={'center'} bd={'1px solid black'}>
                 {day.month==8?day.day_of_month: `${getMonthName(day.month)} ${day.day_of_month}`}
             </Flex>
 
@@ -56,11 +69,11 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
 
                         return(
                             shiftsByEmployee.has(employee.id)
-                            ?   <Flex mih={30} h={20}  p={'4px'}  >
+                            ?   <Flex mih={30} h={20}  p={'4px'} wrap='wrap'  >
                                     {
                                         shiftsByEmployee.get(employee.id)?.map((shift)=>{
                                             return(
-                                                <Text >
+                                                <Text onDoubleClick={()=>{navigateTo('week',shift.date)}}>
                                                     {`
                                                         ${employee.name} - 
                                                         ${convertTo12hr(shift.start_time)} - ${convertTo12hr(shift.end_time)}

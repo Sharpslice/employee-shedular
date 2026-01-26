@@ -78,7 +78,7 @@ function Dashboard(){
             <ContextMenuProvider>
                 
                 <ContextMenu/>
-                    <Container  fluid p={'1rem 1rem'} w={'100vw'} h={'100vh'} style={{display:'flex',justifyContent:'center',backgroundColor:'lightblue'}}>
+                    <Container  fluid p={'1rem 1rem'} w={'100%'} mih={'100%'} style={{display:'flex',justifyContent:'center'}}>
 
                         {   
                             <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts, availabilities,setAvailabilities}}/>
