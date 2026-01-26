@@ -103,6 +103,7 @@ function Calendar(){
                     const date = DateTime.fromISO(dayObj.date,{zone:'utc'}).toISODate()
                     const dailyEmployeeShift = shiftsByDateAndEmployee.get(date!)
                     return <DateCell 
+                        key={`${dayObj.date}`}
                         day={dayObj} 
                         shiftsByEmployee={dailyEmployeeShift ?? new Map() } 
                         employeeList={employeeList} 

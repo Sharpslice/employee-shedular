@@ -69,11 +69,11 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
 
                         return(
                             shiftsByEmployee.has(employee.id)
-                            ?   <Flex mih={30} h={20}  p={'4px'} wrap='wrap'  >
+                            ?   <Flex key={employee.id} mih={30} h={20}  p={'4px'} wrap='wrap'  >
                                     {
                                         shiftsByEmployee.get(employee.id)?.map((shift)=>{
                                             return(
-                                                <Text onDoubleClick={()=>{navigateTo('week',shift.date)}}>
+                                                <Text key={shift.id} onDoubleClick={()=>{navigateTo('week',shift.date)}}>
                                                     {`
                                                         ${employee.name} - 
                                                         ${convertTo12hr(shift.start_time)} - ${convertTo12hr(shift.end_time)}
@@ -88,7 +88,7 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
 
                             :
 
-                                <Flex   mih={30} h={20}  p={'4px'}  style={{}} >
+                                <Flex key={employee.id}  mih={30} h={20}  p={'4px'}  style={{}} >
                                     {''}
                                 </Flex>
                         )

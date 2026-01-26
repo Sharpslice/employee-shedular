@@ -121,7 +121,7 @@ function Week(){
         <Flex w={'100%'} gap={5} direction={"column"}>
             <ViewHeader colGap={5}>
                 {dateRange.map((day)=>(
-                    <WeekHeaderCell key={day.days_of_week} day={day}/>
+                    <WeekHeaderCell key={day.date} day={day}/>
                 ))}
             </ViewHeader>
 
