@@ -15,13 +15,14 @@ import { GridNavigationProvider } from "../GridNavigation/GridNavigationContext"
 import type { Shift } from "../../Interfaces/Shift";
 import axios from "axios";
 import { useMemo } from "react";
+import type { Availability } from "../../Interfaces/Availability";
 
 
 
 
 function Week(){
-    const { dateRange,employeeList,setShifts,shifts } = 
-    useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Map<number,Shift>,setShifts:React.Dispatch<React.SetStateAction<Map<number,Shift>>> }>();
+    const { dateRange,employeeList,setShifts,shifts, availabilities } = 
+    useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Map<number,Shift>,setShifts:React.Dispatch<React.SetStateAction<Map<number,Shift>>>,availabilities:Map<number,Availability> }>();
 
     const shiftsByEmployee = useMemo(()=>{
         const map = new Map<number,Shift[]>();
@@ -36,9 +37,24 @@ function Week(){
                 map.set(shift.employee_id, [shift])
             }
         }
-        console.log('new map: ',map)
+        console.log('shiftsByEmployee: ',map)
         return map
     },[shifts])
+    const availabilitiesByEmployee = useMemo(()=>{
+        const map = new Map<number,Availability[]>()
+
+        for(const availability of availabilities.values()){
+            if(map.has(availability.employee_id)){
+                
+                map.get(availability.employee_id)?.push(availability)
+            }
+            else{
+                map.set(availability.employee_id, [availability])
+            }
+        }
+        return map
+    },[availabilities])
+    console.log(availabilitiesByEmployee)
 
    const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -118,8 +134,14 @@ function Week(){
                         {[...employeeList].map(([id,employee],row)=>{     
 
                             const employeeShifts = shiftsByEmployee.get(id) ?? [];
+                            const employeeAvailabilities = availabilitiesByEmployee.get(id) ?? []
+                            
                             return(
-                                <EmployeeRow key={id} row={row} employee={employee} shifts={employeeShifts}  />
+                                <EmployeeRow key={id} 
+                                    row={row} 
+                                    employee={employee} 
+                                    shifts={employeeShifts} 
+                                    availabilities={employeeAvailabilities} />
                             )
                         })}
                         

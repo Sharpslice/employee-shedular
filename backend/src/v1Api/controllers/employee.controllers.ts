@@ -2,6 +2,7 @@ import {Request,Response} from 'express';
 import prisma from '../../../db/db';
 import { DateTime } from 'luxon';
 import { scheduleService } from '../services/employee.services';
+import { availabilities } from './availability.controller';
 
 
 export async function schedule(req:Request,res:Response){
@@ -31,8 +32,8 @@ export async function schedule(req:Request,res:Response){
 
     try{
         const response = await scheduleService(beginDate,endDate)
-   
-        return res.json({employeeList:response.employeeList,shifts:response.shifts})
+     
+        return res.json({employeeList:response.employeeList,shifts:response.shifts,availabilities:response.availabilities})
 
     }catch(error){
         return res.status(500).json({error: "error fetching employees and shifts"})

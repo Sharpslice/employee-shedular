@@ -14,15 +14,25 @@ export async function scheduleService(beginDate:DateTime,endDate:DateTime){
         })
 
 
-        const shifts = await prisma.employee_Shifts.findMany({
-            where:{
-                date:{
-                    gte: beginDate.toJSDate(),
-                    lte: endDate.toJSDate()
-                }
-                
+    const shifts = await prisma.employee_Shifts.findMany({
+        where:{
+            date:{
+                gte: beginDate.toJSDate(),
+                lte: endDate.toJSDate()
             }
-        })
+            
+        }
+    })
 
-    return {employeeList,shifts}
+    const availabilities = await prisma.employee_Availability.findMany({
+        include:{
+            time_block:true
+        }
+        
+    })
+    console.log(availabilities)
+
+
+
+    return {employeeList,shifts, availabilities}
 }

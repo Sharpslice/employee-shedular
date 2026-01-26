@@ -6,7 +6,6 @@ import './TimeRangePicker.css'
 import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
-import type React from "react"
 
 
 interface ShiftResponse{

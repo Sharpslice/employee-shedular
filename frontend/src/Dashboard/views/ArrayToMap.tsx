@@ -1,3 +1,4 @@
+import type { Availability } from "../Interfaces/Availability"
 import type { Employee } from "../Interfaces/Employee"
 import type { Shift } from "../Interfaces/Shift"
 
@@ -16,6 +17,16 @@ export const ShiftArrayToMap=(shiftArray : Shift[] )=>{
     
     return shiftArray.reduce((acc,shift)=>{
         acc.set(shift.id,shift)
+        return acc
+    },new Map())
+
+    
+}
+
+export const AvailabilityArrayToMap=(AvailabilityArray : Availability[] )=>{
+    
+    return AvailabilityArray.reduce((acc,availability)=>{
+        acc.set(availability.id,availability)
         return acc
     },new Map())
 

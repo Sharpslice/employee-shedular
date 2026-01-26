@@ -14,6 +14,7 @@ import { useOutletContext } from "react-router-dom";
 
 import DayCell from "./DayCell";
 import type { Shift } from "../../Interfaces/Shift";
+import type { Availability } from "../../Interfaces/Availability";
 
 
 
@@ -21,13 +22,20 @@ interface EmployeeRowProps{
     row?:number
     employee: Employee
     shifts: Shift[]
+    availabilities: Availability[]
 }
-function EmployeeRow({row,employee,shifts}:EmployeeRowProps){
+function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
 
     const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[] }>();
     const [hidden,setHidden]  = useState(true)
     const onAvailabilityclick= () => setHidden(prev=>!prev)
-       
+
+
+
+
+
+
+  
     const {setActive} = useContext(ContextMenuContext)!
     return(
         <Flex onClick={()=>setActive(false)} gap={'1rem'} >
@@ -36,17 +44,17 @@ function EmployeeRow({row,employee,shifts}:EmployeeRowProps){
          
             <Flex flex={1} gap={10} direction={'column'}>
                 
-                <EmployeeAvailabilityRow hidden={hidden} dateRange={dateRange}/>
+                <EmployeeAvailabilityRow hidden={hidden} dateRange={dateRange} availability={availabilities}/>
 
-                    <Flex gap={5} flex={1} miw={'100px'} >
-                        {dateRange.map((date,index)=>{
-                            return(
-                                <DayCell key={`${employee.id}-${date}-${index}`} row={row!} employee={employee} shifts={shifts} date={date} index={index}/>
-                            )
-                        })}
-                                    
-                        
-                    </Flex>
+                <Flex gap={5} flex={1} miw={'100px'} >
+                    {dateRange.map((date,index)=>{
+                        return(
+                            <DayCell key={`${employee.id}-${date}-${index}`} row={row!} employee={employee} shifts={shifts} date={date} index={index}/>
+                        )
+                    })}
+                                
+                    
+                </Flex>
               
                 
 

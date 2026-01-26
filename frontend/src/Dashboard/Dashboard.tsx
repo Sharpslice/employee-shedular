@@ -9,12 +9,13 @@ import { Outlet, useMatch, useParams } from "react-router-dom";
 import type { Employee } from "./Interfaces/Employee";
 import type { Day } from "./Interfaces/Day";
 
-import { EmployeeArrayToMap,ShiftArrayToMap } from "./views/ArrayToMap";
+import { AvailabilityArrayToMap, EmployeeArrayToMap,ShiftArrayToMap } from "./views/ArrayToMap";
 
 import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
 import ContextMenu from "./Slot/ContextMenu/ContextMenu";
 import useScheduleSocket from "./useScheduleSocket";
 import type { Shift } from "./Interfaces/Shift";
+import type { Availability } from "./Interfaces/Availability";
 
 
 
@@ -25,6 +26,7 @@ type CalendarResponse ={
 interface EmployeeResponse{
     employeeList: Employee[]
     shifts: Shift[]
+    availabilities: Availability[]
 }
 
 
@@ -42,7 +44,7 @@ function Dashboard(){
   
     const [employeeList,setEmployeeList] = useState<Map<number,Employee>>(new Map())
     const [shifts,setShifts] = useState<Map<number,Shift>>(new Map())
-
+    const [availabilities,setAvailabilities] = useState<Map<number,Availability>>(new Map())
     useScheduleSocket(setShifts);
 
     useEffect(()=>{
@@ -56,9 +58,12 @@ function Dashboard(){
             
             setEmployeeList(EmployeeArrayToMap( employeeResponse.data.employeeList))
             setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
-            console.log(EmployeeArrayToMap( employeeResponse.data.employeeList))
-            console.log(ShiftArrayToMap(employeeResponse.data.shifts))
+            setAvailabilities(AvailabilityArrayToMap(employeeResponse.data.availabilities))
 
+
+            console.log("employee",EmployeeArrayToMap( employeeResponse.data.employeeList))
+            console.log("shifts",ShiftArrayToMap(employeeResponse.data.shifts))
+            console.log("availabilities",AvailabilityArrayToMap(employeeResponse.data.availabilities))
 
         }
         fetchData()
@@ -76,7 +81,7 @@ function Dashboard(){
                     <Container  fluid p={'1rem 1rem'} w={'100%'} h={'100%'} style={{display:'flex',justifyContent:'center',backgroundColor:'lightgray'}}>
 
                         {   
-                            <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts}}/>
+                            <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts, availabilities,setAvailabilities}}/>
                         }
                     
                     </Container> 
