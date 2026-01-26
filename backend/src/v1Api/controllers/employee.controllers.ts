@@ -1,30 +1,14 @@
 import {Request,Response} from 'express';
 import prisma from '../../../db/db';
 import { DateTime } from 'luxon';
+import { scheduleService } from '../services/employee.services';
 
 
 export async function schedule(req:Request,res:Response){
     const view = req.params.view;
     const date = req.params.date;
-
-    if(!view){
-        return res.status(400).json({error: "please input a view "})
-    }
-
-    if(!date ){
-        return res.status(400).json({error: "please input a date "})
-    }
-
-
+    
     const selectedDate = DateTime.fromISO(date as string)
-
-    if(!selectedDate.isValid){
-        return res.status(400).json({error: "invalid date. must be year-month-day"})
-    }
-
-
-
-
     let beginDate = selectedDate
     let endDate = selectedDate
         
@@ -46,27 +30,9 @@ export async function schedule(req:Request,res:Response){
     }
 
     try{
-        const employeeList = await prisma.employee.findMany({
-        select:{
-            id:true,
-            name:true,
-            isWorking:true,
-            position:true,
-            },
-        })
-
-
-        const shifts = await prisma.employee_Shifts.findMany({
-            where:{
-                date:{
-                    gte: beginDate.toJSDate(),
-                    lte: endDate.toJSDate()
-                }
-                
-            }
-        })
+        const response = await scheduleService(beginDate,endDate)
    
-        return res.json({employeeList,shifts})
+        return res.json({employeeList:response.employeeList,shifts:response.shifts})
 
     }catch(error){
         return res.status(500).json({error: "error fetching employees and shifts"})

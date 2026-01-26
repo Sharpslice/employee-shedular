@@ -16,7 +16,7 @@ function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
   
     
     const createShift =async()=>{
-        await axios.post(`http://localhost:3000/api/v1/shifts/${employee.id}`,{date:date.date})
+        await axios.post(`http://localhost:3000/api/v1/employees/${employee.id}/shifts`,{date:date.date})
     
     }
 
