@@ -2,6 +2,7 @@ import {Request,Response} from 'express';
 import prisma from '../../../db/db';
 import { DateTime } from 'luxon';
 import { io } from '../../app';
+import { createShiftService, updateShiftTimeservice } from '../services/employeeShift.services';
 
 
 
@@ -19,14 +20,7 @@ export async function createShift(req:Request,res:Response){
   
 
     try{
-        const shift = await prisma.employee_Shifts.create({
-           data:{
-                employee_id:employee_id,
-                date: date,
-                start_time:null,
-                end_time:null
-           }
-        })
+        const shift = await createShiftService(employee_id,date)
 
         io.emit("shiftAdded",{shift})
         
@@ -59,15 +53,7 @@ export async function updateShiftTimes(req:Request,res:Response){
 
     
     try{
-       const shift =  await prisma.employee_Shifts.update({
-            where:{
-                id:shift_id
-            },
-            data:
-                start_time 
-                ? {start_time}
-                : {end_time} 
-        })
+        const shift =  await updateShiftTimeservice(shift_id,start_time,end_time)
 
         io.emit('shiftUpdated',{shift})
         return res.status(200).json({success:true,shift})
