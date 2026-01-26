@@ -1,4 +1,4 @@
-import {  Flex,Text } from '@mantine/core';
+import {  em, Flex,Text } from '@mantine/core';
 import {  type PropsWithChildren } from "react";
 import type { Shift } from '../Dashboard/Interfaces/Shift';
 import { useOutletContext } from 'react-router-dom';
@@ -45,7 +45,7 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
 
 
 
-            <Flex flex={1} justify={'center'}>
+            <Flex  justify={'center'} bd={'1px solid black'}>
                 {day.month==8?day.day_of_month: `${getMonthName(day.month)} ${day.day_of_month}`}
             </Flex>
 
@@ -56,19 +56,26 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
 
                         return(
                             shiftsByEmployee.has(employee.id)
-                            ?   <Flex mih={15}>
-                                    <Text>{employee.name}</Text>
-                                    <Text>{" - "}</Text>
+                            ?   <Flex mih={30} h={20}  p={'4px'}  >
                                     {
                                         shiftsByEmployee.get(employee.id)?.map((shift)=>{
-                                            return(<Text>{shift.start_time} - {shift.end_time}</Text>)
+                                            return(
+                                                <Text >
+                                                    {`
+                                                        ${employee.name} - 
+                                                        ${convertTo12hr(shift.start_time)} - ${convertTo12hr(shift.end_time)}
+                                                        
+                                                        
+                                                    `}
+                                                </Text>
+                                            )
                                         })
                                     }
                                 </Flex>
 
                             :
 
-                                <Flex  mih={15} >
+                                <Flex   mih={30} h={20}  p={'4px'}  style={{}} >
                                     {''}
                                 </Flex>
                         )
