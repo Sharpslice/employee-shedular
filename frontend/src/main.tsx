@@ -43,7 +43,7 @@ import { SocketProvider } from './SocketContext.tsx';
             },
             {
               path:'day/:date?',
-              element:<DayView/>
+              element:null
             },
             {
               path:'month/:date?',
