@@ -7,9 +7,7 @@ import { copyOverLastWeekService, deleteShiftService, moveShiftService } from ".
 export async function deleteShift(req:Request,res:Response){
     const shift_id = Number(req.params.id);
    
-    if(Number.isNaN(shift_id)){
-        return res.status(400).json({error:"Invalid shift id"})
-    }
+   
 
     try{
         const deletedShift = await deleteShiftService(shift_id)
@@ -30,18 +28,6 @@ export async function moveShift(req:Request, res:Response){
     const shift_id = Number(req.params.id);
     const employee_id = Number(req.body.employee_id)
     const date = new Date(req.body.date);
-
-
-    if(Number.isNaN(shift_id)){
-        return res.status(400).json({error:"Invalid shift id"})
-    }
-
-    if(Number.isNaN(employee_id)){
-        return res.status(400).json({error:"Invalid employee id"})
-    }
-    if(!(date instanceof Date) || isNaN(date.getTime())){
-        return res.status(400).json({error:"Invalid date id"})
-    }
 
     try{
        
@@ -65,23 +51,12 @@ export async function moveShift(req:Request, res:Response){
 export async function copyOverLastWeek(req:Request,res:Response){
     const {lastWeekArray} = req.body
 
-    if(!Array.isArray(lastWeekArray)){
-        return res.status(400).json({error:"Invalid lastWeekArray"})
-    }
-
-    const validatedArray:Date[] = lastWeekArray.filter((date)=>!DateTime.fromISO(date).isValid);
-
-    if(validatedArray.length > 0){
-        return res.status(400).json({error:"lastWeekArray contains invalid dates"})
-    }
-
-
     const thisWeekArray= lastWeekArray.map((date:string)=>{
         return(
             DateTime.fromISO(date).plus({week:1}).toJSDate()
         )
     })
-    console.log(thisWeekArray)
+
     try{
         const response = await copyOverLastWeekService(lastWeekArray,thisWeekArray)
 
