@@ -30,7 +30,7 @@ export async function scheduleService(beginDate:DateTime,endDate:DateTime){
         }
         
     })
-    console.log(availabilities)
+   
 
 
 
