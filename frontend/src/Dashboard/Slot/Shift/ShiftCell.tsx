@@ -11,8 +11,9 @@ import { useDraggable } from "@dnd-kit/core";
 
 
 const convertTo12hr = (time:string | null)=>{
+    
     if(!time) return ""
-    const dt = DateTime.fromFormat(time,'HH:mm:ss');
+    const dt = DateTime.fromISO(time)
     return dt.toFormat('hh:mm a')
 }
 

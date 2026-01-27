@@ -33,11 +33,11 @@ export async function updateShiftTimes(req:Request,res:Response){
     const employee_id = Number(req.params.employee_id);
     const shift_id = Number(req.params.shift_id)
 
-    const {start_time,end_time} = req.body;
-
+    const {start_time,end_time,date} = req.body;
+    
     
     try{
-        const shift =  await updateShiftTimeservice(shift_id,start_time,end_time)
+        const shift =  await updateShiftTimeservice(shift_id,date,start_time,end_time)
 
         io.emit('shiftUpdated',{shift})
         return res.status(200).json({success:true,shift})

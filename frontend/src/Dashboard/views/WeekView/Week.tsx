@@ -37,7 +37,7 @@ function Week(){
                 map.set(shift.employee_id, [shift])
             }
         }
-        console.log('shiftsByEmployee: ',map)
+    
         return map
     },[shifts])
     const availabilitiesByEmployee = useMemo(()=>{
@@ -54,7 +54,7 @@ function Week(){
         }
         return map
     },[availabilities])
-    console.log(availabilitiesByEmployee)
+   
 
    const sensors = useSensors(
     useSensor(PointerSensor, {

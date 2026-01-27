@@ -6,6 +6,8 @@ import './TimeRangePicker.css'
 import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
+import { DateTime } from "luxon"
+
 
 
 interface ShiftResponse{
@@ -21,23 +23,24 @@ function TimeRangePicker({shift}:{shift:Shift}){
  
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const afternoon = getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'})
-   
-    
+
+    const start_time = shift.start_time ?  DateTime.fromISO(shift.start_time).toFormat('HH:mm') : ''
+    const end_time = shift.end_time ?  DateTime.fromISO(shift.end_time).toFormat('HH:mm') : ''
 
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         
+        const formattedDate = DateTime.fromISO(shift.date).toISODate();
+       
         try{
             const response = await axios.patch<ShiftResponse>(`http://localhost:3000/api/v1/employees/${shift.employee_id}/shifts/${shift.id}`,
                     slot==='start' 
                     ?{
-                        date:new Date(shift.date),
+                        date:formattedDate,
                         start_time: time,
-                        end_time : null
                     }
 
                     :{
-                        date:new Date(shift.date),
-                        start_time: null,
+                        date:formattedDate,
                         end_time: time
                     },
                     {withCredentials:true}
@@ -75,8 +78,8 @@ function TimeRangePicker({shift}:{shift:Shift}){
                     
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
-                    value={shift?.start_time}
-                     onPointerDown={(e) => e.stopPropagation()}
+                    value={start_time}
+                    onPointerDown={(e) => e.stopPropagation()}
                     onChange={(e)=>{onChange(e,"start")}}
                   
                     format="12h"
@@ -101,7 +104,7 @@ function TimeRangePicker({shift}:{shift:Shift}){
                     
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
-                    value={shift?.end_time}
+                    value={end_time}
                     onChange={(e)=>{onChange(e,"end")}}
                     format="12h"
                     withDropdown
