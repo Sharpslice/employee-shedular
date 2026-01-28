@@ -51,6 +51,7 @@ calendarApi.get('/date', async(req,res)=>{
             }
         }
     });
+   //const dateArray= dateArrayRaw.map(date => ({ ...date, date: DateTime.fromJSDate(date.date,{zone:'utc'}).toISODate(), }));
     
     res.json({dateArray})
 

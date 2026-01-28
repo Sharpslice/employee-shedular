@@ -23,7 +23,10 @@ export async function scheduleService(beginDate:DateTime,endDate:DateTime){
             
         }
     })
-    //const shifts = shiftsRaw.map(shift => ({ ...shift, date: DateTime.fromJSDate(shift.date,{zone:'utc'}).toISODate(), }));
+    //const shifts =  shiftsRaw.map(shift => ({ ...shift, date: DateTime.fromJSDate(shift.date,{zone:'utc'}).toISODate(), }));
+    console.log(shifts)
+
+
 
     const availabilities = await prisma.employee_Availability.findMany({
         include:{
