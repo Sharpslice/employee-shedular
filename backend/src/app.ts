@@ -37,8 +37,8 @@ app.use(
   } as any)  // type assertion
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize() as any);
+app.use(passport.session() as any);
 
 
 app.use('/auth/google',googleRouter);

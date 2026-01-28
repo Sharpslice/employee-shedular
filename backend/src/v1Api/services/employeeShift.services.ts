@@ -1,7 +1,7 @@
 import { DateTime, Zone } from "luxon";
 import prisma from "../../../db/db";
 
-export async function createShiftService(employee_id:number,date:Date){
+export async function createShiftService(employee_id:number,date:string){
     return prisma.employee_Shifts.create({
            data:{
                 employee_id:employee_id,
@@ -27,7 +27,7 @@ export async function updateShiftTimeservice(shift_id:number,date:string,start_t
     const startDt  = start_time 
                         ? DateTime.fromISO(`${date}T${start_time}`,{zone:'America/Los_Angeles'}) 
                         : shift.start_time 
-                            ? DateTime.fromJSDate(shift.start_time)
+                            ? DateTime.fromJSDate(shift.start_time, )
                             : null
 
 
@@ -38,8 +38,8 @@ export async function updateShiftTimeservice(shift_id:number,date:string,start_t
                         : null
 
  
-    if((startDt && endDt) && startDt > endDt){
-        throw new Error('starting time cannot be greater than ending time')
+    if((startDt && endDt) && startDt >= endDt){
+        throw new Error('starting time cannot be greater or equal than ending time')
     }
 
     const start = startDt ? startDt.toUTC().toISO() : null

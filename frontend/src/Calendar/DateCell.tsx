@@ -28,7 +28,7 @@ function getMonthName(monthNumber:number){
 
     const convertTo12hr = (time:string | null)=>{
         if(!time) return ""
-        const dt = DateTime.fromFormat(time,'HH:mm:ss');
+        const dt = DateTime.fromISO(time);
         return dt.toFormat('hh:mm a')
     }
 
@@ -41,8 +41,9 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
     const navigate =useNavigate()
 
     function navigateTo(view:'day' | 'week', date:string){
-
-        const formattedDate = DateTime.fromISO(date).toISODate()
+        
+        const formattedDate = DateTime.fromISO(date).toISODate() //2026-01-24
+        console.log(formattedDate)
         navigate(`/schedule/${view}/${formattedDate}`)
       
         
