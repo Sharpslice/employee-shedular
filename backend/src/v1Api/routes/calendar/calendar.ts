@@ -46,11 +46,12 @@ calendarApi.get('/date', async(req,res)=>{
         },
         where:{
             date:{
-                gte: beginDate.toJSDate(),
-                lte: endDate.toJSDate()
+                gte: beginDate.toISO()!,
+                lte: endDate.toISO()!
             }
         }
     });
+   //const dateArray= dateArrayRaw.map(date => ({ ...date, date: DateTime.fromJSDate(date.date,{zone:'utc'}).toISODate(), }));
     
     res.json({dateArray})
 
@@ -62,9 +63,9 @@ calendarApi.get('/currentMonth',async (req,res)=>{
     const currentMonth = today.month
  
 
-    const firstDay = today.startOf('month').startOf('week',{useLocaleWeeks:true}).toJSDate()
+    const firstDay = today.startOf('month').startOf('week',{useLocaleWeeks:true}).toISO()
 
-    const lastDay = today.endOf('month').endOf('week',{useLocaleWeeks:true}).startOf('day').toJSDate() 
+    const lastDay = today.endOf('month').endOf('week',{useLocaleWeeks:true}).startOf('day').toISO() 
 
     
    

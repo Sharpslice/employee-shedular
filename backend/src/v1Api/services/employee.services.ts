@@ -17,12 +17,16 @@ export async function scheduleService(beginDate:DateTime,endDate:DateTime){
     const shifts = await prisma.employee_Shifts.findMany({
         where:{
             date:{
-                gte: beginDate.toJSDate(),
-                lte: endDate.toJSDate()
+                gte: beginDate.toISO()!,
+                lte: endDate.toISO()!
             }
             
         }
     })
+    //const shifts =  shiftsRaw.map(shift => ({ ...shift, date: DateTime.fromJSDate(shift.date,{zone:'utc'}).toISODate(), }));
+    console.log(shifts)
+
+
 
     const availabilities = await prisma.employee_Availability.findMany({
         include:{

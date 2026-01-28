@@ -28,7 +28,7 @@ function TimeRangePicker({shift}:{shift:Shift}){
     const end_time = shift.end_time ?  DateTime.fromISO(shift.end_time).toFormat('HH:mm') : ''
 
     const onChange = async(time: string, slot: 'start' | 'end')=>{
-        
+        console.log('time range time', time)
         const formattedDate = DateTime.fromISO(shift.date).toISODate();
        
         try{

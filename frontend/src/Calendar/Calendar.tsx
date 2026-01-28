@@ -39,7 +39,7 @@ function Calendar(){
         const map = new Map<string,Map<number,Shift[]>>();
 
         for(const shift of shifts.values()){
-            const date = DateTime.fromISO(shift.date,{zone:'utc'}).toISODate()!
+            const date = DateTime.fromISO(shift.date).toISODate()!
             
             if(!map.has(date)){
                 map.set(date,new Map<number,Shift[]>())
@@ -100,8 +100,10 @@ function Calendar(){
             {daysInAMonth.length > 0 && 
             
                 daysInAMonth.map((dayObj: MonthElement) => {
-                    const date = DateTime.fromISO(dayObj.date,{zone:'utc'}).toISODate()
+                    
+                    const date = DateTime.fromISO(dayObj.date).toISODate()
                     const dailyEmployeeShift = shiftsByDateAndEmployee.get(date!)
+                   
                     return <DateCell 
                         key={`${dayObj.date}`}
                         day={dayObj} 
