@@ -42,7 +42,7 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
 
     function navigateTo(view:'day' | 'week', date:string){
         
-        const formattedDate = DateTime.fromISO(date).toISODate() //2026-01-24
+        const formattedDate = DateTime.fromISO(date,{zone:'utc'}).toISODate() //2026-01-24
         console.log(formattedDate)
         navigate(`/schedule/${view}/${formattedDate}`)
       

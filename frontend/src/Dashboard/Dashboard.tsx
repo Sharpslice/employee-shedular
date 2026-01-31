@@ -41,6 +41,7 @@ function Dashboard(){
     const isCalendar = useMatch('schedule/calendar/*')
     const safeView = isWeek ? 'week' : isDay ? 'day' : isMonth ? 'month' : isCalendar ? 'month' : 'week'
     const safeDate = date ?? DateTime.local().toISODate()
+    
   
     const [employeeList,setEmployeeList] = useState<Map<number,Employee>>(new Map())
     const [shifts,setShifts] = useState<Map<number,Shift>>(new Map())
@@ -52,7 +53,7 @@ function Dashboard(){
             
             const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`,{withCredentials:true})
             setDateRange(response.data.dateArray)
-       
+            console.log('DateRange', response.data.dateArray)
     
             const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`,{withCredentials:true});
             

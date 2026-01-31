@@ -1,6 +1,6 @@
 import { Flex, Text } from "@mantine/core";
 
-import {DateTime, Zone} from 'luxon'
+import {DateTime} from 'luxon'
 import {  useState } from "react";
 import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 

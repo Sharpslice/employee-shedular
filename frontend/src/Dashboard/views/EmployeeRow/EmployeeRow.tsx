@@ -29,13 +29,7 @@ function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
     const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[] }>();
     const [hidden,setHidden]  = useState(true)
     const onAvailabilityclick= () => setHidden(prev=>!prev)
-
-
-
-
-
-
-  
+   
     const {setActive} = useContext(ContextMenuContext)!
     return(
         <Flex onClick={()=>setActive(false)} gap={'1rem'} >
@@ -46,15 +40,15 @@ function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
                 
                 <EmployeeAvailabilityRow hidden={hidden} dateRange={dateRange} availability={availabilities}/>
 
-                <Flex gap={5} flex={1} miw={'100px'} >
-                    {dateRange.map((date,index)=>{
-                        return(
-                            <DayCell key={`${employee.id}-${date}-${index}`} row={row!} employee={employee} shifts={shifts} date={date} index={index}/>
-                        )
-                    })}
-                                
-                    
-                </Flex>
+                    <Flex gap={5} flex={1} miw={'100px'} >
+                        {dateRange.map((date,index)=>{
+                            return(
+                                <DayCell key={`${employee.id}-${date}-${index}`} row={row!} employee={employee} shifts={shifts} date={date} index={index}/>
+                            )
+                        })}
+                                    
+                        
+                    </Flex>
               
                 
 
