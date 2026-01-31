@@ -13,6 +13,7 @@ import { useDroppable } from "@dnd-kit/core"
 
 import { mergeRefs } from "@react-aria/utils";
 import type { Shift } from "../../Interfaces/Shift"
+import { DateTime } from "luxon"
 
 
 
@@ -27,7 +28,7 @@ interface DayProps{
 
 function DayCell({row,index,employee,date,shifts}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey} = useContext(GridNavigationContext)!
-
+    
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
@@ -59,8 +60,14 @@ function DayCell({row,index,employee,date,shifts}:DayProps){
         opacity:isOver ? 1:0.5
     }
 
-
-     const hasShift = shifts.filter((shift)=> shift.date === date.date)
+    
+     const hasShift = shifts.filter(shift => 
+  DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate()
+);
+        
+        
+    
+    
     //const override = employee.override.filter((override)=>override.date===date.date)
     return(
         <Flex  
