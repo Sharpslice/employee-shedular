@@ -3,9 +3,11 @@ import {  DatePickerInput } from "@mantine/dates"
 import { IconCalendar, IconChevronDown, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import axios from "axios"
 import {DateTime} from 'luxon'
+import { useContext } from "react"
 
 
 import { Link, useNavigate} from "react-router-dom"
+import { AuthenticatedUser } from "../AuthenticatedUserContext"
 
 
 type HeaderProps = {
@@ -15,7 +17,7 @@ type HeaderProps = {
 
 function Header({view,selectedDate}:HeaderProps){
     const navigate = useNavigate();
-    
+    const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
 
     const viewClick = (selectedView:'day' | 'week' | 'bi-week' | 'month') =>{
         if(selectedView != view){
@@ -162,9 +164,12 @@ function Header({view,selectedDate}:HeaderProps){
                 
 
             <Group>
-                <Button onClick={copyLastWeek} w={'140px'}>
-                    Copy last week
-                </Button>
+                {
+                   isUserAdmin 
+                    ? <Button onClick={copyLastWeek} w={'140px'}>
+                        Copy last week
+                     </Button> 
+                    : null} 
 
 
                 <ActionIcon size={36} component={Link} to="/schedule/calendar">
