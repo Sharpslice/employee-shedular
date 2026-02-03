@@ -14,8 +14,9 @@ import WeekHeaderCell from "./WeekHeaderCell";
 import { GridNavigationProvider } from "../GridNavigation/GridNavigationContext";
 import type { Shift } from "../../Interfaces/Shift";
 import axios from "axios";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import type { Availability } from "../../Interfaces/Availability";
+import { AuthenticatedUser } from "../../../AuthenticatedUserContext";
 
 
 
@@ -23,7 +24,7 @@ import type { Availability } from "../../Interfaces/Availability";
 function Week(){
     const { dateRange,employeeList,setShifts,shifts, availabilities } = 
     useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Map<number,Shift>,setShifts:React.Dispatch<React.SetStateAction<Map<number,Shift>>>,availabilities:Map<number,Availability> }>();
-
+    const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
     const shiftsByEmployee = useMemo(()=>{
         const map = new Map<number,Shift[]>();
 
@@ -64,7 +65,9 @@ function Week(){
         },
     })
     );
+    
     const handleDragEnd = async(event:DragEndEvent) => {
+      
         const { active,over } = event;
         if (!over) return;
 
