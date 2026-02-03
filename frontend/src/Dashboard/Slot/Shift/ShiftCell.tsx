@@ -21,7 +21,7 @@ const convertTo12hr = (time:string | null)=>{
 function ShiftCell({shift}:{shift:Shift}){
 
     const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
-    console.log(isUserAdmin)
+    
     const start_time = convertTo12hr(shift!.start_time)
     const end_time = convertTo12hr(shift!.end_time)
 

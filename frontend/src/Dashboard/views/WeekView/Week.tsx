@@ -106,7 +106,7 @@ function Week(){
                     employee_id: droppedEmployee,
                     date: droppedDate,
 
-                }
+                }, {withCredentials:true}
             );
        
         } catch (error) {
