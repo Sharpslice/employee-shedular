@@ -32,6 +32,7 @@ export async function createShift(req:Request,res:Response){
 export async function updateShiftTimes(req:Request,res:Response){
     const employee_id = Number(req.params.employee_id);
     const shift_id = Number(req.params.shift_id)
+    console.log(req.user)
 
     const {start_time,end_time,date} = req.body;
     

@@ -25,7 +25,7 @@ function ShiftCell({shift}:{shift:Shift}){
     const [activate,setActivate] = useState(false)
 
     const deleteShift = async()=>{
-        await axios.delete(`http://localhost:3000/api/v1/shifts/${shift?.id}`)
+        await axios.delete(`http://localhost:3000/api/v1/shifts/${shift?.id}`,{withCredentials:true})
     }
     
     const {attributes,listeners,setNodeRef,transform,isDragging} = useDraggable({

@@ -3,6 +3,7 @@ import { copyOverLastWeek, deleteShift, moveShift } from '../controllers/shift.c
 import { validateDeleteShift } from '../middleware/shift.middleware/validateDeleteShift';
 import { validateMoveShift } from '../middleware/shift.middleware/validateMoveShift';
 import { validateCopyLastWeekShift } from '../middleware/shift.middleware/validateCopyLastWeek';
+import { authenticateAdmin } from '../middleware/auth.middleware/authenticateAdmin';
 
 
 const shifts = express.Router();

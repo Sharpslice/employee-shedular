@@ -17,14 +17,14 @@ function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
     
     const createShift =async()=>{
         console.log(date.date)
-        await axios.post(`http://localhost:3000/api/v1/employees/${employee.id}/shifts`,{date:date.date})
+        await axios.post(`http://localhost:3000/api/v1/employees/${employee.id}/shifts`,{date:date.date},{withCredentials:true})
     
     }
 
     const createOverride = async()=>{
         try{
            const response=  await axios.post<response>(`http://localhost:3000/api/v1/overrides/${employee.id}/${date.date}`,
-            {isAvailable:false}
+            {isAvailable:false},{withCredentials:true}
         )
             if(response.data.success){
                 console.log('created override',response.data.row)
