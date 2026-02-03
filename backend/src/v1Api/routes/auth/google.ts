@@ -8,17 +8,7 @@ import { Employee } from '../../../generated/prisma';
 const google = express.Router();
 dotenv.config();
 
-interface AuthenticatedUser extends Request{
-    id: number,
-    googleId: string
-    name: string
-    phoneNumber?:number
-    role: string
-    position:string
-    color?: string
-    isWorking: boolean
-    picture?: string
-}
+
 
 passport.serializeUser((user,done)=>{
   const dbUser= user as Employee
@@ -49,7 +39,7 @@ passport.use(new GoogleStrategy(
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      console.log(profile);
+      console.log(profile.id);
       let user = await prisma.employee.upsert({
         where: { googleId: profile.id },
         update: {},
@@ -58,9 +48,8 @@ passport.use(new GoogleStrategy(
           name: profile.displayName || "",
           email: profile.emails?.[0]?.value || "",
           phone_number: null,
-          role: "USER",
           color: null,
-          isWorking: true,
+          isWorking: false,
           picture: profile._json.picture || ''
         },
       });
@@ -75,7 +64,7 @@ passport.use(new GoogleStrategy(
 
 google.get('/',passport.authenticate('google',{scope: ['profile','email'],prompt: 'select_account'}))
 google.get('/callback',passport.authenticate('google'),(req,res)=>{
-    const user = req.user as AuthenticatedUser;
+    const user = req.user;
     
     //res.json({user,token})
     res.redirect("http://localhost:5173/schedule")

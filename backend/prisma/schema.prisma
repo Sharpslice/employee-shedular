@@ -21,16 +21,17 @@ enum Role {
 enum Position {
     PHARMACIST
     TECHNICIAN
+    PENDING
 }
 
 model Employee {
   id              Int         @id @default(autoincrement())
   googleId        String      @unique
-  email           String      @unique
+  email           String     
   name            String
   phone_number    String?
   role            Role        @default(USER)
-  position        Position?   
+  position        Position    @default(PENDING)   
   color           String?
   isWorking       Boolean
   picture         String?
