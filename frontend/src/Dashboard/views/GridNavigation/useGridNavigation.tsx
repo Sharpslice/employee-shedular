@@ -10,6 +10,8 @@ function useGridNavigation(){
 
     const [focusedId,setFocusedId] = useState({row:100,col:100})
 
+    const [menuOpened,setMenuOpened] = useState(false)
+
     const cellRefs = useMemo(() => {
             return Array.from({ length: employeeList.size }, () =>
                 Array.from({ length: dateRange.length }, () => React.createRef<HTMLDivElement>())
@@ -18,11 +20,15 @@ function useGridNavigation(){
 
 
     const handleArrowKey=(key:string,row:number,col:number)=>{
+     
+        console.log(menuOpened)
         switch(key){
             case('ArrowUp'):
+                if(menuOpened) return
                 cellRefs[row-1][col].current?.focus()
                 break;
             case('ArrowDown'):
+                if(menuOpened) return
                 cellRefs[row+1][col].current?.focus()
                 break;
             case('ArrowLeft'):
@@ -31,10 +37,14 @@ function useGridNavigation(){
             case('ArrowRight'):
                 cellRefs[row][col+1].current?.focus()
                 break;
+            case('Tab'):
+                if(!menuOpened) return
+              
+                setMenuOpened(false)
         }
     }
 
-    return {cellRefs, focusedId,setFocusedId,handleArrowKey}
+    return {cellRefs, focusedId,setFocusedId,handleArrowKey,setMenuOpened,menuOpened}
 }
 
 export default useGridNavigation

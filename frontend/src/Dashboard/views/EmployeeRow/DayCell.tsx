@@ -27,12 +27,14 @@ interface DayProps{
 }
 
 function DayCell({row,index,employee,date,shifts}:DayProps){
-    const {cellRefs,focusedId,setFocusedId,handleArrowKey} = useContext(GridNavigationContext)!
+    const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened} = useContext(GridNavigationContext)!
     
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
+        
         if(e.target === e.currentTarget){
+            setMenuOpened(false)
             const firstSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".slot")
             const overrideSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".overrideSlot")
             if(firstSlot){
@@ -76,11 +78,10 @@ function DayCell({row,index,employee,date,shifts}:DayProps){
             key={`${employee.id} - ${date.date}`}  
             flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
             tabIndex={-1}
-            //ref={cellRefs?.[row][index]}
             onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
             onContextMenu={(e)=>{
                 e.preventDefault()
-                console.log('hel')
+                
                 setActive(true)
                 console.log(e.clientX,e.clientY)
                 setCoords({x:e.clientX,y:e.clientY})
@@ -89,7 +90,6 @@ function DayCell({row,index,employee,date,shifts}:DayProps){
 
             }}
             onFocus={(e)=>{
-               
                 onParentFocus(e)
                 setFocusedId({row:row!,col:index})
             }}>

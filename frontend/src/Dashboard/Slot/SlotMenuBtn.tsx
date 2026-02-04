@@ -4,6 +4,8 @@ import axios from "axios"
 import type { Employee } from "../Interfaces/Employee"
 import type { Day } from "../Interfaces/Day"
 import type { Override } from "../Interfaces/Override"
+import { useContext, useEffect, useRef } from "react"
+import { GridNavigationContext } from "../views/GridNavigation/GridNavigationContext"
 
 
 type response ={
@@ -13,7 +15,7 @@ type response ={
 
 function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
 
-  
+    const {menuOpened,setMenuOpened} = useContext(GridNavigationContext)!;
     
     const createShift =async()=>{
         console.log(date.date)
@@ -36,32 +38,36 @@ function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
         
         
     }
+    const focusRef= useRef<HTMLButtonElement>(null)
 
-    const focusRef =(element:HTMLButtonElement)=>{
-        if(element){
-            
-            element.focus()
+    useEffect(()=>{
+        if(focusRef.current && !menuOpened){
+            focusRef.current.focus()
         }
-    }
+    },[menuOpened])
+
+    // const focusRef =(element:HTMLButtonElement)=>{
+    //     if(element ){
+    //         element.focus()
+    //     }
+       
+    // }
+    
     return(
     <>
-        <Menu  withArrow>
-            <Menu.Target >
-                <Button ref={focusRef} className="menuBtn" bg={'grey'} flex={1}>
+        <Menu opened={menuOpened}   onChange={setMenuOpened} withArrow>
+            <Menu.Target  >
+                <Button  ref={focusRef} className="menuBtn" bg={'grey'} flex={1}>
                     slot
                 </Button>
             </Menu.Target>
             <Menu.Dropdown>
 
-            <Menu.Item onClick={()=>{createShift()}}>
+            <Menu.Item   className="menuBtnShift" onClick={()=>{createShift()}}>
                 Shift
             </Menu.Item>
 
-            <Menu.Item onClick={()=>{}}>
-                availability
-            </Menu.Item>
-
-            <Menu.Item onClick={()=>{createOverride()}}>
+            <Menu.Item   className="menuBtnOverride" onClick={()=>{createOverride()}}>
                 override
             </Menu.Item>
 
