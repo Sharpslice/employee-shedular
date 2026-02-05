@@ -7,6 +7,8 @@ import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
 import { DateTime } from "luxon"
+import { useContext } from "react"
+import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext"
 
 
 
@@ -19,13 +21,17 @@ interface ShiftResponse{
 
 function TimeRangePicker({shift}:{shift:Shift}){
    
-    
+    const {setTimeOpened} = useContext(GridNavigationContext)!
  
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
-    const afternoon = getTimeRange({startTime:'12:30:00',endTime: '18:00:00',interval:'00:30:00'})
+    const afternoon = ['12:00:00','13:00:00','13:30:00','14:30:00','15:00:00','17:00:00']
+    
 
     const start_time = shift.start_time ?  DateTime.fromISO(shift.start_time).toFormat('HH:mm') : ''
     const end_time = shift.end_time ?  DateTime.fromISO(shift.end_time).toFormat('HH:mm') : ''
+
+
+
 
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         console.log('time range time', time)
@@ -70,7 +76,6 @@ function TimeRangePicker({shift}:{shift:Shift}){
     return (<>
             <Group tabIndex={-1} justify="center" flex={1} h={'100%'} bg={'red'} gap={0} bd={'1px solid black'}  
                 
-                onBlur={()=>{console.log('hello')}}
                 
                 >
                 <TimePicker data-interactive
@@ -79,9 +84,10 @@ function TimeRangePicker({shift}:{shift:Shift}){
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
                     value={start_time}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onChange={(e)=>{onChange(e,"start")}}
                   
+                    
+                    //onPointerDown={(e) => e.stopPropagation()}
+                    onChange={(e)=>{onChange(e,"start")}}
                     format="12h"
                     withDropdown
                     presets={[
@@ -93,8 +99,14 @@ function TimeRangePicker({shift}:{shift:Shift}){
                         position: 'bottom',
                         withArrow:true,
                         middlewares: { flip: true },
+                        onOpen() {
+                            setTimeOpened(true)
+                        },
+                        onClose() {
+                            setTimeOpened(false)
+                        },
                     }}
-                    maxDropdownContentHeight={150}
+                    maxDropdownContentHeight={200}
                 />
 
                 <Text  w={10} style={{textAlign:'center'}}>-</Text>
@@ -117,8 +129,14 @@ function TimeRangePicker({shift}:{shift:Shift}){
                         position: 'bottom',
                         withArrow:true,
                         middlewares: { flip: true },
+                        onOpen() {
+                            setTimeOpened(true)
+                        },
+                        onClose() {
+                            setTimeOpened(false)
+                        },
                     }}
-                    maxDropdownContentHeight={150}
+                    maxDropdownContentHeight={200}
                 />
 
             </Group>
