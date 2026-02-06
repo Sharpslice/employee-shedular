@@ -64,6 +64,7 @@ function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
                     <Flex gap={5} flex={1} miw={'100px'} >
                         {dateRange.map((date,index)=>{
                             return(
+                                
                                 <DayCell key={`${employee.id}-${date}-${index}`} row={row!} employee={employee} shifts={shifts} date={date} index={index}/>
                             )
                         })}

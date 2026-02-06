@@ -6,7 +6,7 @@ import './TimeRangePicker.css'
 import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
-import { DateTime } from "luxon"
+import { DateTime, Zone } from "luxon"
 import { useContext } from "react"
 import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext"
 
@@ -35,8 +35,9 @@ function TimeRangePicker({shift}:{shift:Shift}){
 
     const onChange = async(time: string, slot: 'start' | 'end')=>{
         console.log('time range time', time)
-        const formattedDate = DateTime.fromISO(shift.date).toISODate();
-       
+        console.log('time range date', shift.date)
+        const formattedDate = DateTime.fromISO(shift.date,{zone:'utc'}).toISODate();
+       console.log('time range formatted date',formattedDate)
         try{
             const response = await axios.patch<ShiftResponse>(`http://localhost:3000/api/v1/employees/${shift.employee_id}/shifts/${shift.id}`,
                     slot==='start' 
@@ -64,12 +65,6 @@ function TimeRangePicker({shift}:{shift:Shift}){
                 console.error(error.message)
             }
         }
-
-
-
-
-        
-        
     
     }
 

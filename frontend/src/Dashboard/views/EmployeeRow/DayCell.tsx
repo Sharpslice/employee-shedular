@@ -48,13 +48,14 @@ function DayCell({row,index,employee,date,shifts}:DayProps){
             
         }
     }
-
+    console.log(date)
     const {isOver,setNodeRef} = useDroppable({
         id:`(${row},${index})`,
         data:{
             employee_id:employee.id,
             employee_name: employee.name,
             date:date
+            
         }
 
     })
