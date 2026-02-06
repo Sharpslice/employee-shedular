@@ -3,18 +3,26 @@ import type { Employee } from "../../Interfaces/Employee"
 
 interface InfoProp{
     employee:Employee
+    totalHours: number
     onAvailabilityclick: ()=>void
 }
-function EmployeeInfo({onAvailabilityclick,employee}:InfoProp){
+function EmployeeInfo({onAvailabilityclick,employee,totalHours}:InfoProp){
     return(
-        <Flex onClick={onAvailabilityclick} gap={10} align={'center'} bd={'1px solid black'} w={'10rem'} p={5} >
-                    <Avatar name={employee.name} radius={'xs'} color={"blue"}></Avatar>
-                    <Flex direction={'column'}>
-                        <Text size="lg">{employee.name}</Text>
-                        <Text size='sm'>{employee.position.toLowerCase().replace(/^\w/,c=>c.toUpperCase())}</Text>
-                    </Flex>
-                </Flex>
+        <Flex 
+            gap={15} align={'center'} 
+            bd={'1px solid black'} w={'15rem'} p={5} 
+            onClick={onAvailabilityclick}
+        >
+            <Avatar name={employee.name} radius={'xs'} color={"blue"}></Avatar>
+            <Flex direction={'column'}>
+                <Text size="lg">{employee.name}</Text>
+                <Text>{`Total hours: ${totalHours}`}</Text>
+
+            </Flex>
+        </Flex>
     )
 }
 
 export default EmployeeInfo
+
+{/* <Text size='sm'>{employee.position.toLowerCase().replace(/^\w/,c=>c.toUpperCase())}</Text> */}

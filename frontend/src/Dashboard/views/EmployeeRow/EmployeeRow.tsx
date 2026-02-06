@@ -1,6 +1,6 @@
 import { Flex } from "@mantine/core";
 import type { Employee } from "../../Interfaces/Employee";
-import {  useContext, useState } from 'react'
+import {  createContext, useContext, useState } from 'react'
 import type { Day } from "../../Interfaces/Day";
 
 import EmployeeInfo from "./EmployeeInfo";
@@ -15,6 +15,7 @@ import { useOutletContext } from "react-router-dom";
 import DayCell from "./DayCell";
 import type { Shift } from "../../Interfaces/Shift";
 import type { Availability } from "../../Interfaces/Availability";
+import { DateTime } from "luxon";
 
 
 
@@ -27,14 +28,34 @@ interface EmployeeRowProps{
 function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
 
     const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[] }>();
+    const {setActive} = useContext(ContextMenuContext)!
     const [hidden,setHidden]  = useState(true)
     const onAvailabilityclick= () => setHidden(prev=>!prev)
-   
-    const {setActive} = useContext(ContextMenuContext)!
+
+    const calculateTime = (start:string,end:string)=>{
+        const startDt = DateTime.fromISO(start)
+        const endDt = DateTime.fromISO(end)
+        if(!startDt.isValid || !endDt.isValid){
+            return 0;
+        }
+
+        const diff = endDt.diff(startDt,['hours']);
+        
+        return Number(diff.as('hours').toFixed(2)) 
+    }   
+
+    const totalHours = shifts.reduce((total,shift)=>{
+        return total + calculateTime(shift.start_time,shift.end_time)
+    },0)
+    
+
     return(
+       
+
+        
         <Flex onClick={()=>setActive(false)} gap={'1rem'} >
           
-            <EmployeeInfo onAvailabilityclick={onAvailabilityclick} employee={employee}/>
+            <EmployeeInfo onAvailabilityclick={onAvailabilityclick} employee={employee} totalHours = {totalHours}/>
          
             <Flex flex={1} gap={10} direction={'column'}>
                 
@@ -55,7 +76,9 @@ function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
             </Flex>
             
 
-        </Flex>
+            </Flex>
+        
+            
             
 
 
