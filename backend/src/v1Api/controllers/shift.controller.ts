@@ -28,10 +28,11 @@ export async function moveShift(req:Request, res:Response){
     const shift_id = Number(req.params.id);
     const employee_id = Number(req.body.employee_id)
     const date = new Date(req.body.date);
-
+    const start_time = req.body.start_time;
+    const end_time = req.body.end_time;
     try{
        
-        const updatedShift = await moveShiftService(shift_id,employee_id,date)
+        const updatedShift = await moveShiftService(shift_id,employee_id,date,start_time,end_time)
 
         io.emit('shiftMoved', {updatedShift} )
         res.status(200).json( {updatedShift} );

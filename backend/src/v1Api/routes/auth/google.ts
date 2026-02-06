@@ -12,7 +12,7 @@ dotenv.config();
 
 passport.serializeUser((user,done)=>{
   const dbUser= user as Employee
-  console.log(dbUser.id)
+  
   return done(null,dbUser.id)
 })
 passport.deserializeUser(async (id: number, done) => {
@@ -22,10 +22,10 @@ passport.deserializeUser(async (id: number, done) => {
     const user = await prisma.employee.findUnique({ where: { id } });
 
     // Pass the full user object to Passport
-    console.log("deserialize")
+    
     done(null, user);
   } catch (err) {
-    console.log('deserialzie error')
+    
     done(err, undefined); // if error, pass it to Passport
   }
 });
@@ -39,7 +39,7 @@ passport.use(new GoogleStrategy(
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      console.log(profile.id);
+     
       let user = await prisma.employee.upsert({
         where: { googleId: profile.id },
         update: {},
@@ -71,7 +71,7 @@ google.get('/callback',passport.authenticate('google'),(req,res)=>{
 })
 
 google.get('/logged-in-user',(req,res)=>{
-  console.log(req.user)
+  
   res.json({user:req.user});
 })
 

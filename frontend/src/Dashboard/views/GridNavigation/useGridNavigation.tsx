@@ -12,6 +12,8 @@ function useGridNavigation(){
 
     const [menuOpened,setMenuOpened] = useState(false)
 
+    const [timeOpened,setTimeOpened] = useState(false)
+
     const cellRefs = useMemo(() => {
             return Array.from({ length: employeeList.size }, () =>
                 Array.from({ length: dateRange.length }, () => React.createRef<HTMLDivElement>())
@@ -20,31 +22,32 @@ function useGridNavigation(){
 
 
     const handleArrowKey=(key:string,row:number,col:number)=>{
-     
-        console.log(menuOpened)
+        console.log(timeOpened)
         switch(key){
             case('ArrowUp'):
-                if(menuOpened) return
+                if(menuOpened || timeOpened) return
                 cellRefs[row-1][col].current?.focus()
                 break;
             case('ArrowDown'):
-                if(menuOpened) return
+                if(menuOpened || timeOpened) return
                 cellRefs[row+1][col].current?.focus()
                 break;
             case('ArrowLeft'):
+                if(timeOpened) return
                 cellRefs[row][col-1].current?.focus()   
                 break;
             case('ArrowRight'):
+                if(timeOpened) return
                 cellRefs[row][col+1].current?.focus()
                 break;
             case('Tab'):
                 if(!menuOpened) return
-              
+
                 setMenuOpened(false)
         }
     }
 
-    return {cellRefs, focusedId,setFocusedId,handleArrowKey,setMenuOpened,menuOpened}
+    return {cellRefs, focusedId,setFocusedId,handleArrowKey,setMenuOpened,menuOpened,setTimeOpened,timeOpened}
 }
 
 export default useGridNavigation

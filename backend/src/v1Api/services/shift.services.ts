@@ -12,7 +12,7 @@ export async function deleteShiftService(shift_id:number){
        
 }
 
-export async function moveShiftService(shift_id:number,employee_id:number,date:Date){
+export async function moveShiftService(shift_id:number,employee_id:number,date:Date,start_time:string,end_time:string){
     
     return prisma.employee_Shifts.update({
             where:{
@@ -20,7 +20,9 @@ export async function moveShiftService(shift_id:number,employee_id:number,date:D
             },
             data:{
                 employee_id:employee_id,
-                date: date
+                date: date,
+                start_time:start_time,
+                end_time:end_time
             }
         })
 }

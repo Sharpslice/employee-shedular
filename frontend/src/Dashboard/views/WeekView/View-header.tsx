@@ -9,7 +9,7 @@ interface ViewHeaderProps{
 function ViewHeader({colGap,children}:ViewHeaderProps){
     return(<>
         <Flex  gap={'1rem'}>
-            <Flex justify={'center'} align={'center'} bd={'1px solid black'} w={'10rem'}>Staff</Flex>
+            <Flex justify={'center'} align={'center'} bd={'1px solid black'} w={'15rem'}>Employees</Flex>
             <Flex gap={colGap }flex={1}>
                 {children}
             </Flex>

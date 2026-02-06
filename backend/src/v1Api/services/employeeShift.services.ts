@@ -37,9 +37,10 @@ export async function updateShiftTimeservice(shift_id:number,date:string,start_t
                         ? DateTime.fromJSDate(shift.end_time)
                         : null
 
- 
+    console.log(`start:${startDt}
+                end:${endDt}`)
     if((startDt && endDt) && startDt >= endDt){
-        throw new Error('starting time cannot be greater or equal than ending time')
+        throw new Error(`start time: ${startDt} cannot be greater or equal to end time: ${endDt}`)
     }
 
     const start = startDt ? startDt.toUTC().toISO() : null

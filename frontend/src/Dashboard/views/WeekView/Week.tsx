@@ -16,6 +16,7 @@ import type { Shift } from "../../Interfaces/Shift";
 import axios from "axios";
 import {  useMemo } from "react";
 import type { Availability } from "../../Interfaces/Availability";
+import { DateTime } from "luxon";
 
 
 
@@ -77,17 +78,34 @@ function Week(){
         const shiftId = Number(active.id)
         const droppedDate = over.data.current.date.date;
         const droppedEmployee = over.data.current?.employee_id
+        let updatedStart;
+        let updatedEnd;
         setShifts((oldMap)=>{
             const newMap = new Map(oldMap)
 
             //find the selected shift and replace the date and employee
             const selectedShift = oldMap.get(shiftId)!;
             
+            const formattedDate = DateTime.fromISO(droppedDate,{zone:'utc'})
+            updatedStart = DateTime.fromISO(selectedShift.start_time).set({
+                year: formattedDate.year,
+                month: formattedDate.month,
+                day: formattedDate.day
+            })
+            updatedEnd = DateTime.fromISO(selectedShift.end_time).set({
+                year: formattedDate.year,
+                month: formattedDate.month,
+                day: formattedDate.day
+            })
+            
+            
             const updatedShift = {
                 ...selectedShift,
                 id: selectedShift.id,          
                 employee_id: droppedEmployee,  
-                date: droppedDate
+                date: droppedDate,
+                start_time: updatedStart.toISO()!,
+                end_time: updatedEnd.toISO()! 
                
             }
 
@@ -105,6 +123,8 @@ function Week(){
                 {
                     employee_id: droppedEmployee,
                     date: droppedDate,
+                    start_time: updatedStart!.toISO()!,
+                    end_time: updatedEnd!.toISO()! 
 
                 }, {withCredentials:true}
             );
