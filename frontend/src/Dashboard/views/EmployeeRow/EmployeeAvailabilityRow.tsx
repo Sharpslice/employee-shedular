@@ -5,7 +5,7 @@ import type { Availability } from "../../Interfaces/Availability"
 interface availabilityProp{
     hidden: boolean
     dateRange: Day[]
-    availability: Availability[]
+    availability: Map<number,Availability>
 }
 
 function EmployeeAvailabilityRow({hidden,dateRange,availability}:availabilityProp){
@@ -14,7 +14,7 @@ function EmployeeAvailabilityRow({hidden,dateRange,availability}:availabilityPro
 
         {!hidden && <Flex gap={5} >
             {dateRange.map((day)=>{
-                const time =  availability.find((availability) =>availability.day_of_week === day.days_of_week)
+                //const time =  availability.find((availability) =>availability.day_of_week === day.days_of_week)
 
                 
 

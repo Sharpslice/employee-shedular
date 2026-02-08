@@ -21,7 +21,6 @@ import { DateTime } from "luxon";
 
 
 
-
 function Week(){
     const { dateRange,employeeList,setShifts,shifts, availabilities } = 
     useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Map<number,Shift>,setShifts:React.Dispatch<React.SetStateAction<Map<number,Shift>>>,availabilities:Map<number,Availability> }>();
@@ -42,20 +41,25 @@ function Week(){
     
         return map
     },[shifts])
-    const availabilitiesByEmployee = useMemo(()=>{
-        const map = new Map<number,Availability[]>()
+    const availabilitiesByEmployee = useMemo(() => {
+        const map = new Map<number, Map<number, Availability>>();
 
-        for(const availability of availabilities.values()){
-            if(map.has(availability.employee_id)){
-                
-                map.get(availability.employee_id)?.push(availability)
+        for (const availability of availabilities.values()) {
+            const empId = availability.employee_id;
+            const availDow = availability.day_of_week;
+
+        
+            if (!map.has(empId)) {
+                map.set(empId, new Map());
             }
-            else{
-                map.set(availability.employee_id, [availability])
-            }
+
+        
+            map.get(empId)!.set(availDow, availability);
         }
-        return map
-    },[availabilities])
+
+        return map;
+    }, [availabilities]);
+        console.log(availabilitiesByEmployee)
    
 
    const sensors = useSensors(
@@ -157,7 +161,7 @@ function Week(){
                         {[...employeeList].map(([id,employee],row)=>{     
 
                             const employeeShifts = shiftsByEmployee.get(id) ?? [];
-                            const employeeAvailabilities = availabilitiesByEmployee.get(id) ?? []
+                            const employeeAvailabilities = availabilitiesByEmployee.get(id) ?? new Map()
                             
                             return(
                                 <EmployeeRow key={id} 

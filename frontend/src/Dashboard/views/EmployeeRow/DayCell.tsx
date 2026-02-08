@@ -31,6 +31,8 @@ function DayCell({row,index,employee,date,shifts}:DayProps){
     
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
+     const hasShift = shifts.filter(shift => DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate());
+
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         
         if(e.target === e.currentTarget){
@@ -59,32 +61,18 @@ function DayCell({row,index,employee,date,shifts}:DayProps){
         }
 
     })
-    const style = {
-        opacity:isOver ? 1:0.5
-    }
 
-    
-     const hasShift = shifts.filter(shift => 
-  DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate()
-);
-        
-        
-    
-    
-    //const override = employee.override.filter((override)=>override.date===date.date)
     return(
         <Flex  
             ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
-            style={style}
+            style={{opacity:isOver ? 1:0.5}}
             key={`${employee.id} - ${date.date}`}  
             flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
             tabIndex={-1}
             onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
             onContextMenu={(e)=>{
                 e.preventDefault()
-                
                 setActive(true)
-                console.log(e.clientX,e.clientY)
                 setCoords({x:e.clientX,y:e.clientY})
                 setSelectedCell({employee:employee,date:date})
 
@@ -96,21 +84,16 @@ function DayCell({row,index,employee,date,shifts}:DayProps){
             }}>
                                     
             
-                <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
-                    {hasShift.map((shift,index)=>{
-                        
-                        return(
-                            <ShiftCell key={`${shift.id}-${index}`} shift={shift}/>
-                        )
-                    })}
-                    {/* {override.map((override)=>{
-                        return(
-                            <OverrideCell key={`override-id-${override.id}`} override={override}/>
-                        )
-                        
-                    })} */}
+            <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
+                {hasShift.map((shift,index)=>{
                     
-                </SlotContainer> 
+                    return(
+                        <ShiftCell key={`${shift.id}-${index}`} shift={shift}/>
+                    )
+                })}
+                
+                
+            </SlotContainer> 
 
             
 

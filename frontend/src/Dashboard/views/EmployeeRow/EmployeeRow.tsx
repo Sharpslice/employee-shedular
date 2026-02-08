@@ -1,6 +1,6 @@
 import { Flex } from "@mantine/core";
 import type { Employee } from "../../Interfaces/Employee";
-import {  createContext, useContext, useState } from 'react'
+import {  useContext, useMemo, useState } from 'react'
 import type { Day } from "../../Interfaces/Day";
 
 import EmployeeInfo from "./EmployeeInfo";
@@ -20,10 +20,10 @@ import { DateTime } from "luxon";
 
 
 interface EmployeeRowProps{
-    row?:number
+    row:number
     employee: Employee
     shifts: Shift[]
-    availabilities: Availability[]
+    availabilities: Map<number,Availability>
 }
 function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
 
@@ -44,15 +44,15 @@ function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
         return Number(diff.as('hours').toFixed(2)) 
     }   
 
-    const totalHours = shifts.reduce((total,shift)=>{
-        return total + calculateTime(shift.start_time,shift.end_time)
-    },0)
+    const totalHours = useMemo(()=>{
+      return shifts.reduce((total,shift)=> total + calculateTime(shift.start_time,shift.end_time) ,0)
+    },[shifts])
+    console.log(availabilities)
+    
+    
     
 
-    return(
-       
-
-        
+    return(        
         <Flex onClick={()=>setActive(false)} gap={'1rem'} >
           
             <EmployeeInfo onAvailabilityclick={onAvailabilityclick} employee={employee} totalHours = {totalHours}/>
@@ -65,7 +65,14 @@ function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
                     {dateRange.map((date,index)=>{
                         return(
                             
-                            <DayCell key={`${employee.id}-${date}-${index}`} row={row!} employee={employee} shifts={shifts} date={date} index={index}/>
+                            <DayCell 
+                                key={`${employee.id}-${date.date}`} 
+                                row={row} 
+                                employee={employee} 
+                                shifts={shifts} 
+                                date={date} 
+                                index={index}
+                            />
                         )
                     })}
                                 
