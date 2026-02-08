@@ -1,6 +1,7 @@
 import type { Availability } from "../Interfaces/Availability"
 import type { Employee } from "../Interfaces/Employee"
 import type { Shift } from "../Interfaces/Shift"
+import type { TimeBlock } from "../Interfaces/TimeBlock"
 
 
 export const EmployeeArrayToMap=(employeeArray : Employee[] )=>{
@@ -27,6 +28,16 @@ export const AvailabilityArrayToMap=(AvailabilityArray : Availability[] )=>{
     
     return AvailabilityArray.reduce((acc,availability)=>{
         acc.set(availability.id,availability)
+        return acc
+    },new Map())
+
+    
+}
+
+export const TimeBlockArrayToMap=(timeBlockArray: TimeBlock[] )=>{
+
+    return timeBlockArray.reduce((acc,time_block)=>{
+        acc.set(time_block.id,time_block)
         return acc
     },new Map())
 

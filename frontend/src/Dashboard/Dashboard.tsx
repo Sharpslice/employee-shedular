@@ -9,13 +9,14 @@ import { Outlet, useMatch, useParams } from "react-router-dom";
 import type { Employee } from "./Interfaces/Employee";
 import type { Day } from "./Interfaces/Day";
 
-import { AvailabilityArrayToMap, EmployeeArrayToMap,ShiftArrayToMap } from "./views/ArrayToMap";
+import { AvailabilityArrayToMap, EmployeeArrayToMap,ShiftArrayToMap, TimeBlockArrayToMap } from "./views/ArrayToMap";
 
 import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
 import ContextMenu from "./Slot/ContextMenu/ContextMenu";
 import useScheduleSocket from "./useScheduleSocket";
 import type { Shift } from "./Interfaces/Shift";
 import type { Availability } from "./Interfaces/Availability";
+import type { TimeBlock } from "./Interfaces/TimeBlock";
 
 
 
@@ -27,6 +28,7 @@ interface EmployeeResponse{
     employeeList: Employee[]
     shifts: Shift[]
     availabilities: Availability[]
+    av_time_blocks: TimeBlock[]
 }
 
 
@@ -46,30 +48,40 @@ function Dashboard(){
     const [employeeList,setEmployeeList] = useState<Map<number,Employee>>(new Map())
     const [shifts,setShifts] = useState<Map<number,Shift>>(new Map())
     const [availabilities,setAvailabilities] = useState<Map<number,Availability>>(new Map())
+    const [av_time_blocks,setAv_time_blocks] = useState<Map<number,TimeBlock>>(new Map())
+    
     useScheduleSocket(setShifts);
 
-    useEffect(()=>{
-        const fetchData =async() =>{
-            
-            const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${ safeView}`,{withCredentials:true})
-            setDateRange(response.data.dateArray)
-            console.log('DateRange', response.data.dateArray)
-    
-            const employeeResponse = await axios.get<EmployeeResponse>(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`,{withCredentials:true});
-            
-            setEmployeeList(EmployeeArrayToMap( employeeResponse.data.employeeList))
-            setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
-            setAvailabilities(AvailabilityArrayToMap(employeeResponse.data.availabilities))
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                
+                const [calendarResponse, employeeResponse] = await Promise.all([
+                    axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${safeView}`, { withCredentials: true }),
+                    axios.get<EmployeeResponse>(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`, { withCredentials: true })
+                ]);
 
+                
+                setDateRange(calendarResponse.data.dateArray);
+                console.log('DateRange', calendarResponse.data.dateArray);
 
-            console.log("employee",EmployeeArrayToMap( employeeResponse.data.employeeList))
-            console.log("shifts",ShiftArrayToMap(employeeResponse.data.shifts))
-            console.log("availabilities",AvailabilityArrayToMap(employeeResponse.data.availabilities))
+                setEmployeeList(EmployeeArrayToMap(employeeResponse.data.employeeList));
+                setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
+                setAvailabilities(AvailabilityArrayToMap(employeeResponse.data.availabilities));
+                setAv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
 
-        }
-        fetchData()
-    },[safeDate,safeView])
+                console.log("employee", EmployeeArrayToMap(employeeResponse.data.employeeList));
+                console.log("shifts", ShiftArrayToMap(employeeResponse.data.shifts));
+                console.log("availabilities", AvailabilityArrayToMap(employeeResponse.data.availabilities));
+                console.log("timeblock", TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
 
+            } catch (err) {
+                console.error("Failed to fetch data:", err);
+            }
+        };
+
+        fetchData();
+    }, [safeDate, safeView]);
     return(
         <>  
         
@@ -82,7 +94,7 @@ function Dashboard(){
                     <Container  fluid p={'1rem 1rem'} w={'100%'} mih={'100%'} style={{display:'flex',justifyContent:'center'}}>
 
                         {   
-                            <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts, availabilities,setAvailabilities}}/>
+                            <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts, availabilities,setAvailabilities,av_time_blocks,setAv_time_blocks}}/>
                         }
                     
                     </Container> 

@@ -61,21 +61,26 @@ model Employee_Availability{
     employee_id             Int
     day_of_week             Int
     is_available            Boolean
-    time_block_id           Int?
+    
 
 
+    @@unique([employee_id,day_of_week])
 
-    employee                                   Employee  @relation(fields:[employee_id],references:id)
-    time_block        Employee_Availability_Time_Block? @relation(fields: [time_block_id], references: [id])
+    time_blocks      Employee_Availability_Time_Block[]
+
+    employee          Employee  @relation(fields:[employee_id],references:id)
+    
     @@map("employee_availability")
 }
 
 model Employee_Availability_Time_Block{
     id                      Int       @id @default(autoincrement())
-    start_time              DateTime    @db.Timestamptz
-    end_time                DateTime    @db.Timestamptz
+    employee_availability_id         Int
+    start_time              DateTime    @db.Time
+    end_time                DateTime    @db.Time
 
-    employee_availabilities Employee_Availability[]
+    availability        Employee_Availability @relation(fields:[employee_availability_id],references:id)
+
     @@map("employee_availability_time_block")
 }
 
@@ -95,8 +100,8 @@ model Employee_Time_Override{
 
 model Employee_Override_Time_Block{
     id                      Int         @id @default(autoincrement())
-    start_time              DateTime    @db.Timestamptz
-    end_time                DateTime    @db.Timestamptz
+    start_time              DateTime    @db.Time
+    end_time                DateTime    @db.Time
 
     @@map("employee_override_time_block")
 }

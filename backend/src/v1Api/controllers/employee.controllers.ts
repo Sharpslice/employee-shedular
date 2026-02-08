@@ -33,7 +33,7 @@ export async function schedule(req:Request,res:Response){
     try{
         const response = await scheduleService(beginDate,endDate)
      
-        return res.json({employeeList:response.employeeList,shifts:response.shifts,availabilities:response.availabilities})
+        return res.json({employeeList:response.employeeList,shifts:response.shifts,availabilities:response.availabilities,av_time_blocks:response.av_time_blocks})
 
     }catch(error){
         return res.status(500).json({error: "error fetching employees and shifts"})
