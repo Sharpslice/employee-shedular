@@ -1,14 +1,13 @@
 import { Flex } from "@mantine/core"
 import type { Day } from "../../Interfaces/Day"
-import type { Availability } from "../../Interfaces/Availability"
+
 
 interface availabilityProp{
     hidden: boolean
     dateRange: Day[]
-    availability: Map<number,Availability>
 }
 
-function EmployeeAvailabilityRow({hidden,dateRange,availability}:availabilityProp){
+function EmployeeAvailabilityRow({hidden,dateRange}:availabilityProp){
     
     return(<>
 

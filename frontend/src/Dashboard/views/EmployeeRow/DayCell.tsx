@@ -15,6 +15,8 @@ import { mergeRefs } from "@react-aria/utils";
 import type { Shift } from "../../Interfaces/Shift"
 import { DateTime } from "luxon"
 
+import type { TimeBlock } from "../../Interfaces/TimeBlock"
+
 
 
 
@@ -24,9 +26,10 @@ interface DayProps{
     employee:Employee
     date: Day
     shifts:Shift[]
+    time_blocks: TimeBlock[] 
 }
 
-function DayCell({row,index,employee,date,shifts}:DayProps){
+function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened} = useContext(GridNavigationContext)!
     
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
@@ -88,7 +91,7 @@ function DayCell({row,index,employee,date,shifts}:DayProps){
                 {hasShift.map((shift,index)=>{
                     
                     return(
-                        <ShiftCell key={`${shift.id}-${index}`} shift={shift}/>
+                        <ShiftCell key={`${shift.id}-${index}`} shift={shift} time_blocks={time_blocks}/>
                     )
                 })}
                 

@@ -14,20 +14,21 @@ import { useOutletContext } from "react-router-dom";
 
 import DayCell from "./DayCell";
 import type { Shift } from "../../Interfaces/Shift";
-import type { Availability } from "../../Interfaces/Availability";
+
 import { DateTime } from "luxon";
+import type { TimeBlock } from "../../Interfaces/TimeBlock";
 
 
-
+//type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 interface EmployeeRowProps{
     row:number
     employee: Employee
     shifts: Shift[]
-    availabilities: Map<number,Availability>
+    time_blocks_DOW: Map<number,TimeBlock[] >
 }
-function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
+function EmployeeRow({row,employee,shifts,time_blocks_DOW}:EmployeeRowProps){
 
-    const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[] }>();
+    const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[],av_time_blocks:Map<number,TimeBlock> }>();
     const {setActive} = useContext(ContextMenuContext)!
     const [hidden,setHidden]  = useState(true)
     const onAvailabilityclick= () => setHidden(prev=>!prev)
@@ -47,7 +48,11 @@ function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
     const totalHours = useMemo(()=>{
       return shifts.reduce((total,shift)=> total + calculateTime(shift.start_time,shift.end_time) ,0)
     },[shifts])
-    console.log(availabilities)
+
+
+
+    
+
     
     
     
@@ -59,10 +64,13 @@ function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
          
             <Flex flex={1} gap={10} direction={'column'}>
                 
-                <EmployeeAvailabilityRow hidden={hidden} dateRange={dateRange} availability={availabilities}/>
+                <EmployeeAvailabilityRow hidden={hidden} dateRange={dateRange} />
 
                 <Flex gap={5} flex={1} miw={'100px'} >
                     {dateRange.map((date,index)=>{
+                        
+                        const time_blocks = time_blocks_DOW.get(date.days_of_week)
+                        
                         return(
                             
                             <DayCell 
@@ -72,6 +80,7 @@ function EmployeeRow({row,employee,shifts,availabilities}:EmployeeRowProps){
                                 shifts={shifts} 
                                 date={date} 
                                 index={index}
+                                time_blocks={time_blocks}
                             />
                         )
                     })}
