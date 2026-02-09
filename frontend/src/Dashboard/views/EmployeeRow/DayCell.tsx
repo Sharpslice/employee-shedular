@@ -1,7 +1,7 @@
 import { Flex } from "@mantine/core"
 import SlotContainer from "../../Slot/SlotContainer"
 import ShiftCell from "../../Slot/Shift/ShiftCell"
-import { useContext} from "react"
+import { useContext, useMemo} from "react"
 import { GridNavigationContext } from "../GridNavigation/GridNavigationContext"
 
 import type { Employee } from "../../Interfaces/Employee"
@@ -26,7 +26,7 @@ interface DayProps{
     employee:Employee
     date: Day
     shifts:Shift[]
-    time_blocks: TimeBlock[] 
+    time_blocks: TimeBlock[] | undefined
 }
 
 function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
@@ -65,6 +65,32 @@ function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
 
     })
 
+    const normalizeTime = (dt: DateTime) => dt.set({ year: 1970, month: 1, day: 1 });
+
+
+    function isShiftConflicting(shift: Shift, time_blocks: TimeBlock[] | undefined) {
+        const start_dt = normalizeTime(DateTime.fromISO(shift.start_time));
+        const end_dt = normalizeTime(DateTime.fromISO(shift.end_time));
+
+        if(time_blocks === undefined){
+            return true
+        }
+
+     
+        const fitsInAtLeastOneBlock = time_blocks.some(block => {
+            const available_start = DateTime.fromISO(block.start_time);
+            const available_end = DateTime.fromISO(block.end_time);
+
+            const startsAfterOrEqual = start_dt >= available_start;
+            const endsBeforeOrEqual = end_dt <= available_end;
+
+            return startsAfterOrEqual && endsBeforeOrEqual;
+        });
+
+        return !fitsInAtLeastOneBlock;
+    }
+
+
     return(
         <Flex  
             ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
@@ -89,9 +115,9 @@ function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
             
             <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
                 {hasShift.map((shift,index)=>{
-                    
+                    const conflict = isShiftConflicting(shift, time_blocks);
                     return(
-                        <ShiftCell key={`${shift.id}-${index}`} shift={shift} time_blocks={time_blocks}/>
+                        <ShiftCell key={`${shift.id}-${index}`} shift={shift} hasConflict={conflict}/>
                     )
                 })}
                 

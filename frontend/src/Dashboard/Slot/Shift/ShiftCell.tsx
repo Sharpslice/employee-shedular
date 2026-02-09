@@ -9,16 +9,17 @@ import { useDraggable } from "@dnd-kit/core";
 import { AuthenticatedUser } from "../../../AuthenticatedUserContext";
 import ShiftDisplay from "./ShiftDisplay";
 
-import type { TimeBlock } from "../../Interfaces/TimeBlock";
+
+
 
 
 interface ShiftCellProps{
     shift:Shift,
-    time_blocks: TimeBlock[] 
+    hasConflict: boolean
 }
 
 
-function ShiftCell({shift,time_blocks}:ShiftCellProps){
+function ShiftCell({shift,hasConflict}:ShiftCellProps){
 
     const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
     
@@ -48,7 +49,6 @@ function ShiftCell({shift,time_blocks}:ShiftCellProps){
     zIndex: isDragging ? 999 : "auto",
     cursor: isDragging ? "grabbing" : "grab",
     }
-
 
     return (
     
@@ -91,7 +91,7 @@ function ShiftCell({shift,time_blocks}:ShiftCellProps){
             
           {activate 
             ? <TimeRangePicker shift={shift}/> 
-            : <ShiftDisplay start_time={shift.start_time} end_time={shift.end_time} time_blocks={time_blocks} />
+            : <ShiftDisplay start_time={shift.start_time} end_time={shift.end_time} hasConflict={hasConflict} />
                 
           }
 
