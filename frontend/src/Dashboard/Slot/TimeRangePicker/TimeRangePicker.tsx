@@ -6,7 +6,7 @@ import './TimeRangePicker.css'
 import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
-import { DateTime, Zone } from "luxon"
+import { DateTime} from "luxon"
 import { useContext } from "react"
 import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext"
 

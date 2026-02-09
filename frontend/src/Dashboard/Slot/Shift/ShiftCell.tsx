@@ -1,6 +1,5 @@
-import { Flex, Text } from "@mantine/core";
+import { Flex } from "@mantine/core";
 
-import {DateTime} from 'luxon'
 import {  useContext, useState } from "react";
 import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 
@@ -8,22 +7,23 @@ import axios from "axios";
 import type { Shift } from "../../Interfaces/Shift";
 import { useDraggable } from "@dnd-kit/core";
 import { AuthenticatedUser } from "../../../AuthenticatedUserContext";
+import ShiftDisplay from "./ShiftDisplay";
 
 
 
-const convertTo12hr = (time:string | null)=>{
-    
-    if(!time) return ""
-    const dt = DateTime.fromISO(time)
-    return dt.toFormat('hh:mm a')
+
+
+interface ShiftCellProps{
+    shift:Shift,
+    hasConflict: boolean
 }
 
-function ShiftCell({shift}:{shift:Shift}){
+
+function ShiftCell({shift,hasConflict}:ShiftCellProps){
 
     const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
     
-    const start_time = convertTo12hr(shift!.start_time)
-    const end_time = convertTo12hr(shift!.end_time)
+   
 
     const [activate,setActivate] = useState(false)
 
@@ -49,7 +49,6 @@ function ShiftCell({shift}:{shift:Shift}){
     zIndex: isDragging ? 999 : "auto",
     cursor: isDragging ? "grabbing" : "grab",
     }
-
 
     return (
     
@@ -90,13 +89,10 @@ function ShiftCell({shift}:{shift:Shift}){
         
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
             
-          {activate ? <TimeRangePicker shift={shift}/> :
-            <>
-                <Text fz={14}>{start_time}</Text>  
-                <Text fz={14}>-</Text>
-                <Text fz={14}>{end_time}</Text>
-            </>
-          
+          {activate 
+            ? <TimeRangePicker shift={shift}/> 
+            : <ShiftDisplay start_time={shift.start_time} end_time={shift.end_time} hasConflict={hasConflict} />
+                
           }
 
 

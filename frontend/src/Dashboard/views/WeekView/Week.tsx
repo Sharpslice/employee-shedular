@@ -17,14 +17,15 @@ import axios from "axios";
 import {  useMemo } from "react";
 import type { Availability } from "../../Interfaces/Availability";
 import { DateTime } from "luxon";
+import type { TimeBlock } from "../../Interfaces/TimeBlock";
 
 
 
 
 
 function Week(){
-    const { dateRange,employeeList,setShifts,shifts, availabilities } = 
-    useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Map<number,Shift>,setShifts:React.Dispatch<React.SetStateAction<Map<number,Shift>>>,availabilities:Map<number,Availability> }>();
+    const { dateRange,employeeList,setShifts,shifts, availabilities,av_time_blocks } = 
+    useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Map<number,Shift>,setShifts:React.Dispatch<React.SetStateAction<Map<number,Shift>>>,availabilities:Map<number,Availability>,av_time_blocks:Map<number,TimeBlock> }>();
 
     const shiftsByEmployee = useMemo(()=>{
         const map = new Map<number,Shift[]>();
@@ -42,21 +43,42 @@ function Week(){
     
         return map
     },[shifts])
-    const availabilitiesByEmployee = useMemo(()=>{
-        const map = new Map<number,Availability[]>()
+    const timeBlocksByEmployeeAndDow = useMemo(() => {
+    const result = new Map<number, Map<number, TimeBlock[]>>();
 
-        for(const availability of availabilities.values()){
-            if(map.has(availability.employee_id)){
-                
-                map.get(availability.employee_id)?.push(availability)
-            }
-            else{
-                map.set(availability.employee_id, [availability])
-            }
+    for (const block of av_time_blocks.values()) {
+        const avail = availabilities.get(block.employee_availability_id);
+        if (!avail) continue;
+
+        const employeeId = avail.employee_id;
+        const dow = avail.day_of_week;
+
+        if (!result.has(employeeId)) {
+        result.set(employeeId, new Map());
         }
-        return map
-    },[availabilities])
-   
+
+        const dowMap = result.get(employeeId)!;
+
+        if (!dowMap.has(dow)) {
+        dowMap.set(dow, []);
+        }
+
+        dowMap.get(dow)!.push(block);
+    }
+
+  // Sort blocks within each day (optional but nice for display)
+  for (const dowMap of result.values()) {
+    for (const blocks of dowMap.values()) {
+      blocks.sort((a, b) => 
+        DateTime.fromISO(a.start_time).toMillis() - 
+        DateTime.fromISO(b.start_time).toMillis()
+      );
+    }
+  }
+
+  return result;
+}, [availabilities, av_time_blocks]);
+   console.log(timeBlocksByEmployeeAndDow)
 
    const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -157,14 +179,15 @@ function Week(){
                         {[...employeeList].map(([id,employee],row)=>{     
 
                             const employeeShifts = shiftsByEmployee.get(id) ?? [];
-                            const employeeAvailabilities = availabilitiesByEmployee.get(id) ?? []
+                            const time_blocks_DOW = timeBlocksByEmployeeAndDow.get(id) ?? new Map()
                             
                             return(
                                 <EmployeeRow key={id} 
                                     row={row} 
                                     employee={employee} 
                                     shifts={employeeShifts} 
-                                    availabilities={employeeAvailabilities} />
+                                    time_blocks_DOW={time_blocks_DOW}
+                                    />
                             )
                         })}
                         
