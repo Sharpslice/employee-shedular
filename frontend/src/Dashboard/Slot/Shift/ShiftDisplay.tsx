@@ -1,4 +1,5 @@
-import { Flex, Text } from "@mantine/core"
+import { ActionIcon, Flex, Text } from "@mantine/core"
+import { IconAlertTriangle } from "@tabler/icons-react"
 
 import { DateTime } from "luxon"
 
@@ -26,7 +27,18 @@ function ShiftDisplay({start_time,end_time,hasConflict}:ShiftDisplayProps){
             <Text fz={14}>{convertTo12hr( start_time)}</Text>  
             <Text fz={14}>-</Text>
             <Text fz={14}>{convertTo12hr(end_time)}</Text>
-            
+
+            {hasConflict &&
+                <ActionIcon color="red" onClick={
+                    (e)=>{
+                        e.stopPropagation()
+                       
+                    }
+                    
+                    }>
+                <IconAlertTriangle/>
+            </ActionIcon>
+            }
         </Flex>
     )
 }

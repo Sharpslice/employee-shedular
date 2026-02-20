@@ -25,14 +25,14 @@ export async function updateShiftTimeservice(shift_id:number,date:string,start_t
     }
     
     const startDt  = start_time 
-                        ? DateTime.fromISO(`${date}T${start_time}`,{zone:'America/Los_Angeles'}) 
+                        ? DateTime.fromISO(`1970-01-01T${start_time}`,{zone:'America/Los_Angeles'}) 
                         : shift.start_time 
                             ? DateTime.fromJSDate(shift.start_time, )
                             : null
 
 
     const endDt = end_time 
-                    ? DateTime.fromISO(`${date}T${end_time}`,{zone:'America/Los_Angeles'}) 
+                    ? DateTime.fromISO(`1970-01-01T${end_time}`,{zone:'America/Los_Angeles'}) 
                     : shift.end_time
                         ? DateTime.fromJSDate(shift.end_time)
                         : null

@@ -29,6 +29,7 @@ interface EmployeeResponse{
     shifts: Shift[]
     availabilities: Availability[]
     av_time_blocks: TimeBlock[]
+    ov_time_blocks: TimeBlock[]
 }
 
 
@@ -49,6 +50,7 @@ function Dashboard(){
     const [shifts,setShifts] = useState<Map<number,Shift>>(new Map())
     const [availabilities,setAvailabilities] = useState<Map<number,Availability>>(new Map())
     const [av_time_blocks,setAv_time_blocks] = useState<Map<number,TimeBlock>>(new Map())
+    const [ov_time_blocks,setOv_time_blocks] = useState<Map<number,TimeBlock>>(new Map())
     
     useScheduleSocket(setShifts);
 
@@ -69,11 +71,13 @@ function Dashboard(){
                 setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
                 setAvailabilities(AvailabilityArrayToMap(employeeResponse.data.availabilities));
                 setAv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
+                setOv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks))
 
                 console.log("employee", EmployeeArrayToMap(employeeResponse.data.employeeList));
                 console.log("shifts", ShiftArrayToMap(employeeResponse.data.shifts));
                 console.log("availabilities", AvailabilityArrayToMap(employeeResponse.data.availabilities));
                 console.log("timeblock", TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
+                 console.log("ov timeblock", TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks));
 
             } catch (err) {
                 console.error("Failed to fetch data:", err);
@@ -94,7 +98,7 @@ function Dashboard(){
                     <Container  fluid p={'1rem 1rem'} w={'100%'} mih={'100%'} style={{display:'flex',justifyContent:'center'}}>
 
                         {   
-                            <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts, availabilities,setAvailabilities,av_time_blocks,setAv_time_blocks}}/>
+                            <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts, availabilities,setAvailabilities,av_time_blocks,setAv_time_blocks,ov_time_blocks,setOv_time_blocks}}/>
                         }
                     
                     </Container> 

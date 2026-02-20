@@ -1,7 +1,7 @@
 import { Flex } from "@mantine/core"
 import SlotContainer from "../../Slot/SlotContainer"
 import ShiftCell from "../../Slot/Shift/ShiftCell"
-import { useContext, useMemo} from "react"
+import { useContext} from "react"
 import { GridNavigationContext } from "../GridNavigation/GridNavigationContext"
 
 import type { Employee } from "../../Interfaces/Employee"
