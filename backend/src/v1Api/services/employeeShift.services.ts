@@ -37,8 +37,7 @@ export async function updateShiftTimeservice(shift_id:number,date:string,start_t
                         ? DateTime.fromJSDate(shift.end_time)
                         : null
 
-    console.log(`start:${startDt}
-                end:${endDt}`)
+  
     if((startDt && endDt) && startDt >= endDt){
         throw new Error(`start time: ${startDt} cannot be greater or equal to end time: ${endDt}`)
     }

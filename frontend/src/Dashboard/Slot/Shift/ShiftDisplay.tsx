@@ -1,7 +1,9 @@
 import { ActionIcon, Flex, Text } from "@mantine/core"
 import { IconAlertTriangle } from "@tabler/icons-react"
+import axios from "axios"
 
 import { DateTime } from "luxon"
+import type { Shift } from "../../Interfaces/Shift"
 
 
 const convertTo12hr = (time:string | null)=>{
@@ -13,26 +15,42 @@ const convertTo12hr = (time:string | null)=>{
 
 
 interface ShiftDisplayProps{
-    start_time: string,
-    end_time: string,
+    shift:Shift,
     hasConflict: boolean
 }
 
 
 
-function ShiftDisplay({start_time,end_time,hasConflict}:ShiftDisplayProps){
+function ShiftDisplay({shift,hasConflict}:ShiftDisplayProps){
+
+    const timeOverride =async()=>{
+        await axios.post(`http://localhost:3000/api/v1/overrides/`,
+            {
+                employee_id: shift.employee_id,
+                date:shift.date,
+                isAvailable: true,
+                time:{
+                    start_time:shift.start_time,
+                    end_time: shift.end_time
+                }
+                
+                
+            },
+            {withCredentials:true}
+        )
+    }
  
     return(
          <Flex  bg={hasConflict ? 'red' : 'green'} gap={10}>
-            <Text fz={14}>{convertTo12hr( start_time)}</Text>  
+            <Text fz={14}>{convertTo12hr( shift.start_time)}</Text>  
             <Text fz={14}>-</Text>
-            <Text fz={14}>{convertTo12hr(end_time)}</Text>
+            <Text fz={14}>{convertTo12hr(shift.end_time)}</Text>
 
             {hasConflict &&
                 <ActionIcon color="red" onClick={
                     (e)=>{
                         e.stopPropagation()
-                       
+                        timeOverride()
                     }
                     
                     }>

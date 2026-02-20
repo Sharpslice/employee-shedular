@@ -91,7 +91,7 @@ function ShiftCell({shift,hasConflict}:ShiftCellProps){
             
           {activate 
             ? <TimeRangePicker shift={shift}/> 
-            : <ShiftDisplay start_time={shift.start_time} end_time={shift.end_time} hasConflict={hasConflict} />
+            : <ShiftDisplay shift={shift} hasConflict={hasConflict} />
                 
           }
 

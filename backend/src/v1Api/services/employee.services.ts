@@ -31,7 +31,7 @@ export async function scheduleService(beginDate:DateTime,endDate:DateTime){
 
      const ov_time_blocks = await prisma.employee_Override_Time_Block.findMany()
    
-    console.log(av_time_blocks)
+ 
 
 
     return {employeeList,shifts, availabilities,av_time_blocks,ov_time_blocks}

@@ -1,41 +1,11 @@
 import express from 'express';
 import prisma from '../../../db/db';
 import { io } from '../../app';
+import { createAvailabilityOverride } from '../controllers/override.controller';
+import { validateAvailabilityOverride } from '../middleware/override.middleware/validateCreateAvailabilityOverride';
 
 const overrides = express.Router()
 
-overrides.post('/:id/:date',async(req,res)=>{
-    const employee_id = parseInt(req.params.id);
-    const date = new Date(req.params.date)
-    const {isAvailable,start_time,end_time,note} = req.body
-    try{
-        const row = await prisma.employee_Time_Override.upsert({
-        where:{
-            employee_id_date:{ 
-                    employee_id: employee_id,
-                    date: date
-                }
-        },
-        update:{
-            is_available:isAvailable,
-            note:note ?? undefined,
-        },
-        create:{
-            employee_id:employee_id,
-            date: date,
-            is_available:isAvailable,
-            note:note ?? null,
-        }
-
-        })
-        io.emit('overrideCreated',row)
-        res.json({success:true,row})
-    }catch(err){
-        console.error(err)
-    }
-    
-
-
-})
+overrides.post('/',validateAvailabilityOverride, createAvailabilityOverride)
 
 export default overrides
