@@ -77,7 +77,7 @@ function Dashboard(){
                 console.log("shifts", ShiftArrayToMap(employeeResponse.data.shifts));
                 console.log("availabilities", AvailabilityArrayToMap(employeeResponse.data.availabilities));
                 console.log("timeblock", TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
-                 console.log("ov timeblock", TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks));
+                console.log("ov timeblock", TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks));
 
             } catch (err) {
                 console.error("Failed to fetch data:", err);

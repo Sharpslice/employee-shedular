@@ -18,6 +18,7 @@ import {  useMemo } from "react";
 import type { Availability } from "../../Interfaces/Availability";
 import { DateTime } from "luxon";
 import type { TimeBlock } from "../../Interfaces/TimeBlock";
+import { handleDragEnd } from "./dragUtil";
 
 
 
@@ -89,74 +90,7 @@ function Week(){
     })
     );
     
-    const handleDragEnd = async(event:DragEndEvent) => {
-      
-        const { active,over } = event;
-        if (!over) return;
 
-        console.log(`Dragged shift ${active.id} into droppable ${over.id} owned by ${over.data.current?.employee_name}: ${over.data.current?.employee_id}`);
-
-     
-        const shiftId = Number(active.id)
-        const droppedDate = over.data.current.date.date;
-        const droppedEmployee = over.data.current?.employee_id
-        let updatedStart;
-        let updatedEnd;
-        setShifts((oldMap)=>{
-            const newMap = new Map(oldMap)
-
-            //find the selected shift and replace the date and employee
-            const selectedShift = oldMap.get(shiftId)!;
-            
-            const formattedDate = DateTime.fromISO(droppedDate,{zone:'utc'})
-            updatedStart = DateTime.fromISO(selectedShift.start_time).set({
-                year: formattedDate.year,
-                month: formattedDate.month,
-                day: formattedDate.day
-            })
-            updatedEnd = DateTime.fromISO(selectedShift.end_time).set({
-                year: formattedDate.year,
-                month: formattedDate.month,
-                day: formattedDate.day
-            })
-            
-            
-            const updatedShift = {
-                ...selectedShift,
-                id: selectedShift.id,          
-                employee_id: droppedEmployee,  
-                date: droppedDate,
-                start_time: updatedStart.toISO()!,
-                end_time: updatedEnd.toISO()! 
-               
-            }
-
-            newMap.set(shiftId, updatedShift)
-            console.log(updatedShift)
-
-            return newMap
-        })
-           
-        
-        try {
-            //moves shift
-            await axios.patch(
-                `http://localhost:3000/api/v1/shifts/${shiftId}`,
-                {
-                    employee_id: droppedEmployee,
-                    date: droppedDate,
-                    start_time: updatedStart!.toISO()!,
-                    end_time: updatedEnd!.toISO()! 
-
-                }, {withCredentials:true}
-            );
-       
-        } catch (error) {
-            console.error("Failed to update shift:", error);
-            alert("Failed to move shift. Please try again.");
-        }
-    
-    };
 
 
     if (!employeeList.size || !dateRange.length) return null;
@@ -171,7 +105,7 @@ function Week(){
             </ViewHeader>
 
             <GridNavigationProvider>
-                <DndContext sensors ={sensors} onDragEnd={handleDragEnd}>
+                <DndContext sensors ={sensors} onDragEnd={(event:DragEndEvent)=>{handleDragEnd(event,shifts,setShifts)}}>
                     <Flex gap={10} direction={'column'}
                         onContextMenu={(e)=>e.preventDefault()}
                     

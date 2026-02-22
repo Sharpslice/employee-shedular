@@ -6,8 +6,6 @@ export interface Override{
     date: string,
     isAvailable: boolean,
     note?: string
-    start_time?: string,
-    end_time?: string
 
 }
 
