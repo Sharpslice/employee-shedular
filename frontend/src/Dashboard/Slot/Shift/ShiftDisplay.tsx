@@ -4,6 +4,7 @@ import axios from "axios"
 
 import { DateTime } from "luxon"
 import type { Shift } from "../../Interfaces/Shift"
+import type { ShiftStatus } from "./ShiftCell"
 
 
 const convertTo12hr = (time:string | null)=>{
@@ -16,12 +17,22 @@ const convertTo12hr = (time:string | null)=>{
 
 interface ShiftDisplayProps{
     shift:Shift,
-    hasConflict: boolean
+    status: ShiftStatus
+}
+
+const getShiftColors = (status:ShiftStatus)=>{
+    switch(status){
+        case "conflict":
+            return 'red'
+        case "override":
+            return 'yellow'
+        case "allowed":
+            return 'green'
+    }
 }
 
 
-
-function ShiftDisplay({shift,hasConflict}:ShiftDisplayProps){
+function ShiftDisplay({shift,status}:ShiftDisplayProps){
 
     const timeOverride =async()=>{
         await axios.post(`http://localhost:3000/api/v1/overrides/`,
@@ -39,15 +50,17 @@ function ShiftDisplay({shift,hasConflict}:ShiftDisplayProps){
             {withCredentials:true}
         )
     }
+
+    console.log('shift status',status)
  
     return(
-         <Flex  bg={hasConflict ? 'red' : 'green'} gap={10}>
+         <Flex  bg={getShiftColors(status)} gap={10}>
             <Text fz={14}>{convertTo12hr( shift.start_time)}</Text>  
             <Text fz={14}>-</Text>
             <Text fz={14}>{convertTo12hr(shift.end_time)}</Text>
 
-            {hasConflict &&
-                <ActionIcon color="red" onClick={
+            {status ==='conflict' &&
+                <ActionIcon color={getShiftColors(status)} onClick={
                     (e)=>{
                         e.stopPropagation()
                         timeOverride()

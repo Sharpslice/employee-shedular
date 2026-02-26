@@ -11,15 +11,15 @@ import ShiftDisplay from "./ShiftDisplay";
 
 
 
-
+export type ShiftStatus = 'conflict' | 'override' | 'allowed'
 
 interface ShiftCellProps{
     shift:Shift,
-    hasConflict: boolean
+    status: boolean
 }
 
 
-function ShiftCell({shift,hasConflict}:ShiftCellProps){
+function ShiftCell({shift,status}:ShiftCellProps){
 
     const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
     
@@ -91,7 +91,7 @@ function ShiftCell({shift,hasConflict}:ShiftCellProps){
             
           {activate 
             ? <TimeRangePicker shift={shift}/> 
-            : <ShiftDisplay shift={shift} hasConflict={hasConflict} />
+            : <ShiftDisplay shift={shift} status={status} />
                 
           }
 

@@ -5,17 +5,8 @@ import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock";
 
 const normalizeTime = (dt: DateTime) => dt.set({ year: 1970, month: 1, day: 1 });
 
-
-export const isShiftConflicting = (shift: Shift, time_blocks: TimeBlock[] | undefined, ov_time_blocks:OvTimeBlock[] | undefined)=> {
-    const start_dt = normalizeTime(DateTime.fromISO(shift.start_time));
-    const end_dt = normalizeTime(DateTime.fromISO(shift.end_time));
-
-    
-  
-
-    if(ov_time_blocks){
-
-        const allowedOvertime = ov_time_blocks.some(block =>{
+const withinTimeBlocks = (start_dt:DateTime,end_dt:DateTime, time_blocks: TimeBlock[] | OvTimeBlock[]) =>{
+    const within = time_blocks.some(block =>{
             const override_start = DateTime.fromISO(block.start_time);
             const override_end = DateTime.fromISO(block.end_time);
             
@@ -25,27 +16,35 @@ export const isShiftConflicting = (shift: Shift, time_blocks: TimeBlock[] | unde
             console.log(endsBeforeOrEqual)
             console.log((startsAfterOrEqual && endsBeforeOrEqual))
             return (startsAfterOrEqual && endsBeforeOrEqual)
-        })
-        return !allowedOvertime
-    }
+    })
+    return within
+}
 
 
 
-
-    if(time_blocks === undefined){
-        return true
-    }
+export const getShiftStatus = (shift: Shift, time_blocks: TimeBlock[] | undefined, ov_time_blocks:OvTimeBlock[] | undefined)=> {
+    const start_dt = normalizeTime(DateTime.fromISO(shift.start_time));
+    const end_dt = normalizeTime(DateTime.fromISO(shift.end_time));
 
     
-    const fitsInAtLeastOneBlock = time_blocks.some(block => {
-        const available_start = DateTime.fromISO(block.start_time);
-        const available_end = DateTime.fromISO(block.end_time);
+    if(ov_time_blocks){
+        if(withinTimeBlocks(start_dt,end_dt,ov_time_blocks)){
+            return 'override'
+        }
+    }
 
-        const startsAfterOrEqual = start_dt >= available_start;
-        const endsBeforeOrEqual = end_dt <= available_end;
+    if(time_blocks === undefined){
+        return 'conflict'
+    }
 
-        return startsAfterOrEqual && endsBeforeOrEqual;
-    });
+    if(withinTimeBlocks(start_dt,end_dt,time_blocks)){
+        return 'allowed'
+    }
+    return 'conflict'
 
-    return !fitsInAtLeastOneBlock;
+
+
+    
+    
+   
 }

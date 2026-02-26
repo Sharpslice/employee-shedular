@@ -17,7 +17,7 @@ import { DateTime } from "luxon"
 
 import type { TimeBlock } from "../../Interfaces/TimeBlock"
 import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
-import { isShiftConflicting } from "./shiftConflictUtil"
+import { getShiftStatus } from "./shiftConflictUtil"
 
 
 
@@ -96,9 +96,9 @@ function DayCell({row,index,employee,date,shifts,time_blocks,ov_time_blocks}:Day
             
             <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
                 {hasShift.map((shift,index)=>{
-                    const conflict = isShiftConflicting(shift, time_blocks,ov_time_blocks);
+                    const status = getShiftStatus(shift, time_blocks,ov_time_blocks);
                     return(
-                        <ShiftCell key={`${shift.id}-${index}`} shift={shift} hasConflict={conflict}/>
+                        <ShiftCell key={`${shift.id}-${index}`} shift={shift} status={status}/>
                     )
                 })}
                 

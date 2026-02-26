@@ -27,8 +27,8 @@ export function validateAvailabilityOverride(req:Request,res:Response,next:NextF
         return res.status(400).json({error:'end_time is not an iso value'})
     }
 
-    req.body.time.start_time = DateTime.fromISO(req.body.time.start_time).toUTC().set({year:1970,month:1,day:1})
-    req.body.time.end_time = DateTime.fromISO(req.body.time.end_time).toUTC().set({year:1970,month:1,day:1})
+    req.body.time.start_time = DateTime.fromISO(req.body.time.start_time).set({year:1970,month:1,day:1}).toUTC()
+    req.body.time.end_time = DateTime.fromISO(req.body.time.end_time).set({year:1970,month:1,day:1}).toUTC()
 
     next()
 
