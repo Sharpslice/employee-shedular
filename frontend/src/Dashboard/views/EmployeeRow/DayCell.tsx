@@ -16,6 +16,8 @@ import type { Shift } from "../../Interfaces/Shift"
 import { DateTime } from "luxon"
 
 import type { TimeBlock } from "../../Interfaces/TimeBlock"
+import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
+import { isShiftConflicting } from "./shiftConflictUtil"
 
 
 
@@ -27,14 +29,15 @@ interface DayProps{
     date: Day
     shifts:Shift[]
     time_blocks: TimeBlock[] | undefined
+    ov_time_blocks: OvTimeBlock[] | undefined
 }
 
-function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
+function DayCell({row,index,employee,date,shifts,time_blocks,ov_time_blocks}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened} = useContext(GridNavigationContext)!
     
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
-     const hasShift = shifts.filter(shift => DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate());
+    const hasShift = shifts.filter(shift => DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate());
 
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         
@@ -65,31 +68,9 @@ function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
 
     })
 
-    const normalizeTime = (dt: DateTime) => dt.set({ year: 1970, month: 1, day: 1 });
-
-
-    function isShiftConflicting(shift: Shift, time_blocks: TimeBlock[] | undefined) {
-        const start_dt = normalizeTime(DateTime.fromISO(shift.start_time));
-        const end_dt = normalizeTime(DateTime.fromISO(shift.end_time));
-
-        if(time_blocks === undefined){
-            return true
-        }
-
-     
-        const fitsInAtLeastOneBlock = time_blocks.some(block => {
-            const available_start = DateTime.fromISO(block.start_time);
-            const available_end = DateTime.fromISO(block.end_time);
-
-            const startsAfterOrEqual = start_dt >= available_start;
-            const endsBeforeOrEqual = end_dt <= available_end;
-
-            return startsAfterOrEqual && endsBeforeOrEqual;
-        });
-
-        return !fitsInAtLeastOneBlock;
-    }
-
+    
+  
+    
 
     return(
         <Flex  
@@ -115,7 +96,7 @@ function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
             
             <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
                 {hasShift.map((shift,index)=>{
-                    const conflict = isShiftConflicting(shift, time_blocks);
+                    const conflict = isShiftConflicting(shift, time_blocks,ov_time_blocks);
                     return(
                         <ShiftCell key={`${shift.id}-${index}`} shift={shift} hasConflict={conflict}/>
                     )

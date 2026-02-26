@@ -31,14 +31,14 @@ function EmployeeAvailabilityRow({hidden,dateRange,time_blocks_DOW}:availability
                             ? (<Text>unavailable</Text>)
                             : (time_blocks_DOW.get(day.days_of_week)?.map((block)=>{
                                 return(
-                                    <>
+                                    
                                         <Group key={`group-${day.days_of_week}`} justify="center">
                                             <Text fz={14}>{convertTo12hr(block.start_time)}</Text>  
                                             <Text fz={14}>-</Text>
                                             <Text fz={14}>{convertTo12hr(block.end_time)}</Text>
                                         </Group>
                                         
-                                    </>
+                                    
                                 )
                             }))
                         }

@@ -1,5 +1,6 @@
 import type { Availability } from "../Interfaces/Availability"
 import type { Employee } from "../Interfaces/Employee"
+import type { Override } from "../Interfaces/Override"
 import type { Shift } from "../Interfaces/Shift"
 import type { TimeBlock } from "../Interfaces/TimeBlock"
 
@@ -32,6 +33,13 @@ export const AvailabilityArrayToMap=(AvailabilityArray : Availability[] )=>{
     },new Map())
 
     
+}
+
+export const OverrideToMap=(overrideArray: Override[])=>{
+    return overrideArray.reduce((acc,override)=>{
+        acc.set(override.id,override)
+        return acc
+    },new Map())
 }
 
 export const TimeBlockArrayToMap=(timeBlockArray: TimeBlock[] )=>{

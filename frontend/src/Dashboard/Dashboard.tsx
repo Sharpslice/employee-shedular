@@ -9,7 +9,7 @@ import { Outlet, useMatch, useParams } from "react-router-dom";
 import type { Employee } from "./Interfaces/Employee";
 import type { Day } from "./Interfaces/Day";
 
-import { AvailabilityArrayToMap, EmployeeArrayToMap,ShiftArrayToMap, TimeBlockArrayToMap } from "./views/ArrayToMap";
+import { AvailabilityArrayToMap, EmployeeArrayToMap,OverrideToMap,ShiftArrayToMap, TimeBlockArrayToMap } from "./views/ArrayToMap";
 
 import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
 import ContextMenu from "./Slot/ContextMenu/ContextMenu";
@@ -17,6 +17,8 @@ import useScheduleSocket from "./useScheduleSocket";
 import type { Shift } from "./Interfaces/Shift";
 import type { Availability } from "./Interfaces/Availability";
 import type { TimeBlock } from "./Interfaces/TimeBlock";
+import type { Override } from "./Interfaces/Override";
+import type { OvTimeBlock } from "./Interfaces/OvTimeBlock";
 
 
 
@@ -29,6 +31,7 @@ interface EmployeeResponse{
     shifts: Shift[]
     availabilities: Availability[]
     av_time_blocks: TimeBlock[]
+    overrides: Override[]
     ov_time_blocks: TimeBlock[]
 }
 
@@ -50,7 +53,8 @@ function Dashboard(){
     const [shifts,setShifts] = useState<Map<number,Shift>>(new Map())
     const [availabilities,setAvailabilities] = useState<Map<number,Availability>>(new Map())
     const [av_time_blocks,setAv_time_blocks] = useState<Map<number,TimeBlock>>(new Map())
-    const [ov_time_blocks,setOv_time_blocks] = useState<Map<number,TimeBlock>>(new Map())
+    const [overrides,setOverrides] = useState<Map<number,Override>>(new Map())
+    const [ov_time_blocks,setOv_time_blocks] = useState<Map<number,OvTimeBlock>>(new Map())
     
     useScheduleSocket(setShifts);
 
@@ -66,11 +70,12 @@ function Dashboard(){
                 
                 setDateRange(calendarResponse.data.dateArray);
                 console.log('DateRange', calendarResponse.data.dateArray);
-
+                console.log(employeeResponse.data.overrides)
                 setEmployeeList(EmployeeArrayToMap(employeeResponse.data.employeeList));
                 setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
                 setAvailabilities(AvailabilityArrayToMap(employeeResponse.data.availabilities));
                 setAv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
+                setOverrides(OverrideToMap(employeeResponse.data.overrides));
                 setOv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks))
 
                 console.log("employee", EmployeeArrayToMap(employeeResponse.data.employeeList));
@@ -78,6 +83,7 @@ function Dashboard(){
                 console.log("availabilities", AvailabilityArrayToMap(employeeResponse.data.availabilities));
                 console.log("timeblock", TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
                 console.log("ov timeblock", TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks));
+                console.log('overrides',OverrideToMap(employeeResponse.data.overrides))
 
             } catch (err) {
                 console.error("Failed to fetch data:", err);
@@ -98,7 +104,17 @@ function Dashboard(){
                     <Container  fluid p={'1rem 1rem'} w={'100%'} mih={'100%'} style={{display:'flex',justifyContent:'center'}}>
 
                         {   
-                            <Outlet  context={{safeView,dateRange,employeeList,setEmployeeList,shifts,setShifts, availabilities,setAvailabilities,av_time_blocks,setAv_time_blocks,ov_time_blocks,setOv_time_blocks}}/>
+                            <Outlet context={
+                                {   safeView,dateRange,
+                                    employeeList,setEmployeeList,
+                                    shifts,setShifts, 
+                                    availabilities,setAvailabilities,
+                                    av_time_blocks,setAv_time_blocks,
+                                    overrides,setOverrides,
+                                    ov_time_blocks,setOv_time_blocks
+
+                                }
+                            }/>
                         }
                     
                     </Container> 

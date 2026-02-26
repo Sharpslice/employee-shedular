@@ -13,20 +13,29 @@ import WeekHeaderCell from "./WeekHeaderCell";
 
 import { GridNavigationProvider } from "../GridNavigation/GridNavigationContext";
 import type { Shift } from "../../Interfaces/Shift";
-import axios from "axios";
+
 import {  useMemo } from "react";
 import type { Availability } from "../../Interfaces/Availability";
-import { DateTime } from "luxon";
+
 import type { TimeBlock } from "../../Interfaces/TimeBlock";
 import { handleDragEnd } from "./dragUtil";
+import type { Override } from "../../Interfaces/Override";
+import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock";
 
 
 
 
 
 function Week(){
-    const { dateRange,employeeList,setShifts,shifts, availabilities,av_time_blocks } = 
-    useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,shifts:Map<number,Shift>,setShifts:React.Dispatch<React.SetStateAction<Map<number,Shift>>>,availabilities:Map<number,Availability>,av_time_blocks:Map<number,TimeBlock> }>();
+    const { dateRange,employeeList,setShifts,shifts, availabilities,av_time_blocks,overrides,ov_time_blocks } = 
+    useOutletContext<{ 
+        dateRange: Day[],
+        employeeList:Map<number,Employee>,setEmployeeList:React.Dispatch<React.SetStateAction<Map<number,Employee>>>,
+        shifts:Map<number,Shift>,setShifts:React.Dispatch<React.SetStateAction<Map<number,Shift>>>,
+        availabilities:Map<number,Availability>,av_time_blocks:Map<number,TimeBlock> 
+        overrides:Map<number,Override>, ov_time_blocks:Map<number,OvTimeBlock>
+    
+    }>();
 
     const shiftsByEmployee = useMemo(()=>{
         const map = new Map<number,Shift[]>();
@@ -45,41 +54,60 @@ function Week(){
         return map
     },[shifts])
     const timeBlocksByEmployeeAndDow = useMemo(() => {
-    const result = new Map<number, Map<number, TimeBlock[]>>();
+        const result = new Map<number, Map<number, TimeBlock[]>>();
 
-    for (const block of av_time_blocks.values()) {
-        const avail = availabilities.get(block.employee_availability_id);
-        if (!avail) continue;
+        for (const block of av_time_blocks.values()) {
+            const avail = availabilities.get(block.employee_availability_id);
+            if (!avail) continue;
 
-        const employeeId = avail.employee_id;
-        const dow = avail.day_of_week;
+            const employeeId = avail.employee_id;
+            const dow = avail.day_of_week;
 
-        if (!result.has(employeeId)) {
-        result.set(employeeId, new Map());
+            if (!result.has(employeeId)) {
+            result.set(employeeId, new Map());
+            }
+
+            const dowMap = result.get(employeeId)!;
+
+            if (!dowMap.has(dow)) {
+            dowMap.set(dow, []);
+            }
+
+            dowMap.get(dow)!.push(block);
         }
 
-        const dowMap = result.get(employeeId)!;
+        return result;
+    }, [availabilities, av_time_blocks]);
 
-        if (!dowMap.has(dow)) {
-        dowMap.set(dow, []);
+    const overrideTimeBlockByEmployeeAndDate =useMemo(()=>{
+        const newMap = new Map<number,Map<string,OvTimeBlock[]>>()
+
+        for(const block of ov_time_blocks.values()){
+            const override = overrides.get(block.employee_time_override_id);
+            if(!override) continue;
+
+            const employee_id = override.employee_id;
+            const date = override.date;
+
+            if(!newMap.has(employee_id)){
+                newMap.set(employee_id,new Map())
+            }
+            const dateMap = newMap.get(employee_id)!;
+            
+            if(!dateMap.has(date)){
+                dateMap.set(date,[])
+            }
+            dateMap.get(date)!.push(block)
         }
+        console.log(newMap)
+        return newMap
 
-        dowMap.get(dow)!.push(block);
-    }
+    },[overrides,ov_time_blocks])
 
-  // Sort blocks within each day (optional but nice for display)
-  for (const dowMap of result.values()) {
-    for (const blocks of dowMap.values()) {
-      blocks.sort((a, b) => 
-        DateTime.fromISO(a.start_time).toMillis() - 
-        DateTime.fromISO(b.start_time).toMillis()
-      );
-    }
-  }
 
-  return result;
-}, [availabilities, av_time_blocks]);
-   console.log(timeBlocksByEmployeeAndDow)
+
+
+
 
    const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -114,13 +142,14 @@ function Week(){
 
                             const employeeShifts = shiftsByEmployee.get(id) ?? [];
                             const time_blocks_DOW = timeBlocksByEmployeeAndDow.get(id) ?? new Map()
-                            
+                            const ov_time_blocks_date = overrideTimeBlockByEmployeeAndDate.get(id) ?? new Map()
                             return(
                                 <EmployeeRow key={id} 
                                     row={row} 
                                     employee={employee} 
                                     shifts={employeeShifts} 
                                     time_blocks_DOW={time_blocks_DOW}
+                                    ov_time_blocks_date = {ov_time_blocks_date}
                                     />
                             )
                         })}

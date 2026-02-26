@@ -17,6 +17,7 @@ import type { Shift } from "../../Interfaces/Shift";
 
 import { DateTime } from "luxon";
 import type { TimeBlock } from "../../Interfaces/TimeBlock";
+import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock";
 
 
 //type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -25,8 +26,9 @@ interface EmployeeRowProps{
     employee: Employee
     shifts: Shift[]
     time_blocks_DOW: Map<number,TimeBlock[] >
+    ov_time_blocks_date: Map<string,OvTimeBlock[]>
 }
-function EmployeeRow({row,employee,shifts,time_blocks_DOW}:EmployeeRowProps){
+function EmployeeRow({row,employee,shifts,time_blocks_DOW,ov_time_blocks_date}:EmployeeRowProps){
 
     const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[],av_time_blocks:Map<number,TimeBlock> }>();
     const {setActive} = useContext(ContextMenuContext)!
@@ -70,7 +72,8 @@ function EmployeeRow({row,employee,shifts,time_blocks_DOW}:EmployeeRowProps){
                     {dateRange.map((date,index)=>{
                         
                         const time_blocks = time_blocks_DOW.get(date.days_of_week)
-                        
+                       
+                        const ov_time_blocks = ov_time_blocks_date.get(date.date);
                         return(
                             
                             <DayCell 
@@ -81,6 +84,7 @@ function EmployeeRow({row,employee,shifts,time_blocks_DOW}:EmployeeRowProps){
                                 date={date} 
                                 index={index}
                                 time_blocks={time_blocks}
+                                ov_time_blocks = {ov_time_blocks}
                             />
                         )
                     })}

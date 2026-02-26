@@ -38,6 +38,7 @@ export async function schedule(req:Request,res:Response){
             shifts:response.shifts,
             availabilities:response.availabilities,
             av_time_blocks:response.av_time_blocks,
+            overrides:response.overrides,
             ov_time_blocks:response.ov_time_blocks
            
         })
