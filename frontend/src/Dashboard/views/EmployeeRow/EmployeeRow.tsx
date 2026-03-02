@@ -59,7 +59,12 @@ function EmployeeRow({row,employee,shifts,time_blocks_DOW,ov_time_blocks_date}:E
          
             <Flex flex={1} gap={10} direction={'column'}>
                 
-                <EmployeeAvailabilityRow hidden={hidden} dateRange={dateRange} time_blocks_DOW={time_blocks_DOW} />
+                <EmployeeAvailabilityRow    
+                    hidden={hidden} 
+                    dateRange={dateRange} 
+                    time_blocks_DOW={time_blocks_DOW} 
+                    ov_time_blocks_date = {ov_time_blocks_date}
+                />
 
                 <Flex gap={5} flex={1} miw={'100px'} >
                     {dateRange.map((date,index)=>{
