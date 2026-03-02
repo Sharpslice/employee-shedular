@@ -56,7 +56,7 @@ function Dashboard(){
     const [overrides,setOverrides] = useState<Map<number,Override>>(new Map())
     const [ov_time_blocks,setOv_time_blocks] = useState<Map<number,OvTimeBlock>>(new Map())
     
-    useScheduleSocket(setShifts);
+    useScheduleSocket(setShifts,setOverrides,setOv_time_blocks);
 
     useEffect(() => {
         const fetchData = async () => {

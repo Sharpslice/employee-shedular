@@ -1,5 +1,6 @@
 import {Request,Response} from 'express';
 import { createAvailabilityOverrideService } from '../services/override.services';
+import { io } from '../../app';
 
 
 
@@ -16,7 +17,9 @@ export async function createAvailabilityOverride(req:Request,res:Response)
 
 
     try{
-        await createAvailabilityOverrideService(employee_id,date,isAvailable,start_time,end_time)
+        const response = await createAvailabilityOverrideService(employee_id,date,isAvailable,start_time,end_time)
+
+        io.emit('overrideCreated',{override: response.override,time_block: response.time_block})
         return res.status(200).json({success:true})
     }   
 

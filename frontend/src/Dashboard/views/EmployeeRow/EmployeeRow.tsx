@@ -52,13 +52,6 @@ function EmployeeRow({row,employee,shifts,time_blocks_DOW,ov_time_blocks_date}:E
     },[shifts])
 
 
-
-    
-
-    
-    
-    
-
     return(        
         <Flex onClick={()=>setActive(false)} gap={'1rem'} >
           

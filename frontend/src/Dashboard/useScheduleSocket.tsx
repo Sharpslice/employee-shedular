@@ -1,10 +1,20 @@
 import { useEffect } from "react";
 import { useSocket } from "../SocketContext";
 import type { Shift } from "./Interfaces/Shift";
+import type { OvTimeBlock } from "./Interfaces/OvTimeBlock";
+import { useOutletContext } from "react-router-dom";
+import type { Override } from "./Interfaces/Override";
 
 
-function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<number,Shift>>>){
+function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<number,Shift>>>,
+    setOverrides: React.Dispatch<React.SetStateAction<Map<number,Override>>>,
+    setOv_time_blocks: React.Dispatch<React.SetStateAction<Map<number,OvTimeBlock>>>
+
+){
     const socket = useSocket()
+    
+
+
     useEffect(()=>{
         socket?.on('copyOverLastWeekshift',(shiftsArray:Shift[])=>{
             console.log('copy over')
@@ -21,6 +31,30 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
                 return newMap;
            })
 
+        })
+
+        socket?.on('overrideCreated',(data)=>{
+            console.log('override created')
+
+            const override = data.override;
+            const time_block = data.time_block;
+            console.log(override,time_block)
+
+
+            setOverrides((oldMap)=>{
+                const newMap = new Map(oldMap)
+                if(newMap.has(override.id)) return new Map;
+                newMap.set(override.id,override)
+                return newMap
+            })
+
+            setOv_time_blocks((oldMap)=>{
+                const newMap = new Map(oldMap)
+                if(newMap.has(time_block.id)) return new Map;
+                newMap.set(time_block.id,time_block)
+                return newMap
+            })
+            
         })
         
         socket?.on('shiftUpdated',(data)=>{
