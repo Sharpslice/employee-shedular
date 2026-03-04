@@ -53,6 +53,24 @@ function Week(){
     
         return map
     },[shifts])
+
+    const overridesByEmployee = useMemo(()=>{
+        const map = new Map<number,Override[]>();
+
+
+        for(const override of overrides.values()){
+            if(map.has(override.employee_id)){
+                map.get(override.employee_id)?.push(override)
+            }
+            else{
+                map.set(override.employee_id,[override])
+            }
+        }
+
+        return map
+
+
+    },[overrides])
     const timeBlocksByEmployeeAndDow = useMemo(() => {
         const result = new Map<number, Map<number, TimeBlock[]>>();
 
@@ -78,6 +96,9 @@ function Week(){
 
         return result;
     }, [availabilities, av_time_blocks]);
+
+    
+
 
     const overrideTimeBlockByEmployeeAndDate =useMemo(()=>{
         const newMap = new Map<number,Map<string,OvTimeBlock[]>>()
@@ -141,6 +162,7 @@ function Week(){
                         {[...employeeList].map(([id,employee],row)=>{     
 
                             const employeeShifts = shiftsByEmployee.get(id) ?? [];
+                            const employeeOverrides = overridesByEmployee.get(id)?? [];
                             const time_blocks_DOW = timeBlocksByEmployeeAndDow.get(id) ?? new Map()
                             const ov_time_blocks_date = overrideTimeBlockByEmployeeAndDate.get(id) ?? new Map()
                             return(
@@ -148,6 +170,7 @@ function Week(){
                                     row={row} 
                                     employee={employee} 
                                     shifts={employeeShifts} 
+                                    overrides= {employeeOverrides}
                                     time_blocks_DOW={time_blocks_DOW}
                                     ov_time_blocks_date = {ov_time_blocks_date}
                                     />

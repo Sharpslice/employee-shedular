@@ -18,6 +18,7 @@ import type { Shift } from "../../Interfaces/Shift";
 import { DateTime } from "luxon";
 import type { TimeBlock } from "../../Interfaces/TimeBlock";
 import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock";
+import type { Override } from "../../Interfaces/Override";
 
 
 //type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -25,10 +26,11 @@ interface EmployeeRowProps{
     row:number
     employee: Employee
     shifts: Shift[]
+    overrides: Override[]
     time_blocks_DOW: Map<number,TimeBlock[] >
     ov_time_blocks_date: Map<string,OvTimeBlock[]>
 }
-function EmployeeRow({row,employee,shifts,time_blocks_DOW,ov_time_blocks_date}:EmployeeRowProps){
+function EmployeeRow({row,employee,shifts,overrides,time_blocks_DOW,ov_time_blocks_date}:EmployeeRowProps){
 
     const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[],av_time_blocks:Map<number,TimeBlock> }>();
     const {setActive} = useContext(ContextMenuContext)!
@@ -79,6 +81,7 @@ function EmployeeRow({row,employee,shifts,time_blocks_DOW,ov_time_blocks_date}:E
                                 row={row} 
                                 employee={employee} 
                                 shifts={shifts} 
+                                overrides= {overrides}
                                 date={date} 
                                 index={index}
                                 time_blocks={time_blocks}

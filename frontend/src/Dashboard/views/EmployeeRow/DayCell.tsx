@@ -18,6 +18,10 @@ import { DateTime } from "luxon"
 import type { TimeBlock } from "../../Interfaces/TimeBlock"
 import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 import { getShiftStatus } from "./shiftConflictUtil"
+import type { Override } from "../../Interfaces/Override"
+import OverrideCell from "../../Slot/Override/OverrideCell"
+
+
 
 
 
@@ -28,17 +32,18 @@ interface DayProps{
     employee:Employee
     date: Day
     shifts:Shift[]
+    overrides:Override[]
     time_blocks: TimeBlock[] | undefined
     ov_time_blocks: OvTimeBlock[] | undefined
 }
 
-function DayCell({row,index,employee,date,shifts,time_blocks,ov_time_blocks}:DayProps){
+function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_blocks}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened} = useContext(GridNavigationContext)!
     
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
     const hasShift = shifts.filter(shift => DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate());
-
+    const hasOverride = overrides.filter(override => DateTime.fromISO(override.date).toISODate()=== DateTime.fromISO(date.date).toISODate())
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         
         if(e.target === e.currentTarget){
@@ -95,12 +100,22 @@ function DayCell({row,index,employee,date,shifts,time_blocks,ov_time_blocks}:Day
                                     
             
             <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
-                {hasShift.map((shift,index)=>{
-                    const status = getShiftStatus(shift, time_blocks,ov_time_blocks);
-                    return(
-                        <ShiftCell key={`${shift.id}-${index}`} shift={shift} status={status}/>
-                    )
-                })}
+                {
+                    hasOverride.map((override,index)=>{
+                        return(
+                            <OverrideCell key={`${override.id}-${index}`}></OverrideCell>
+                        )
+                    })
+                }
+                {
+                    hasShift.map((shift,index)=>{
+                        const status = getShiftStatus(shift, time_blocks,ov_time_blocks);
+                        return(
+                            <ShiftCell key={`${shift.id}-${index}`} shift={shift} status={status}/>
+                        )
+                    })
+                }
+               
                 
                 
             </SlotContainer> 

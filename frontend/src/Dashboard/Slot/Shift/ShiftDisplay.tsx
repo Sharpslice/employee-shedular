@@ -35,7 +35,7 @@ const getShiftColors = (status:ShiftStatus)=>{
 function ShiftDisplay({shift,status}:ShiftDisplayProps){
 
     const timeOverride =async()=>{
-        await axios.post(`http://localhost:3000/api/v1/overrides/`,
+        await axios.post(`http://localhost:3000/api/v1/employees/${shift.employee_id}/overrides/`,
             {
                 employee_id: shift.employee_id,
                 date:shift.date,
