@@ -49,7 +49,7 @@ function EmployeeAvailabilityRow({hidden,dateRange,time_blocks_DOW,ov_time_block
                                 
                                 
                                 
-                                time_blocks_DOW.get(day.days_of_week) === undefined 
+                                time_blocks_DOW.get(day.days_of_week) === undefined && ov_time_blocks_date.get(day.date) ===undefined
                                 ? (<Text>unavailable</Text>)
                                 : (time_blocks_DOW.get(day.days_of_week)?.map((block)=>{
                                     return(
