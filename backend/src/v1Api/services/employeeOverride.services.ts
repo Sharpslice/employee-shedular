@@ -7,7 +7,7 @@ export async function createLeaveService(employee_id:number,date:string){
         data:{
             employee_id:employee_id,
             date:date,
-            is_available:false
+            type:"MISC"
         }
     })
 

@@ -11,7 +11,7 @@ export async function createAvailabilityOverrideService(
             data:{
                 employee_id: employee_id,
                 date:date,
-                is_available: isAvailable,
+                type:"MISC"
             }
         })
 
