@@ -110,7 +110,7 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
                 }
                 {
                     hasShift.map((shift,index)=>{
-                        const status = getShiftStatus(shift, time_blocks,ov_time_blocks);
+                        const status = getShiftStatus(shift, time_blocks,ov_time_blocks,hasOverride);
                         return(
                             <ShiftCell key={`${shift.id}-${index}`} shift={shift} status={status}/>
                         )

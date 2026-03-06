@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import type { Shift } from "../../Interfaces/Shift";
 import type { TimeBlock } from "../../Interfaces/TimeBlock";
 import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock";
+import type { Override } from "../../Interfaces/Override";
 
 const normalizeTime = (dt: DateTime) => dt.set({ year: 1970, month: 1, day: 1 });
 
@@ -20,10 +21,16 @@ const withinTimeBlocks = (start_dt:DateTime,end_dt:DateTime, time_blocks: TimeBl
 
 
 
-export const getShiftStatus = (shift: Shift, time_blocks: TimeBlock[] | undefined, ov_time_blocks:OvTimeBlock[] | undefined)=> {
+export const getShiftStatus = (shift: Shift, time_blocks: TimeBlock[] | undefined, ov_time_blocks:OvTimeBlock[] | undefined,overrides:Override[] | undefined)=> {
     const start_dt = normalizeTime(DateTime.fromISO(shift.start_time));
     const end_dt = normalizeTime(DateTime.fromISO(shift.end_time));
 
+    if(overrides){
+        if(overrides.some((override)=> override.type !=='AVAILABLE')){
+            console.log('hey')
+            return 'conflict'
+        }
+    }
     
     if(ov_time_blocks){
         if(withinTimeBlocks(start_dt,end_dt,ov_time_blocks)){
