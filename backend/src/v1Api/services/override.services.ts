@@ -30,11 +30,17 @@ export async function createAvailabilityOverrideService(
     })
     
     return response;
+}
 
-   
+export async function deleteOverrideService(override_id:number){
+    const deletedRow = await prisma.employee_Time_Override.delete({
+        where:{
+            id:override_id
+        },
+        select:{
+            id:true
+        }
+    })
 
-    
-
-
-
+    return deletedRow
 }

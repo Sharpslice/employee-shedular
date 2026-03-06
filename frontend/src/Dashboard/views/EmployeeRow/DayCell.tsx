@@ -104,7 +104,7 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
                     hasOverride.map((override,index)=>{
                         if(override.type === 'AVAILABLE') return null;
                         return(
-                            <OverrideCell override_type ={override.type} key={`${override.id}-${index}`}></OverrideCell>
+                            <OverrideCell override={override} key={`${override.id}-${index}`}></OverrideCell>
                         )
                     })
                 }

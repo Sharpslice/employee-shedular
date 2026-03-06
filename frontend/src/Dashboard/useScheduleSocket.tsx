@@ -32,6 +32,19 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
            })
 
         })
+        socket?.on('overrideDeleted',(override:Override)=>{
+            console.log("deleting override", override)
+
+            
+            setOverrides((oldMap)=>{
+                const newMap = new Map(oldMap);
+
+                newMap.delete(override.id)
+                return newMap;
+
+            })
+            
+        })
         socket?.on('addOverride',(override)=>{
              setOverrides((oldMap)=>{
                 const newMap = new Map(oldMap)
