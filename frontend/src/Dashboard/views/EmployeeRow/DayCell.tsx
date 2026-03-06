@@ -20,6 +20,7 @@ import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 import { getShiftStatus } from "./shiftConflictUtil"
 import type { Override } from "../../Interfaces/Override"
 import OverrideCell from "../../Slot/Override/OverrideCell"
+import SlotMenuBtn from "../../Slot/SlotMenuBtn"
 
 
 
@@ -43,7 +44,15 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
     const hasShift = shifts.filter(shift => DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate());
-    const hasOverride = overrides.filter(override => DateTime.fromISO(override.date).toISODate()=== DateTime.fromISO(date.date).toISODate())
+    const hasOverride = overrides.filter(
+
+        override => DateTime.fromISO(override.date).toISODate()=== DateTime.fromISO(date.date).toISODate() 
+        
+        
+        
+    
+    
+    )
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         
         if(e.target === e.currentTarget){
@@ -101,11 +110,13 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
             
             <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
                 {
-                    hasOverride.map((override,index)=>{
-                        if(override.type === 'AVAILABLE') return null;
+                    hasOverride.filter((override)=>override.type !='AVAILABLE').map((override,index)=>{
+                        
                         return(
                             <OverrideCell override={override} key={`${override.id}-${index}`}></OverrideCell>
                         )
+                        
+                        
                     })
                 }
                 {
