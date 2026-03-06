@@ -32,8 +32,17 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
            })
 
         })
+        socket?.on('addOverride',(override)=>{
+             setOverrides((oldMap)=>{
+                const newMap = new Map(oldMap)
+                if(newMap.has(override.id)) return oldMap;
+                newMap.set(override.id,override)
+                return newMap
+            })
+            
 
-        socket?.on('overrideCreated',(data)=>{
+        })
+        socket?.on('manualTimeOverride',(data)=>{
             console.log('override created')
 
             const override = data.override;
@@ -43,7 +52,7 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
 
             setOverrides((oldMap)=>{
                 const newMap = new Map(oldMap)
-                if(newMap.has(override.id)) return new Map;
+                if(newMap.has(override.id)) return oldMap;
                 newMap.set(override.id,override)
                 return newMap
             })

@@ -39,7 +39,7 @@ interface DayProps{
 
 function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_blocks}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened} = useContext(GridNavigationContext)!
-    
+
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
     const hasShift = shifts.filter(shift => DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate());
@@ -102,8 +102,9 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
             <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
                 {
                     hasOverride.map((override,index)=>{
+                        if(override.type === 'AVAILABLE') return null;
                         return(
-                            <OverrideCell key={`${override.id}-${index}`}></OverrideCell>
+                            <OverrideCell override_type ={override.type} key={`${override.id}-${index}`}></OverrideCell>
                         )
                     })
                 }

@@ -1,9 +1,13 @@
-import { Flex } from "@mantine/core"
-
-function OverrideCell(){
+import { Flex,Text } from "@mantine/core"
+interface overrideProp{
+    override_type: string
+}
+function OverrideCell({override_type}:overrideProp){
     return(
-        <Flex>
-            override
+        <Flex justify={'center'}>
+            <Text>
+                {override_type}
+            </Text>
         </Flex>
     )
 }

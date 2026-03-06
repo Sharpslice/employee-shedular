@@ -12,9 +12,7 @@ const withinTimeBlocks = (start_dt:DateTime,end_dt:DateTime, time_blocks: TimeBl
             
             const startsAfterOrEqual = start_dt >= override_start;
             const endsBeforeOrEqual = end_dt <= override_end;
-            console.log(startsAfterOrEqual)
-            console.log(endsBeforeOrEqual)
-            console.log((startsAfterOrEqual && endsBeforeOrEqual))
+            
             return (startsAfterOrEqual && endsBeforeOrEqual)
     })
     return within

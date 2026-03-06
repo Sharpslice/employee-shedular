@@ -8,7 +8,7 @@ export async function createAvailabilityOverride(req:Request,res:Response)
 {
     const employee_id = req.body.employee_id;
     const date = req.body.date;
-    const isAvailable = req.body.isAvailable;
+    const type = req.body.type;
     const note = req.body.note ?? ''
 
     const start_time = req.body.time.start_time
@@ -17,9 +17,9 @@ export async function createAvailabilityOverride(req:Request,res:Response)
 
 
     try{
-        const response = await createAvailabilityOverrideService(employee_id,date,isAvailable,start_time,end_time)
+        const response = await createAvailabilityOverrideService(employee_id,date,type,start_time,end_time)
 
-        io.emit('overrideCreated',{override: response.override,time_block: response.time_block})
+        io.emit('manualTimeOverride',{override: response.override,time_block: response.time_block})
         return res.status(200).json({success:true})
     }   
 
@@ -38,7 +38,8 @@ export async function createLeave(req:Request,res:Response){
 
     try{
         const override = await createLeaveService(employee_id,date)
-        
+        console.log('hey')
+        io.emit('addOverride',override)
         res.status(200).json({success:true,override })
 
 

@@ -34,10 +34,10 @@ function TimeRangePicker({shift}:{shift:Shift}){
 
 
     const onChange = async(time: string, slot: 'start' | 'end')=>{
-        console.log('time range time', time)
-        //console.log('time range date', shift.date)
+       
+    
         const formattedDate = DateTime.fromISO(shift.date,{zone:'utc'}).toISODate();
-       console.log('time range formatted date',formattedDate)
+   
         try{
             const response = await axios.patch<ShiftResponse>(`http://localhost:3000/api/v1/employees/${shift.employee_id}/shifts/${shift.id}`,
                     slot==='start' 

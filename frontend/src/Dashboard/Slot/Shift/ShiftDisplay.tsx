@@ -39,7 +39,7 @@ function ShiftDisplay({shift,status}:ShiftDisplayProps){
             {
                 employee_id: shift.employee_id,
                 date:shift.date,
-                isAvailable: true,
+                type: 'AVAILABLE',
                 time:{
                     start_time:shift.start_time,
                     end_time: shift.end_time
@@ -51,8 +51,7 @@ function ShiftDisplay({shift,status}:ShiftDisplayProps){
         )
     }
 
-    console.log('shift status',status)
- 
+   
     return(
          <Flex  bg={getShiftColors(status)} gap={10}>
             <Text fz={14}>{convertTo12hr( shift.start_time)}</Text>  

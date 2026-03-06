@@ -66,11 +66,14 @@ function Week(){
                 map.set(override.employee_id,[override])
             }
         }
-
         return map
 
 
     },[overrides])
+    //something wrong with this map
+        console.log('overide',overrides)
+        console.log('override by employee',overridesByEmployee)
+
     const timeBlocksByEmployeeAndDow = useMemo(() => {
         const result = new Map<number, Map<number, TimeBlock[]>>();
 
