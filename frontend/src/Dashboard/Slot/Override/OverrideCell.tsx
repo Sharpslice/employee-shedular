@@ -37,7 +37,7 @@ function OverrideCell({override}:overrideProp){
                     setEditable(false)
                 }}
                 onKeyDown={(e)=>{
-                    if(e.key ==='Backspace' || e.key ==='Delete'){
+                    if(!editable &&(e.key ==='Backspace' || e.key ==='Delete')){
                         console.log('Delete')
                         deleteOverride()
                     }
