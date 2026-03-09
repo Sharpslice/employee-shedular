@@ -14,7 +14,7 @@ export async function createShift(req:Request,res:Response){
     try{
         const shift = await createShiftService(employee_id,date!)
 
-        io.emit("shiftAdded",{shift})
+        io.emit("shiftAdded",shift)
         
      
         return res.status(200).json({success:true,shift})
@@ -40,7 +40,7 @@ export async function updateShiftTimes(req:Request,res:Response){
     try{
         const shift =  await updateShiftTimeservice(shift_id,date,start_time,end_time)
 
-        io.emit('shiftUpdated',{shift})
+        io.emit('shiftUpdated',shift)
         return res.status(200).json({success:true,shift})
     }
     catch(error:unknown){
