@@ -5,7 +5,7 @@ import prisma from "../../../db/db";
 
 export async function createAvailabilityOverrideService(
     employee_id:number, date:string,type:string,
-    start_time:string, end_time:string
+    start_time:string, end_time:string, shift_id:number
 ){
 
 
@@ -14,7 +14,8 @@ export async function createAvailabilityOverrideService(
             data:{
                 employee_id: employee_id,
                 date:date,
-                type:'AVAILABLE'
+                type:'AVAILABLE',
+                shift_id:shift_id
             }
         })
 

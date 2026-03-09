@@ -4,12 +4,18 @@ import prisma from "../../../db/db";
 
 
 export async function deleteShiftService(shift_id:number){
-    return prisma.employee_Shifts.delete({
+  
+    const deletedOverride = await prisma.employee_Time_Override.findFirst({
+        where:{shift_id:shift_id}
+    })
+
+
+    const deletedShift = await prisma.employee_Shifts.delete({
         where:{id:shift_id},
         select:{id:true}
     })
     
-       
+    return {deletedShift,deletedOverride}
 }
 
 export async function moveShiftService(shift_id:number,employee_id:number,date:Date,start_time:string,end_time:string){

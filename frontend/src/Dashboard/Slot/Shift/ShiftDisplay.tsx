@@ -43,7 +43,9 @@ function ShiftDisplay({shift,status}:ShiftDisplayProps){
                 time:{
                     start_time:shift.start_time,
                     end_time: shift.end_time
-                }
+                },
+                shift_id:shift.id
+
                 
                 
             },

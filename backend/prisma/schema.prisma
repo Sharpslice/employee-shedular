@@ -52,17 +52,20 @@ model Employee {
   @@map("employee")
 }
 
-model Employee_Shifts{
-    id                Int       @id @default(autoincrement())
-    employee_id       Int
-    date              DateTime  @db.Date
-    start_time        DateTime?   @db.Timestamptz
-    end_time          DateTime?   @db.Timestamptz
+model Employee_Shifts {
+  id          Int                       @id @default(autoincrement())
+  employee_id Int
+  date        DateTime                  @db.Date
+  start_time  DateTime?                 @db.Timestamptz
+  end_time    DateTime?                 @db.Timestamptz
 
-    employee          Employee  @relation(fields: [employee_id], references:id)
-    calendar          Calendar  @relation(fields: [date],references:date)
+  // FK to the optional shift override
+  override    Employee_Time_Override?   @relation("ShiftOverride")
 
-    @@map("employee_shifts")
+  employee    Employee                  @relation(fields: [employee_id], references: id)
+  calendar    Calendar                  @relation(fields: [date], references: date)
+
+  @@map("employee_shifts")
 }
 
 model Employee_Availability{
@@ -92,20 +95,24 @@ model Employee_Availability_Time_Block{
     @@map("employee_availability_time_block")
 }
 
-model Employee_Time_Override{
-    id                      Int         @id @default(autoincrement())
-    employee_id             Int
-    date                    DateTime    @db.Date
-    type                    Override_Type
-    note                    String?
-    
-    employee                Employee @relation(fields:[employee_id],references:id)
-    calendar                Calendar @relation(fields:[date],references:date)
+model Employee_Time_Override {
+  id          Int                       @id @default(autoincrement())
+  shift_id    Int?      @unique          // only used for shift-related overrides
+  employee_id Int
+  date        DateTime                  @db.Date
+  type        Override_Type
+  note        String?
 
-    time_blocks             Employee_Override_Time_Block[]
+  employee    Employee                  @relation(fields: [employee_id], references: id)
+  calendar    Calendar                  @relation(fields: [date], references: date)
 
+  // Optional one-to-one relation to shift
+  shift       Employee_Shifts?          @relation("ShiftOverride", fields: [shift_id], references: [id], onDelete: Cascade)
 
-    @@map("employee_time_override")
+  // Time blocks for the override
+  time_blocks Employee_Override_Time_Block[]
+
+  @@map("employee_time_override")
 }
 
 model Employee_Override_Time_Block{
@@ -114,7 +121,7 @@ model Employee_Override_Time_Block{
     start_time                  DateTime    @db.Timestamptz
     end_time                    DateTime    @db.Timestamptz
 
-    override                    Employee_Time_Override @relation(fields:[employee_time_override_id],references:id)
+    override                    Employee_Time_Override @relation(fields:[employee_time_override_id],references:id,onDelete: Cascade)
 
     @@map("employee_override_time_block")
 }

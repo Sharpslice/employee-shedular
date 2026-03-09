@@ -10,10 +10,10 @@ export async function deleteShift(req:Request,res:Response){
    
 
     try{
-        const deletedShift = await deleteShiftService(shift_id)
+        const {deletedShift,deletedOverride} = await deleteShiftService(shift_id)
         
-        io.emit("shiftDeleted",{shift_id:deletedShift.id})
-        return res.json({ success: true, shift_id: deletedShift.id });
+        io.emit("shiftDeleted",{shift_id:deletedShift.id,override_id:deletedOverride?.id ?? null})
+        return res.json({ success: true, shift_id: deletedShift.id});
 
     }catch(error:unknown){
         if(error instanceof Error){

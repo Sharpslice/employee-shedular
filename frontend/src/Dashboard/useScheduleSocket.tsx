@@ -108,7 +108,10 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
         socket?.on('shiftDeleted',(data)=>{
             console.log("deleting shift", data)
 
-            const {shift_id} = data
+            const shift_id = data.shift_id;
+            const override_id = data.override_id;
+
+            
             setShifts((oldMap)=>{
                 const newMap = new Map(oldMap);
 
@@ -116,6 +119,17 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
                 return newMap;
 
             })
+
+            if(override_id){
+                console.log('override deleting')
+                setOverrides((oldMap)=>{
+                    const newMap = new Map(oldMap);
+
+                    newMap.delete(override_id)
+                return newMap;
+
+            })
+            }
             
         })
        socket?.on('shiftMoved',(data)=>{

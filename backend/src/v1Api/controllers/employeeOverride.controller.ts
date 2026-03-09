@@ -10,14 +10,14 @@ export async function createAvailabilityOverride(req:Request,res:Response)
     const date = req.body.date;
     const type = req.body.type;
     const note = req.body.note ?? ''
-
+    const shift_id = Number(req.body.shift_id) ?? null
     const start_time = req.body.time.start_time
     const end_time = req.body.time.end_time
 
 
 
     try{
-        const response = await createAvailabilityOverrideService(employee_id,date,type,start_time,end_time)
+        const response = await createAvailabilityOverrideService(employee_id,date,type,start_time,end_time,shift_id)
 
         io.emit('manualTimeOverride',{override: response.override,time_block: response.time_block})
         return res.status(200).json({success:true})
