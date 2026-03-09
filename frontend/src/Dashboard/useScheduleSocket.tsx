@@ -72,7 +72,14 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
 
             setOv_time_blocks((oldMap)=>{
                 const newMap = new Map(oldMap)
-                if(newMap.has(time_block.id)) return new Map;
+                // if(newMap.has(time_block.id))
+                // {
+                //     // const newMapStart = newMap.get(time_block.id)?.start_time;
+                //     // const newMapStart
+
+
+                //     return oldMap;
+                // } 
                 newMap.set(time_block.id,time_block)
                 return newMap
             })

@@ -1,5 +1,6 @@
 import {Request,Response} from 'express';
 import prisma from "../../../db/db";
+import { Override_Type } from '../../generated/prisma';
 
 
 
@@ -8,32 +9,82 @@ export async function createAvailabilityOverrideService(
     start_time:string, end_time:string, shift_id:number
 ){
 
+    const response = await prisma.$transaction(async (tx) => {
 
-    const response = await prisma.$transaction(async(tx)=>{
-        const override = await tx.employee_Time_Override.create({
+        let time_block = null;
+        let override = null;
+        //checks to see override already exist for that [shift]
+        override = await tx.employee_Time_Override.findFirst({
+            where:{shift_id},
+            include:{time_blocks:true}
+        })
+
+        console.log(override?.time_blocks[0]?.id)
+        //if override exists AND its an override that has a time block
+        if(override && override.time_blocks.length > 0){
+            time_block = await tx.employee_Override_Time_Block.update({
+                where:{id:override.time_blocks[0]!.id},
+                data:{
+                    start_time,
+                    end_time
+                }
+            })
+        }
+        else{
+            override = await tx.employee_Time_Override.create({
             data:{
                 employee_id: employee_id,
                 date:date,
                 type:'AVAILABLE',
                 shift_id:shift_id
-            }
-        })
+                }
+            })
+            time_block = await tx.employee_Override_Time_Block.create({
+                data:{
+                    employee_time_override_id: override.id,
+                    start_time: start_time,
+                    end_time: end_time
+                }
+            })
 
-        const time_block = await tx.employee_Override_Time_Block.create({
-            data:{
-                employee_time_override_id: override.id,
-                start_time: start_time,
-                end_time: end_time
-            }
-        })
+        }
+
+
+
+
 
         return {override,time_block}
-    })
+    });
+
+
+
+
+    // const response = await prisma.$transaction(async(tx)=>{
+    //     const override = await tx.employee_Time_Override.create({
+    //         data:{
+    //             employee_id: employee_id,
+    //             date:date,
+    //             type:'AVAILABLE',
+    //             shift_id:shift_id
+    //         }
+    //     })
+
+    //     const time_block = await tx.employee_Override_Time_Block.create({
+    //         data:{
+    //             employee_time_override_id: override.id,
+    //             start_time: start_time,
+    //             end_time: end_time
+    //         }
+    //     })
+
+        // return {override,time_block}
+    //})
     
     return response;
 }
 
 export async function deleteOverrideService(override_id:number){
+
     const deletedRow = await prisma.employee_Time_Override.delete({
         where:{
             id:override_id
