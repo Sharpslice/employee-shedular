@@ -7,7 +7,8 @@ export async function createLeaveService(employee_id:number,date:string){
         data:{
             employee_id:employee_id,
             date:date,
-            type:"MISC"
+            type:"MISC",
+            status:'APPROVED'
         }
     })
 

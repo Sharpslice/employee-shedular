@@ -24,6 +24,12 @@ enum Position {
     PENDING
 }
 
+enum Override_Status {
+    PENDING
+    APPROVED
+    DENIED
+}
+
 enum Override_Type {
     ILLNESS
     SCHOOL
@@ -101,6 +107,7 @@ model Employee_Time_Override {
   employee_id Int
   date        DateTime                  @db.Date
   type        Override_Type
+  status      Override_Status
   note        String?
 
   employee    Employee                  @relation(fields: [employee_id], references: id)
