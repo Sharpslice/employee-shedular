@@ -1,11 +1,14 @@
-import { Flex, TextInput } from "@mantine/core"
+import { ActionIcon, Flex, Group, TextInput } from "@mantine/core"
 import axios from "axios"
 import { useState } from "react"
 import type { Override } from "../../Interfaces/Override"
+import { IconCheck, IconX } from "@tabler/icons-react"
+type Override_status = 'APPROVED' | 'PENDING' | 'DENIED'
 interface overrideProp{
     override:Override
+    status : Override_status
 }
-function OverrideCell({override}:overrideProp){
+function OverrideCell({override,status}:overrideProp){
 
     const [textValue, setTextValue] = useState<string>(override.type)
     const [editable, setEditable] = useState(false)
@@ -14,17 +17,36 @@ function OverrideCell({override}:overrideProp){
         await axios.delete(`http://localhost:3000/api/v1/overrides/${override.id}`,{withCredentials:true})
     }
 
+    const getStatusColor = (status:Override_status) =>{
+        switch(status){
+            case('APPROVED'):
+                return undefined
+            case('PENDING'):
+                return 'pink'
+            case('DENIED'):
+                return 'red'
+            default:
+                return undefined
+        }
 
-
+        
+    }
+    
     return(
-        <Flex flex={1}  justify={'center'}>
-            <TextInput  unstyled
+        <Flex h={'100%'} bg={'pink'} align={'center'}>
+
+            <TextInput  h={'100%'}
+              
+                radius={0}
                 styles={{
-                    input: 
-                    {
-                        textAlign: 'center', // center text horizontally
-                        padding: '0.5rem',   // optional
+                   root:{
+                    width:'100%'
+                   },
+                    wrapper:{
+                        height:'100%',
+                        
                     },
+                    input: { backgroundColor: getStatusColor(status),textAlign: 'center', height:'100%' },
                 }}
                 readOnly={!editable}
                 value={textValue}
@@ -42,11 +64,19 @@ function OverrideCell({override}:overrideProp){
                         deleteOverride()
                     }
                 }}
-            
+                
             />
-               
+
+            {/* <Group bg='blue' wrap="nowrap">
+                <IconCheck/>
+                <IconX/>
+
+            </Group> */}
+            
+
+                 </Flex>
         
-        </Flex>
+       
     )
 }
 

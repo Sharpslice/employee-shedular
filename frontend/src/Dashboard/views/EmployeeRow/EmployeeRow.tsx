@@ -68,7 +68,7 @@ function EmployeeRow({row,employee,shifts,overrides,time_blocks_DOW,ov_time_bloc
                     ov_time_blocks_date = {ov_time_blocks_date}
                 />
 
-                <Flex gap={5} flex={1} miw={'100px'} >
+                <Flex gap={5} flex={1} miw={'100px'} h={'75px'} >
                     {dateRange.map((date,index)=>{
                         
                         const time_blocks = time_blocks_DOW.get(date.days_of_week)

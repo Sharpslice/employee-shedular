@@ -91,7 +91,8 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
             ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
             style={{opacity:isOver ? 1:0.5}}
             key={`${employee.id} - ${date.date}`}  
-            flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
+            flex={1} direction={'column'} align={'stretch'}   p={5} bd={'1px solid black'} bg={'grey'}
+            
             tabIndex={-1}
             onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
             onContextMenu={(e)=>{
@@ -113,7 +114,7 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
                     hasOverride.filter((override)=>override.type !='AVAILABLE').map((override,index)=>{
                         
                         return(
-                            <OverrideCell override={override} key={`${override.id}-${index}`}></OverrideCell>
+                            <OverrideCell override={override} status={override.status} key={`${override.id}-${index}`}></OverrideCell>
                         )
                         
                         
