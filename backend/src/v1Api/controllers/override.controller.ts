@@ -1,5 +1,5 @@
 import {Request,Response} from 'express';
-import { createAvailabilityOverrideService, deleteOverrideService } from '../services/override.services';
+import { createAvailabilityOverrideService, deleteOverrideService, updateOverrideStatusService} from '../services/override.services';
 import { io } from '../../app';
 
 export async function deleteOverride(req:Request,res:Response){
@@ -13,7 +13,26 @@ export async function deleteOverride(req:Request,res:Response){
     }catch(error:unknown){
 
     }
+
+
+
 }
 
+export async function updateOverrideStatus(req:Request,res:Response){
+    console.log('hey')
+    const override_id = Number(req.params.override_id);
+    const status  = req.body.status
+    try{
+        const override = await updateOverrideStatusService(override_id,status);
+        io.emit('overrideStatusUpdated',override)
+        res.status(200).json({success:true,override})
+    }catch(error:unknown){
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update override status',
+           
+        });
+    }
+}
 
 

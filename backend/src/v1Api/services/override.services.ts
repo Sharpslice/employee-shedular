@@ -1,9 +1,9 @@
 import {Request,Response} from 'express';
 import prisma from "../../../db/db";
-import { Override_Type } from '../../generated/prisma';
 
 
 
+type Override_Status = 'APPROVED' | 'PENDING' | 'DENIED'
 export async function createAvailabilityOverrideService(
     employee_id:number, date:string,type:string,
     start_time:string, end_time:string, shift_id:number
@@ -68,4 +68,19 @@ export async function deleteOverrideService(override_id:number){
     })
 
     return deletedRow
+}
+
+export async function updateOverrideStatusService(override_id: number, status: Override_Status) {
+    console.log('inside service')
+    try {
+        const override = await prisma.employee_Time_Override.update({
+            where: { id: override_id },
+            data: { status: status }
+        });
+        
+        return override;
+    } catch (error) {
+        console.error('Error updating override:', error);
+       
+    }
 }

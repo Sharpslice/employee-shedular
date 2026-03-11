@@ -116,7 +116,17 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
            
        })
   
-        
+        socket?.on('overrideStatusUpdated',(override:Override)=>{
+            console.log(override)
+
+
+            setOverrides((oldMap)=>{
+                const newMap = new Map(oldMap)
+                //if(newMap.has(override.id)) return oldMap;
+                newMap.set(override.id,override)
+                return newMap
+            })
+        })
     },[socket,setShifts])
 }
 

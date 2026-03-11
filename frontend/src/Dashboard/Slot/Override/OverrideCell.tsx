@@ -17,6 +17,23 @@ function OverrideCell({override,status}:overrideProp){
         await axios.delete(`http://localhost:3000/api/v1/overrides/${override.id}`,{withCredentials:true})
     }
 
+    const updateOverrideStatus = async (status: Override_status) => {
+        try {
+            const response = await axios.patch(`http://localhost:3000/api/v1/overrides/${override.id}/status`,{ status },{ withCredentials: true });
+
+            if(response.data.success){
+                console.log('success')
+            }
+            else{
+                console.log('failed')
+            }
+        } catch (error) {
+            console.error("Failed to update override status:", error);
+        }
+    };
+
+   
+
     const getStatusColor = (status:Override_status) =>{
         switch(status){
             case('APPROVED'):
@@ -67,11 +84,22 @@ function OverrideCell({override,status}:overrideProp){
                 
             />
 
-            {/* <Group bg='blue' wrap="nowrap">
-                <IconCheck/>
-                <IconX/>
+            {status === 'PENDING' && <Group flex={1} h='100%'  wrap="nowrap">
+                <ActionIcon  bg='green' w={'100%'} onClick={(e)=>{
+                        e.stopPropagation()
+                       
+                        updateOverrideStatus('APPROVED')
+                        console.log('click ',override.id)
+                    }}>
+                    <IconCheck/>
+                </ActionIcon>
+                
+                <ActionIcon bg='green' w={'100%'} onClick={()=>updateOverrideStatus('DENIED')}>
+                    <IconX/>
+                </ActionIcon>
+                
 
-            </Group> */}
+            </Group>}
             
 
                  </Flex>

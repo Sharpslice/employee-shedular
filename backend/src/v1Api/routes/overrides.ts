@@ -3,10 +3,11 @@ import prisma from '../../../db/db';
 import { io } from '../../app';
 
 import { validateAvailabilityOverride } from '../middleware/override.middleware/validateCreateAvailabilityOverride';
-import { deleteOverride } from '../controllers/override.controller';
+import { deleteOverride, updateOverrideStatus } from '../controllers/override.controller';
 
 const overrides = express.Router()
 
 overrides.delete('/:override_id',deleteOverride)
 
+overrides.patch('/:override_id/status',updateOverrideStatus)
 export default overrides
