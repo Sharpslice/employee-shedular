@@ -13,8 +13,8 @@ function ContextMenu(){
     }
     const createOverride = async()=>{
         try{
-           const response=  await axios.post(`http://localhost:3000/api/v1/overrides/${selectedCell.employee?.id}/${selectedCell.date?.date}`,
-            {isAvailable:false},{withCredentials:true}
+           const response=  await axios.post(`http://localhost:3000/api/v1/employees/${selectedCell.employee?.id}/overrides/leaves`,
+            {note:'test',date:selectedCell.date?.date,type:'MISC'},{withCredentials:true}
         )
             if(response.data.success){
                 console.log('created override',response.data.row)

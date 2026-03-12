@@ -4,27 +4,48 @@ import prisma from "../../../db/db";
 
 
 export async function deleteShiftService(shift_id:number){
-    return prisma.employee_Shifts.delete({
+  
+    const override = await prisma.employee_Time_Override.findFirst({
+        where:{shift_id:shift_id},
+        include:{
+            time_blocks:true
+        }
+    })
+
+    
+
+
+    const shift = await prisma.employee_Shifts.delete({
         where:{id:shift_id},
         select:{id:true}
     })
     
-       
+    return {shift,override}
 }
+export async function moveShiftService(
+    shift_id: number,
+    employee_id: number,
+    date: Date,
+    start_time: string,
+    end_time: string
+) {
+    return prisma.$transaction(async (tx) => {
 
-export async function moveShiftService(shift_id:number,employee_id:number,date:Date,start_time:string,end_time:string){
-    
-    return prisma.employee_Shifts.update({
-            where:{
-                id:shift_id
-            },
-            data:{
-                employee_id:employee_id,
+
+   
+      
+        const updatedShift = await tx.employee_Shifts.update({
+            where: { id: shift_id },
+            data: {
+                employee_id: employee_id,
                 date: date,
-                start_time:start_time,
-                end_time:end_time
-            }
-        })
+                start_time: start_time,
+                end_time: end_time,
+            },
+        });
+        
+        return updatedShift; // placeholder return, returns undefined
+    });
 }
 
 export async function copyOverLastWeekService(lastWeekArray:string[],thisWeekArray:Date[]){

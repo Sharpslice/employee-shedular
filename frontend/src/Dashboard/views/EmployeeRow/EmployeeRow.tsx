@@ -17,6 +17,8 @@ import type { Shift } from "../../Interfaces/Shift";
 
 import { DateTime } from "luxon";
 import type { TimeBlock } from "../../Interfaces/TimeBlock";
+import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock";
+import type { Override } from "../../Interfaces/Override";
 
 
 //type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -24,9 +26,11 @@ interface EmployeeRowProps{
     row:number
     employee: Employee
     shifts: Shift[]
+    overrides: Override[]
     time_blocks_DOW: Map<number,TimeBlock[] >
+    ov_time_blocks_date: Map<string,OvTimeBlock[]>
 }
-function EmployeeRow({row,employee,shifts,time_blocks_DOW}:EmployeeRowProps){
+function EmployeeRow({row,employee,shifts,overrides,time_blocks_DOW,ov_time_blocks_date}:EmployeeRowProps){
 
     const {dateRange} = useOutletContext<{safeView: ('week' | 'day'),dateRange:Day[],av_time_blocks:Map<number,TimeBlock> }>();
     const {setActive} = useContext(ContextMenuContext)!
@@ -50,13 +54,6 @@ function EmployeeRow({row,employee,shifts,time_blocks_DOW}:EmployeeRowProps){
     },[shifts])
 
 
-
-    
-
-    
-    
-    
-
     return(        
         <Flex onClick={()=>setActive(false)} gap={'1rem'} >
           
@@ -64,13 +61,19 @@ function EmployeeRow({row,employee,shifts,time_blocks_DOW}:EmployeeRowProps){
          
             <Flex flex={1} gap={10} direction={'column'}>
                 
-                <EmployeeAvailabilityRow hidden={hidden} dateRange={dateRange} time_blocks_DOW={time_blocks_DOW} />
+                <EmployeeAvailabilityRow    
+                    hidden={hidden} 
+                    dateRange={dateRange} 
+                    time_blocks_DOW={time_blocks_DOW} 
+                    ov_time_blocks_date = {ov_time_blocks_date}
+                />
 
-                <Flex gap={5} flex={1} miw={'100px'} >
+                <Flex gap={5} flex={1} miw={'100px'} h={'75px'} >
                     {dateRange.map((date,index)=>{
                         
                         const time_blocks = time_blocks_DOW.get(date.days_of_week)
-                        
+                       
+                        const ov_time_blocks = ov_time_blocks_date.get(date.date);
                         return(
                             
                             <DayCell 
@@ -78,9 +81,11 @@ function EmployeeRow({row,employee,shifts,time_blocks_DOW}:EmployeeRowProps){
                                 row={row} 
                                 employee={employee} 
                                 shifts={shifts} 
+                                overrides= {overrides}
                                 date={date} 
                                 index={index}
                                 time_blocks={time_blocks}
+                                ov_time_blocks = {ov_time_blocks}
                             />
                         )
                     })}

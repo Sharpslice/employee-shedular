@@ -4,6 +4,7 @@ import employeeShiftsRoute from './employeesShifts';
 import { validateSchedule } from '../middleware/employee.middleware/validateSchedule';
 import employeeAvailabilitiesRoute from './employeeAvailability';
 import { authenticateAdmin } from '../middleware/auth.middleware/authenticateAdmin';
+import employeeOverridesRoute from './employeesOverride';
 const employees = express.Router();
 
 
@@ -15,5 +16,6 @@ employees.get('/schedule-overview/:view/:date',
 
 employees.use('/:employee_id/shifts',authenticateAdmin,employeeShiftsRoute)
 //employees.use('/:employee_id/availabilities',employeeAvailabilitiesRoute)
+employees.use('/:employee_id/overrides',employeeOverridesRoute)
 export default employees;
 

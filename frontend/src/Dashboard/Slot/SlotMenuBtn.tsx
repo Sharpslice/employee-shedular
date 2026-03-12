@@ -10,7 +10,7 @@ import { GridNavigationContext } from "../views/GridNavigation/GridNavigationCon
 
 type response ={
     success:boolean;
-    row: Override
+    override: Override
 }
 
 function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
@@ -18,18 +18,18 @@ function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
     const {menuOpened,setMenuOpened} = useContext(GridNavigationContext)!;
     
     const createShift =async()=>{
-        console.log(date.date)
+        
         await axios.post(`http://localhost:3000/api/v1/employees/${employee.id}/shifts`,{date:date.date},{withCredentials:true})
     
     }
 
     const createOverride = async()=>{
         try{
-           const response=  await axios.post<response>(`http://localhost:3000/api/v1/overrides/${employee.id}/${date.date}`,
-            {isAvailable:false},{withCredentials:true}
+           const response=  await axios.post<response>(`http://localhost:3000/api/v1/employees/${employee.id}/overrides/leaves`,
+            {note:'test',date:date.date},{withCredentials:true}
         )
             if(response.data.success){
-                console.log('created override',response.data.row)
+               //
                 
             }
         }catch(err){

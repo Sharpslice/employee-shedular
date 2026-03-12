@@ -11,15 +11,15 @@ import ShiftDisplay from "./ShiftDisplay";
 
 
 
-
+export type ShiftStatus = 'conflict' | 'override' | 'allowed'
 
 interface ShiftCellProps{
     shift:Shift,
-    hasConflict: boolean
+    status: ShiftStatus
 }
 
 
-function ShiftCell({shift,hasConflict}:ShiftCellProps){
+function ShiftCell({shift,status}:ShiftCellProps){
 
     const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
     
@@ -40,14 +40,14 @@ function ShiftCell({shift,hasConflict}:ShiftCellProps){
     })
 
     const style = {
-        width: '100%',
-    height: 50,
-    background: "tomato",
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    opacity: isDragging ? 0.8 : 1,
-    boxShadow: isDragging ? "0 5px 15px rgba(0,0,0,0.3)" : "none",
-    zIndex: isDragging ? 999 : "auto",
-    cursor: isDragging ? "grabbing" : "grab",
+        // width: '100%',
+        // height:'100%',
+        background: "tomato",
+        transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+        opacity: isDragging ? 0.8 : 1,
+        boxShadow: isDragging ? "0 5px 15px rgba(0,0,0,0.3)" : "none",
+        zIndex: isDragging ? 999 : "auto",
+        cursor: isDragging ? "grabbing" : "grab",
     }
 
     return (
@@ -57,8 +57,8 @@ function ShiftCell({shift,hasConflict}:ShiftCellProps){
             {...(isUserAdmin ? listeners : {})}         
             {...(isUserAdmin ? attributes : {})}   
             style={style}
+            flex={1}
             className="slot" 
-            tabIndex={0} flex={1}  
             onKeyDown={(e)=>{
                 if(!isUserAdmin) return
                 if(e.key ==='Backspace' || e.key ==='Delete'){
@@ -91,7 +91,7 @@ function ShiftCell({shift,hasConflict}:ShiftCellProps){
             
           {activate 
             ? <TimeRangePicker shift={shift}/> 
-            : <ShiftDisplay start_time={shift.start_time} end_time={shift.end_time} hasConflict={hasConflict} />
+            : <ShiftDisplay shift={shift} status={status} />
                 
           }
 

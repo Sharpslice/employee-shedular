@@ -10,10 +10,10 @@ export async function deleteShift(req:Request,res:Response){
    
 
     try{
-        const deletedShift = await deleteShiftService(shift_id)
+        const {shift,override} = await deleteShiftService(shift_id)
         
-        io.emit("shiftDeleted",{shift_id:deletedShift.id})
-        return res.json({ success: true, shift_id: deletedShift.id });
+        io.emit("shiftDeleted",{shift, override: override ?? null})
+        return res.json({ success: true, shift_id: shift.id});
 
     }catch(error:unknown){
         if(error instanceof Error){
@@ -32,10 +32,10 @@ export async function moveShift(req:Request, res:Response){
     const end_time = req.body.end_time;
     try{
        
-        const updatedShift = await moveShiftService(shift_id,employee_id,date,start_time,end_time)
+        const shift = await moveShiftService(shift_id,employee_id,date,start_time,end_time)
 
-        io.emit('shiftMoved', {updatedShift} )
-        res.status(200).json( {updatedShift} );
+        io.emit('shiftMoved', shift )
+        res.status(200).json( shift );
 
     }catch(error:any){
         console.error("Error updating shift:", error);

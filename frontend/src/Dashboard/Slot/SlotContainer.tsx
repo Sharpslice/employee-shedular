@@ -18,7 +18,7 @@ interface SlotContainerProps{
 function SlotContainer({coords,focusedId,children,employee,date}:SlotContainerProps){
     const childrenCount = React.Children.count(children)
     const cellFocused = focusedId?.row === coords?.row && focusedId?.col===coords?.col
-
+    
     if(childrenCount===0){
         return cellFocused ? <SlotMenuBtn employee={employee} date={date}/> : <SlotPlaceholder/>
     }

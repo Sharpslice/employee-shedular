@@ -1,7 +1,7 @@
 import { Flex } from "@mantine/core"
 import SlotContainer from "../../Slot/SlotContainer"
 import ShiftCell from "../../Slot/Shift/ShiftCell"
-import { useContext, useMemo} from "react"
+import { useContext} from "react"
 import { GridNavigationContext } from "../GridNavigation/GridNavigationContext"
 
 import type { Employee } from "../../Interfaces/Employee"
@@ -16,6 +16,13 @@ import type { Shift } from "../../Interfaces/Shift"
 import { DateTime } from "luxon"
 
 import type { TimeBlock } from "../../Interfaces/TimeBlock"
+import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
+import { getShiftStatus } from "./shiftConflictUtil"
+import type { Override } from "../../Interfaces/Override"
+import OverrideCell from "../../Slot/Override/OverrideCell"
+
+
+
 
 
 
@@ -26,26 +33,38 @@ interface DayProps{
     employee:Employee
     date: Day
     shifts:Shift[]
+    overrides:Override[]
     time_blocks: TimeBlock[] | undefined
+    ov_time_blocks: OvTimeBlock[] | undefined
 }
 
-function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
+function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_blocks}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened} = useContext(GridNavigationContext)!
-    
+
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
-     const hasShift = shifts.filter(shift => DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate());
+    const hasShift = shifts.filter(shift => DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate());
+    const hasOverride = overrides.filter(
 
+        override => DateTime.fromISO(override.date).toISODate()=== DateTime.fromISO(date.date).toISODate() 
+        
+        
+        
+    
+    
+    )
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         
         if(e.target === e.currentTarget){
             setMenuOpened(false)
             const firstSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".slot")
-            const overrideSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".overrideSlot")
+            const overrideSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>("input")
             if(firstSlot){
+                
                 firstSlot?.focus()
             }
-            else{
+            else if(overrideSlot){
+                
                 overrideSlot?.focus()
             
             }
@@ -65,38 +84,17 @@ function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
 
     })
 
-    const normalizeTime = (dt: DateTime) => dt.set({ year: 1970, month: 1, day: 1 });
-
-
-    function isShiftConflicting(shift: Shift, time_blocks: TimeBlock[] | undefined) {
-        const start_dt = normalizeTime(DateTime.fromISO(shift.start_time));
-        const end_dt = normalizeTime(DateTime.fromISO(shift.end_time));
-
-        if(time_blocks === undefined){
-            return true
-        }
-
-     
-        const fitsInAtLeastOneBlock = time_blocks.some(block => {
-            const available_start = DateTime.fromISO(block.start_time);
-            const available_end = DateTime.fromISO(block.end_time);
-
-            const startsAfterOrEqual = start_dt >= available_start;
-            const endsBeforeOrEqual = end_dt <= available_end;
-
-            return startsAfterOrEqual && endsBeforeOrEqual;
-        });
-
-        return !fitsInAtLeastOneBlock;
-    }
-
+    
+  
+    
 
     return(
         <Flex  
             ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
-            style={{opacity:isOver ? 1:0.5}}
+            // style={{opacity:isOver ? 1:0.5}}
             key={`${employee.id} - ${date.date}`}  
-            flex={1} direction={'column'} justify={'center'}  p={5} bd={'1px solid black'} bg={'grey'} 
+            flex={1} direction={'column'} align={'stretch'}   p={5} bd={'1px solid black'} bg={'grey'}
+            
             tabIndex={-1}
             onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
             onContextMenu={(e)=>{
@@ -114,12 +112,25 @@ function DayCell({row,index,employee,date,shifts,time_blocks}:DayProps){
                                     
             
             <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
-                {hasShift.map((shift,index)=>{
-                    const conflict = isShiftConflicting(shift, time_blocks);
-                    return(
-                        <ShiftCell key={`${shift.id}-${index}`} shift={shift} hasConflict={conflict}/>
-                    )
-                })}
+                {
+                    hasOverride.filter((override)=>override.type !='AVAILABLE').map((override,index)=>{
+                        
+                        return(
+                            <OverrideCell override={override} status={override.status} key={`${override.id}-${index}`}></OverrideCell>
+                        )
+                        
+                        
+                    })
+                }
+                {
+                    hasShift.map((shift,index)=>{
+                        const status = getShiftStatus(shift, time_blocks,ov_time_blocks,hasOverride);
+                        return(
+                            <ShiftCell key={`${shift.id}-${index}`} shift={shift} status={status}/>
+                        )
+                    })
+                }
+               
                 
                 
             </SlotContainer> 
