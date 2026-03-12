@@ -34,7 +34,7 @@ function EmployeeAvailabilityRow({hidden,dateRange,time_blocks_DOW,ov_time_block
                                 ? null 
                                 :  ov_time_blocks_date.get(day.date)?.map((block)=>{
                                     return(
-                                        <Group key={`override-group-${day.days_of_week}`} bg={'yellow'} justify="center">
+                                        <Group flex={1} key={`override-group-${day.days_of_week}`} bg={'yellow'} justify="center">
                                                 <Text fz={14}>{convertTo12hr(block.start_time)}</Text>  
                                                 <Text fz={14}>-</Text>
                                                 <Text fz={14}>{convertTo12hr(block.end_time)}</Text>
@@ -50,7 +50,7 @@ function EmployeeAvailabilityRow({hidden,dateRange,time_blocks_DOW,ov_time_block
                                 
                                 
                                 time_blocks_DOW.get(day.days_of_week) === undefined && ov_time_blocks_date.get(day.date) ===undefined
-                                ? (<Text>unavailable</Text>)
+                                ? (<Text >unavailable</Text>)
                                 : (time_blocks_DOW.get(day.days_of_week)?.map((block)=>{
                                     return(
                                         
