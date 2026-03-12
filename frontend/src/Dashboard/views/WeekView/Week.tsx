@@ -71,8 +71,7 @@ function Week(){
 
     },[overrides])
     //something wrong with this map
-        console.log('overide',overrides)
-        console.log('override by employee',overridesByEmployee)
+     
 
     const timeBlocksByEmployeeAndDow = useMemo(() => {
         const result = new Map<number, Map<number, TimeBlock[]>>();
@@ -123,7 +122,7 @@ function Week(){
             }
             dateMap.get(date)!.push(block)
         }
-        console.log(newMap)
+        
         return newMap
 
     },[overrides,ov_time_blocks])
