@@ -4,6 +4,7 @@ import { validateDeleteShift } from '../middleware/shift.middleware/validateDele
 import { validateMoveShift } from '../middleware/shift.middleware/validateMoveShift';
 import { validateCopyLastWeekShift } from '../middleware/shift.middleware/validateCopyLastWeek';
 import { authenticateAdmin } from '../middleware/auth.middleware/authenticateAdmin';
+import { normalizeTime } from '../middleware/shift.middleware/normalizeTime';
 
 
 const shifts = express.Router();
@@ -18,6 +19,7 @@ shifts.delete('/:id',
 
 shifts.patch('/:id',
     validateMoveShift,
+    normalizeTime,
     moveShift)
 
 
