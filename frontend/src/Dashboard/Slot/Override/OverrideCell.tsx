@@ -1,4 +1,4 @@
-import { ActionIcon, Flex, Group, TextInput } from "@mantine/core"
+import { ActionIcon, Flex, TextInput } from "@mantine/core"
 import axios from "axios"
 import { useState } from "react"
 import type { Override } from "../../Interfaces/Override"
@@ -84,22 +84,18 @@ function OverrideCell({override,status}:overrideProp){
                 
             />
 
-            {status === 'PENDING' && <Group flex={1} h='100%'  wrap="nowrap">
-                <ActionIcon  bg='green' w={'100%'} onClick={(e)=>{
-                        e.stopPropagation()
-                       
-                        updateOverrideStatus('APPROVED')
-                        console.log('click ',override.id)
-                    }}>
+            {status === 'PENDING' && 
+            <Flex direction={'column'}>
+                <ActionIcon radius={0} bg='green' w={'100%'} onClick={()=>{updateOverrideStatus('APPROVED')}}>
                     <IconCheck/>
                 </ActionIcon>
                 
-                <ActionIcon bg='green' w={'100%'} onClick={()=>updateOverrideStatus('DENIED')}>
+                <ActionIcon radius={0} bg='green' w={'100%'} onClick={()=>updateOverrideStatus('DENIED')}>
                     <IconX/>
                 </ActionIcon>
                 
 
-            </Group>}
+            </Flex>}
             
 
                  </Flex>
