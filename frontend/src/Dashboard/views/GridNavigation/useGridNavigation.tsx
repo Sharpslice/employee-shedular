@@ -22,7 +22,7 @@ function useGridNavigation(){
 
 
     const handleArrowKey=(key:string,row:number,col:number)=>{
-    
+        if(menuOpened) return
         switch(key){
             case('ArrowUp'):
                 if(menuOpened || timeOpened) return

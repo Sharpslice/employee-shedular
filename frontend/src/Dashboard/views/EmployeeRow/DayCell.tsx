@@ -58,11 +58,13 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
         if(e.target === e.currentTarget){
             setMenuOpened(false)
             const firstSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".slot")
-            const overrideSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>(".overrideSlot")
+            const overrideSlot = cellRefs?.[row][index].current?.querySelector<HTMLDivElement>("input")
             if(firstSlot){
+                
                 firstSlot?.focus()
             }
-            else{
+            else if(overrideSlot){
+                
                 overrideSlot?.focus()
             
             }
@@ -89,7 +91,7 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
     return(
         <Flex  
             ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
-            style={{opacity:isOver ? 1:0.5}}
+            // style={{opacity:isOver ? 1:0.5}}
             key={`${employee.id} - ${date.date}`}  
             flex={1} direction={'column'} align={'stretch'}   p={5} bd={'1px solid black'} bg={'grey'}
             

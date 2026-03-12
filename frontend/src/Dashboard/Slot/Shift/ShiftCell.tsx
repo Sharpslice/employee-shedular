@@ -15,7 +15,7 @@ export type ShiftStatus = 'conflict' | 'override' | 'allowed'
 
 interface ShiftCellProps{
     shift:Shift,
-    status: boolean
+    status: ShiftStatus
 }
 
 
