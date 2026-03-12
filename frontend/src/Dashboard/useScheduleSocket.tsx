@@ -102,7 +102,7 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
             
             setShifts((oldMap)=> removeFromMapShift(oldMap,shift))
 
-            if(override.id){
+            if( override && override.id){
                 console.log('override deleting')
                 setOverrides((oldMap)=>removeFromMapOverride(oldMap,override))
             }

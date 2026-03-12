@@ -27,7 +27,7 @@ const getShiftColors = (status:ShiftStatus)=>{
         case "override":
             return 'yellow'
         case "allowed":
-            return 'green'
+            return undefined
     }
 }
 
@@ -55,10 +55,10 @@ function ShiftDisplay({shift,status}:ShiftDisplayProps){
 
    
     return(
-         <Flex  bg={getShiftColors(status)} gap={10}>
-            <Text fz={14}>{convertTo12hr( shift.start_time)}</Text>  
-            <Text fz={14}>-</Text>
-            <Text fz={14}>{convertTo12hr(shift.end_time)}</Text>
+         <Flex flex={1} justify={'center'} align={'center'}h={'100%'} gap={10} bg={getShiftColors(status)} >
+            <Text  fz={15}>{convertTo12hr( shift.start_time)}</Text>  
+            <Text  fz={15}>-</Text>
+            <Text  fz={15}>{convertTo12hr(shift.end_time)}</Text>
 
             {status ==='conflict' &&
                 <ActionIcon color={getShiftColors(status)} onClick={
