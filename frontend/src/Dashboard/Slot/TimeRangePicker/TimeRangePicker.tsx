@@ -7,7 +7,7 @@ import type { Shift } from "../../Interfaces/Shift"
 
 import axios from "axios"
 import { DateTime} from "luxon"
-import { useContext } from "react"
+import { useContext, useRef, useState } from "react"
 import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext"
 
 
@@ -30,12 +30,12 @@ function TimeRangePicker({shift}:{shift:Shift}){
     const start_time = shift.start_time ?  DateTime.fromISO(shift.start_time).toFormat('HH:mm') : ''
     const end_time = shift.end_time ?  DateTime.fromISO(shift.end_time).toFormat('HH:mm') : ''
 
+    const [startValue,setStartValue ] = useState(start_time)
+    const [userTyping,setUserTyping] = useState(false)
 
-
-
-    const onChange = async(time: string, slot: 'start' | 'end')=>{
-       
-    
+    const updateShiftTime = async(time: string, slot: 'start' | 'end')=>{
+        //console.log(time)
+        
         const formattedDate = DateTime.fromISO(shift.date,{zone:'utc'}).toISODate();
    
         try{
@@ -53,12 +53,8 @@ function TimeRangePicker({shift}:{shift:Shift}){
                     {withCredentials:true}
                 
                 )
-            if(response.data.success){
-                console.log(response.data.row)
-            }
-            else{
-                console.error(response.data.error)
-            }
+            
+          
         
         }catch(error:unknown){
             if(error instanceof Error){
@@ -66,6 +62,44 @@ function TimeRangePicker({shift}:{shift:Shift}){
             }
         }
     
+    }
+    
+    const startHoursRef= useRef<HTMLInputElement>(null);
+    const startMinutesRef = useRef<HTMLInputElement>(null);
+    const startAmPmRef = useRef<HTMLSelectElement>(null);
+    const endHoursRef = useRef<HTMLInputElement>(null);
+    const endMinutesRef = useRef<HTMLInputElement>(null);
+    const endAmPmRef = useRef<HTMLSelectElement>(null)
+
+    const handleBlur = (slot: 'start' | 'end')=>{
+        console.log(userTyping)
+        if(!userTyping) return
+        else setUserTyping(false)
+
+        let hour = Number(slot==='start' ? startHoursRef.current?.value : endHoursRef.current?.value)
+        const minute =Number(slot==='start'? startMinutesRef.current?.value : endMinutesRef.current?.value)
+        const amPm = (slot==='start' ? startAmPmRef.current?.value : endAmPmRef.current?.value)
+        
+        if(amPm === 'AM' || amPm ==='PM')
+            {
+                console.log('has amPM, do not auto complete: ',amPm )
+                return
+            } 
+
+
+        if(!hour) return
+        if(hour < 7){
+            hour+=12
+        }
+
+        const dt = DateTime.fromObject({hour:hour,minute:minute})
+        const time = dt.toFormat('HH:mm:ss')
+        console.log('autocomplete time: ',time)
+        updateShiftTime(time,slot)
+        setStartValue(time)
+        console.log('blur fired')
+
+            
     }
 
     return (<>
@@ -75,14 +109,22 @@ function TimeRangePicker({shift}:{shift:Shift}){
                 >
                 <TimePicker data-interactive
                     
-                    
+                    hoursRef={startHoursRef}
+                    minutesRef={startMinutesRef}
+                    amPmRef={startAmPmRef}
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
                     value={start_time}
-                  
-                    
-                    //onPointerDown={(e) => e.stopPropagation()}
-                    onChange={(e)=>{onChange(e,"start")}}
+                    onBlur={()=>{
+                        handleBlur('start')
+                    }}
+                    onChange={(e)=>{
+                       
+                        console.log('onchange firing')
+                        updateShiftTime(e,'start')}
+                    }
+                    onInput={()=>{setUserTyping(true)}}
+                   
                     format="12h"
                     withDropdown
                     presets={[
@@ -108,11 +150,17 @@ function TimeRangePicker({shift}:{shift:Shift}){
 
                 <TimePicker 
                     
-                    
+                    hoursRef={endHoursRef}
+                    minutesRef={endMinutesRef}
+                    amPmRef={endAmPmRef}
                     classNames={{ input: 'david-class'}}
                     styles={{input:{backgroundColor:'transparent'}}}
                     value={end_time}
-                    onChange={(e)=>{onChange(e,"end")}}
+                    onBlur={()=>{
+                        handleBlur('end')
+                    }}
+                    onChange={(e)=>{updateShiftTime(e,"end")}}
+                    onInput={()=>{setUserTyping(true)}}
                     format="12h"
                     withDropdown
                     presets={[

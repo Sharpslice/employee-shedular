@@ -27,7 +27,7 @@ export const getShiftStatus = (shift: Shift, time_blocks: TimeBlock[] | undefine
 
     if(overrides){
         if(overrides.some((override)=> override.type !=='AVAILABLE')){
-            console.log('hey')
+            
             return 'conflict'
         }
     }
