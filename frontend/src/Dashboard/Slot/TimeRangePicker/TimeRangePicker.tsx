@@ -30,7 +30,7 @@ function TimeRangePicker({shift}:{shift:Shift}){
     const start_time = shift.start_time ?  DateTime.fromISO(shift.start_time).toFormat('HH:mm') : ''
     const end_time = shift.end_time ?  DateTime.fromISO(shift.end_time).toFormat('HH:mm') : ''
 
-    const [startValue,setStartValue ] = useState(start_time)
+    
     const [userTyping,setUserTyping] = useState(false)
 
     const updateShiftTime = async(time: string, slot: 'start' | 'end')=>{
@@ -96,7 +96,7 @@ function TimeRangePicker({shift}:{shift:Shift}){
         const time = dt.toFormat('HH:mm:ss')
         console.log('autocomplete time: ',time)
         updateShiftTime(time,slot)
-        setStartValue(time)
+        
         console.log('blur fired')
 
             
@@ -124,7 +124,9 @@ function TimeRangePicker({shift}:{shift:Shift}){
                         updateShiftTime(e,'start')}
                     }
                     onInput={()=>{setUserTyping(true)}}
-                   
+                    onKeyDown={(e)=>{
+                        e.stopPropagation()
+                    }}      
                     format="12h"
                     withDropdown
                     presets={[
