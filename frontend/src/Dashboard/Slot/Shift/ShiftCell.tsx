@@ -3,12 +3,13 @@ import { Flex } from "@mantine/core";
 import {  useContext, useState } from "react";
 import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 
-import axios from "axios";
+
 import type { Shift } from "../../Interfaces/Shift";
 import { useDraggable } from "@dnd-kit/core";
 import { AuthenticatedUser } from "../../../AuthenticatedUserContext";
 import ShiftDisplay from "./ShiftDisplay";
 import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext";
+import { deleteShift } from "../../../services/shiftServices";
 
 
 
@@ -28,9 +29,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
 
     const [activate,setActivate] = useState(false)
 
-    const deleteShift = async()=>{
-        await axios.delete(`http://localhost:3000/api/v1/shifts/${shift?.id}`,{withCredentials:true})
-    }
+    
     
     const {attributes,listeners,setNodeRef,transform,isDragging} = useDraggable({
         id: shift.id,
@@ -70,7 +69,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
                 if(!isUserAdmin) return
                 if(e.key ==='Backspace' || e.key ==='Delete'){
                     console.log('Delete')
-                    deleteShift()
+                    deleteShift(shift.id)
                 }
                 else if (e.key===' ' || e.key ==='Enter'){
                     console.log('space')
