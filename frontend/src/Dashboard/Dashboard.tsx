@@ -92,6 +92,25 @@ function Dashboard(){
 
         fetchData();
     }, [safeDate, safeView]);
+
+    useEffect(()=>{
+        const handleUndoPress=(e:KeyboardEvent)=>{
+            if(e.key==='z' && (e.ctrlKey || e.metaKey) ){
+                e.preventDefault()
+                console.log('undo press')
+            }
+        }
+        window.addEventListener('keydown',(e:KeyboardEvent)=>handleUndoPress(e))
+
+        return () => {
+            window.removeEventListener('keydown', (e:KeyboardEvent)=>handleUndoPress(e));
+        };
+
+
+    },[])
+
+
+
     return(
         <>  
         
