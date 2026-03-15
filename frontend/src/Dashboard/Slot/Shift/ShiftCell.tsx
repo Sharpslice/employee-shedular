@@ -8,6 +8,7 @@ import type { Shift } from "../../Interfaces/Shift";
 import { useDraggable } from "@dnd-kit/core";
 import { AuthenticatedUser } from "../../../AuthenticatedUserContext";
 import ShiftDisplay from "./ShiftDisplay";
+import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext";
 
 
 
@@ -23,7 +24,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
 
     const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
     
-   
+   const {setClipboard} = useContext(GridNavigationContext)!;
 
     const [activate,setActivate] = useState(false)
 
@@ -60,6 +61,12 @@ function ShiftCell({shift,status}:ShiftCellProps){
             flex={1}
             className="slot" 
             onKeyDown={(e)=>{
+                
+                if(e.key === 'c' && (e.ctrlKey || e.metaKey)){
+                    console.log('copying ',shift)
+                    setClipboard(shift)
+                }
+
                 if(!isUserAdmin) return
                 if(e.key ==='Backspace' || e.key ==='Delete'){
                     console.log('Delete')
@@ -69,6 +76,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
                     console.log('space')
                     setActivate(prev=>!prev)
                 }
+
             }}
             onClick={()=>{
                 if(!isUserAdmin) return
@@ -76,6 +84,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
 
 
             }}
+            //onFocus={()=>{console.log('currenty selecting shift')}}
             onBlur={(e)=>{
 
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {

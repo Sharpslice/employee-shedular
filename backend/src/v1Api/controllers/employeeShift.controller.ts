@@ -9,10 +9,11 @@ import { createShiftService, updateShiftTimeservice } from '../services/employee
 export async function createShift(req:Request,res:Response){
     const employee_id = Number(req.params.employee_id)
     const date = DateTime.fromISO(req.body.date).toISO();
-
+    const start_time = req.body.start_time ?? null
+    const end_time = req.body.end_time ?? null
 
     try{
-        const shift = await createShiftService(employee_id,date!)
+        const shift = await createShiftService(employee_id,date!,start_time,end_time)
 
         io.emit("shiftAdded",shift)
         

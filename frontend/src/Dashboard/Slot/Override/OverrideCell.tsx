@@ -13,7 +13,7 @@ function OverrideCell({override,status}:overrideProp){
 
     const [textValue, setTextValue] = useState<string>(override.type)
     const [editable, setEditable] = useState(false)
-    const {menuOpened,setMenuOpened} = useContext(GridNavigationContext)!;
+    const {setMenuOpened} = useContext(GridNavigationContext)!;
     const deleteOverride= async()=>{
         await axios.delete(`http://localhost:3000/api/v1/overrides/${override.id}`,{withCredentials:true})
     }

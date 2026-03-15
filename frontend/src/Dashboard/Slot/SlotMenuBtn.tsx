@@ -55,9 +55,20 @@ function SlotMenuBtn({employee,date}:{employee:Employee,date:Day}){
     
     return(
     <>
-        <Menu opened={menuOpened}   onChange={setMenuOpened} withArrow>
+        <Menu 
+            opened={menuOpened}   
+            onChange={setMenuOpened} 
+           
+            withArrow
+            
+            
+            
+            >
             <Menu.Target  >
-                <Button  ref={focusRef} className="menuBtn" bg={'grey'} flex={1}>
+                <Button  ref={focusRef} className="menuBtn" bg={'grey'} flex={1}
+                 
+                
+                >
                     slot
                 </Button>
             </Menu.Target>

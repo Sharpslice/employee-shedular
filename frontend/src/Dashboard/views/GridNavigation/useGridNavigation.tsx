@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import type { Day } from "../../Interfaces/Day";
 import type { Employee } from "../../Interfaces/Employee";
+import type { Shift } from "../../Interfaces/Shift";
 
 
 
@@ -14,6 +15,15 @@ function useGridNavigation(){
 
     const [timeOpened,setTimeOpened] = useState(false)
 
+    const [clipboard,setClipboard] = useState<Shift>()
+
+    // const pasteShift = (shift:Shift)=>{
+    //     const newShift:Shift ={
+    //         id:-1,
+    //         employee_id:
+    //     }
+    // }
+
     const cellRefs = useMemo(() => {
             return Array.from({ length: employeeList.size }, () =>
                 Array.from({ length: dateRange.length }, () => React.createRef<HTMLDivElement>())
@@ -22,6 +32,7 @@ function useGridNavigation(){
 
 
     const handleArrowKey=(key:string,row:number,col:number)=>{
+        console.log('arrow key triger')
         if(menuOpened) return
         switch(key){
             case('ArrowUp'):
@@ -47,7 +58,15 @@ function useGridNavigation(){
         }
     }
 
-    return {cellRefs, focusedId,setFocusedId,handleArrowKey,setMenuOpened,menuOpened,setTimeOpened,timeOpened}
+    return {cellRefs, 
+            focusedId,setFocusedId,
+            handleArrowKey,
+            setMenuOpened,menuOpened,
+            setTimeOpened,timeOpened,
+            setClipboard,clipboard,
+            
+        
+        }
 }
 
 export default useGridNavigation

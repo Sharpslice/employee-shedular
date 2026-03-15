@@ -39,7 +39,7 @@ function TimeRangePicker({shift}:{shift:Shift}){
         const formattedDate = DateTime.fromISO(shift.date,{zone:'utc'}).toISODate();
    
         try{
-            const response = await axios.patch<ShiftResponse>(`http://localhost:3000/api/v1/employees/${shift.employee_id}/shifts/${shift.id}`,
+            await axios.patch<ShiftResponse>(`http://localhost:3000/api/v1/employees/${shift.employee_id}/shifts/${shift.id}`,
                     slot==='start' 
                     ?{
                         date:formattedDate,
