@@ -55,7 +55,7 @@ function ShiftDisplay({shift,status}:ShiftDisplayProps){
 
    
     return(
-         <Flex flex={1} justify={'center'} align={'center'}h={'100%'} gap={10} bg={getShiftColors(status)} >
+         <Flex flex={1} justify={'center'} align={'center'}h={'100%'} gap={10} bg={getShiftColors(status)}  >
             <Text  fz={15}>{convertTo12hr( shift.start_time)}</Text>  
             <Text  fz={15}>-</Text>
             <Text  fz={15}>{convertTo12hr(shift.end_time)}</Text>
