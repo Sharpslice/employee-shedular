@@ -50,7 +50,7 @@ model Employee {
   color           String?
   isWorking       Boolean
   picture         String?
-
+  index           Int?
   shifts          Employee_Shifts[]
   availability    Employee_Availability[]
   override        Employee_Time_Override[]

@@ -4,7 +4,8 @@ import prisma from "../../../db/db"
 
 
 export async function scheduleService(beginDate:DateTime,endDate:DateTime){
-    const employeeList = await prisma.employee.findMany({
+    const employeeList = await prisma.employee.findMany(
+    {
         select:{
             id:true,
             name:true,
@@ -12,7 +13,11 @@ export async function scheduleService(beginDate:DateTime,endDate:DateTime){
             color:true,
             position:true,
             },
-        })
+        orderBy:{
+            index:'asc'
+        }
+    }
+    )
 
 
     const shifts = await prisma.employee_Shifts.findMany({
