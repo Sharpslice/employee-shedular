@@ -3,9 +3,11 @@ import type { Day } from "../../Interfaces/Day"
 import type { TimeBlock } from "../../Interfaces/TimeBlock"
 import { DateTime } from "luxon"
 import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
+import type { Employee } from "../../Interfaces/Employee"
 
 
 interface availabilityProp{
+    employee:Employee
     hidden: boolean
     dateRange: Day[]
     time_blocks_DOW: Map<number,TimeBlock[]>
@@ -18,7 +20,7 @@ const convertTo12hr = (time:string | null)=>{
     return dt.toFormat('hh:mm a')
 }
 
-function EmployeeAvailabilityRow({hidden,dateRange,time_blocks_DOW,ov_time_blocks_date}:availabilityProp){
+function EmployeeAvailabilityRow({employee,hidden,dateRange,time_blocks_DOW,ov_time_blocks_date}:availabilityProp){
 
     return(<>
 
@@ -27,7 +29,7 @@ function EmployeeAvailabilityRow({hidden,dateRange,time_blocks_DOW,ov_time_block
                
                return (
                     <Flex key={day.days_of_week} direction={'column'}
-                        bg={'green'}  justify={'center'}  bd={'1px solid black'} flex={1}>
+                        bg={`${employee.color}`}  justify={'center'}  bd={'1px solid black'} flex={1}>
                         <>
                             {
                                 ov_time_blocks_date.get(day.date) ===undefined 

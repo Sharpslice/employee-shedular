@@ -70,7 +70,7 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
 
                         return(
                             shiftsByEmployee.has(employee.id)
-                            ?   <Flex key={employee.id} mih={30} h={20}  p={'4px'} wrap='wrap'  >
+                            ?   <Flex bg={`${employee.color}`} key={employee.id} mih={30} h={20}  p={'4px'} wrap='wrap'  >
                                     {
                                         shiftsByEmployee.get(employee.id)?.map((shift)=>{
                                             return(

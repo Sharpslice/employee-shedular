@@ -62,6 +62,7 @@ function EmployeeRow({row,employee,shifts,overrides,time_blocks_DOW,ov_time_bloc
             <Flex flex={1} gap={10} direction={'column'}>
                 
                 <EmployeeAvailabilityRow    
+                    employee={employee}
                     hidden={hidden} 
                     dateRange={dateRange} 
                     time_blocks_DOW={time_blocks_DOW} 

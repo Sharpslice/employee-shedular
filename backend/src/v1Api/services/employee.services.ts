@@ -9,6 +9,7 @@ export async function scheduleService(beginDate:DateTime,endDate:DateTime){
             id:true,
             name:true,
             isWorking:true,
+            color:true,
             position:true,
             },
         })
