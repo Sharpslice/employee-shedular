@@ -5,6 +5,7 @@ import type { Shift } from '../Dashboard/Interfaces/Shift';
 import type { Employee } from '../Dashboard/Interfaces/Employee';
 import { DateTime } from 'luxon';
 import {  useNavigate } from 'react-router-dom';
+import type { Override } from '../Dashboard/Interfaces/Override';
 
 
 
@@ -20,6 +21,7 @@ type Props ={
     day: MonthElement
     employeeList: Map<number,Employee>
     shiftsByEmployee: Map<number,Shift[]>
+    overridesByEmployee: Map<number,Override[]>
 }
 function getMonthName(monthNumber:number){
         const month = new Date(2000,monthNumber-1,1);
@@ -36,7 +38,7 @@ function getMonthName(monthNumber:number){
 
 
 
-function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>){
+function DateCell({day,shiftsByEmployee,employeeList,overridesByEmployee}: PropsWithChildren<Props>){
    
     const navigate =useNavigate()
 
@@ -87,6 +89,27 @@ function DateCell({day,shiftsByEmployee,employeeList}: PropsWithChildren<Props>)
                                     }
                                 </Flex>
 
+                            : overridesByEmployee.has(employee.id) ? 
+                                    <Flex bg={`${employee.color}`} key={employee.id} mih={30} h={20}  p={'4px'} wrap='wrap'  >
+                                    {
+                                        overridesByEmployee.get(employee.id)?.map((override)=>{
+                                            return(
+                                                <Text>
+                                                    {`
+                                                        ${employee.name} - 
+                                                        ${'unavailable'} 
+                                                        
+                                                        
+                                                    `}
+                                                    
+                                                </Text>
+                                            )
+                                        })
+                                    }
+                                </Flex>
+                            
+                            
+                            
                             :
 
                                 <Flex key={employee.id}  mih={30} h={20}  p={'4px'}  style={{}} >

@@ -28,7 +28,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
    const {setClipboard} = useContext(GridNavigationContext)!;
 
     const [activate,setActivate] = useState(false)
-
+   
     
     
     const {attributes,listeners,setNodeRef,transform,isDragging} = useDraggable({

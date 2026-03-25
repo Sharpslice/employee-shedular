@@ -6,11 +6,13 @@ import type { OvTimeBlock } from "./Interfaces/OvTimeBlock";
 import type { Override } from "./Interfaces/Override";
 
 
+
 function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<number,Shift>>>,
     setOverrides: React.Dispatch<React.SetStateAction<Map<number,Override>>>,
     setOv_time_blocks: React.Dispatch<React.SetStateAction<Map<number,OvTimeBlock>>>
 
 ){
+
     const socket = useSocket()
     
     const addToMapOverride = (oldMap:Map<number,Override>,override:Override)=>{
@@ -92,6 +94,9 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
         socket?.on('shiftAdded',(shift:Shift)=>{
             console.log("adding shift")
             setShifts((oldMap)=> addToMapShift(oldMap,shift))
+
+
+            
         })
         socket?.on('shiftDeleted',(data)=>{
             console.log("deleting shift", data)

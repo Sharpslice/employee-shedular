@@ -17,12 +17,7 @@ function useGridNavigation(){
 
     const [clipboard,setClipboard] = useState<Shift>()
 
-    // const pasteShift = (shift:Shift)=>{
-    //     const newShift:Shift ={
-    //         id:-1,
-    //         employee_id:
-    //     }
-    // }
+    const focusedRef = React.useRef({ row: 0, col: 0 });
 
     const cellRefs = useMemo(() => {
             return Array.from({ length: employeeList.size }, () =>
@@ -64,6 +59,7 @@ function useGridNavigation(){
             setMenuOpened,menuOpened,
             setTimeOpened,timeOpened,
             setClipboard,clipboard,
+            focusedRef
             
         
         }
