@@ -6,6 +6,7 @@ import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 import type { Employee } from "../../Interfaces/Employee"
 
 
+
 interface availabilityProp{
     employee:Employee
     hidden: boolean
@@ -61,6 +62,7 @@ function EmployeeAvailabilityRow({employee,hidden,dateRange,time_blocks_DOW,ov_t
                                                 <Text fz={14}>-</Text>
                                                 <Text fz={14}>{convertTo12hr(block.end_time)}</Text>
                                             </Group>
+                                            
                                             
                                         
                                     )

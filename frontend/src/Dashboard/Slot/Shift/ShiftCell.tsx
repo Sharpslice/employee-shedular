@@ -1,7 +1,7 @@
 import { Flex } from "@mantine/core";
 
 import {  useContext, useState } from "react";
-import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
+
 
 
 import type { Shift } from "../../Interfaces/Shift";
@@ -9,7 +9,8 @@ import { useDraggable } from "@dnd-kit/core";
 import { AuthenticatedUser } from "../../../AuthenticatedUserContext";
 import ShiftDisplay from "./ShiftDisplay";
 import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext";
-import { deleteShift } from "../../../services/shiftServices";
+import { deleteShift, updateShiftTime } from "../../../services/shiftServices";
+import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 
 
 
@@ -49,6 +50,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
         zIndex: isDragging ? 999 : "auto",
         cursor: isDragging ? "grabbing" : "grab",
     }
+  
 
     return (
     
@@ -98,7 +100,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
             
           {activate 
-            ? <TimeRangePicker shift={shift}/> 
+            ? shift && <TimeRangePicker data={shift} onChange={(time,string)=>updateShiftTime(time,string,shift)}/>  
             : <ShiftDisplay shift={shift} status={status} />
                 
           }
