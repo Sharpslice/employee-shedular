@@ -20,7 +20,7 @@ import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 // }
 
 interface PickerProps{
-    data:TimeBlock | OvTimeBlock | Shift
+    data:TimeBlock | OvTimeBlock | Shift | null
     onChange: (time:string, slot: "start" | "end")=> Promise<void>
 }
 
@@ -28,12 +28,12 @@ function TimeRangePicker({data,onChange}:PickerProps){
    
     const {setTimeOpened} = useContext(GridNavigationContext)!
 
-    console.log(data.start_time)
+    console.log(data?.start_time)
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const afternoon = ['12:00:00','13:00:00','13:30:00','14:30:00','15:00:00','17:00:00']
 
-    const start_time = data.start_time ?  DateTime.fromISO(data.start_time).toFormat('HH:mm') : ''
-    const end_time = data.end_time ?  DateTime.fromISO(data.end_time).toFormat('HH:mm') : ''
+    const start_time = data?.start_time ?  DateTime.fromISO(data.start_time).toFormat('HH:mm') : ''
+    const end_time = data?.end_time ?  DateTime.fromISO(data.end_time).toFormat('HH:mm') : ''
     const [userTyping,setUserTyping] = useState(false)
 
    

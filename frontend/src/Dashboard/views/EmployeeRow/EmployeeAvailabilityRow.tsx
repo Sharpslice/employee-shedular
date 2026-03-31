@@ -4,6 +4,7 @@ import type { TimeBlock } from "../../Interfaces/TimeBlock"
 import { DateTime } from "luxon"
 import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 import type { Employee } from "../../Interfaces/Employee"
+import TimeRangePicker from "../../Slot/TimeRangePicker/TimeRangePicker"
 
 
 
@@ -53,15 +54,17 @@ function EmployeeAvailabilityRow({employee,hidden,dateRange,time_blocks_DOW,ov_t
                                 
                                 
                                 time_blocks_DOW.get(day.days_of_week) === undefined && ov_time_blocks_date.get(day.date) ===undefined
-                                ? (<Text >unavailable</Text>)
+                                ? <TimeRangePicker
+                                    data={null}
+                                    onChange={async()=>{}}
+                                    />
                                 : (time_blocks_DOW.get(day.days_of_week)?.map((block)=>{
                                     return(
                                         
-                                            <Group key={`group-${day.days_of_week}`} justify="center">
-                                                <Text fz={14}>{convertTo12hr(block.start_time)}</Text>  
-                                                <Text fz={14}>-</Text>
-                                                <Text fz={14}>{convertTo12hr(block.end_time)}</Text>
-                                            </Group>
+                                            <TimeRangePicker
+                                            data={block}
+                                            onChange={async()=>{}}
+                                            />
                                             
                                             
                                         
