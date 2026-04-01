@@ -22,9 +22,10 @@ import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 interface PickerProps{
     data:TimeBlock | OvTimeBlock | Shift | null
     onChange: (time:string, slot: "start" | "end")=> Promise<void>
+    bg?:string
 }
 
-function TimeRangePicker({data,onChange}:PickerProps){
+function TimeRangePicker({data,onChange,bg}:PickerProps){
    
     const {setTimeOpened} = useContext(GridNavigationContext)!
 
@@ -79,7 +80,7 @@ function TimeRangePicker({data,onChange}:PickerProps){
     }
 
     return (<>
-            <Group tabIndex={-1} justify="center" flex={1} h={'100%'}  gap={0} bd={'1px solid black'}  
+            <Group tabIndex={-1} justify="center" flex={1} h={'100%'}  gap={0} bd={'1px solid black'}  bg={bg}
                 >
                 <TimePicker data-interactive size="sm"
                     

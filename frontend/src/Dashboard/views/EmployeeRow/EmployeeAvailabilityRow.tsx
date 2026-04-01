@@ -28,51 +28,60 @@ function EmployeeAvailabilityRow({employee,hidden,dateRange,time_blocks_DOW,ov_t
 
         {!hidden && <Flex gap={5} >
             {dateRange.map((day)=>{
-               
+
+                const overrides = ov_time_blocks_date.get(day.date)
+                const availabilities = time_blocks_DOW.get(day.days_of_week) ?? [null]
+                console.log(availabilities)
                return (
-                    <Flex key={day.days_of_week} direction={'column'}
-                        bg={`${employee.color}`}  justify={'center'}  bd={'1px solid black'} flex={1}>
+                    <Flex key={day.days_of_week} 
+                        flex={1}
+                        direction={'column'}
+                        justify={'center'}  
+                        bg={`${employee.color}`}  
+                        bd={'1px solid black'} 
+                    >
                         <>
-                            {
-                                ov_time_blocks_date.get(day.date) ===undefined 
-                                ? null 
-                                :  ov_time_blocks_date.get(day.date)?.map((block)=>{
-                                    return(
-                                        <Group flex={1} key={`override-group-${day.days_of_week}`} bg={'yellow'} justify="center">
-                                                <Text fz={14}>{convertTo12hr(block.start_time)}</Text>  
-                                                <Text fz={14}>-</Text>
-                                                <Text fz={14}>{convertTo12hr(block.end_time)}</Text>
-                                            </Group>
-                                    )
-                                })
-                            }
+                        {
+                            overrides
+                            ?  overrides.map((time_block)=>{
+                                return(
+                                    <Group flex={1} key={`override-group-${day.days_of_week}`} bg={'yellow'} justify="center">
+                                        <Text fz={14}>{convertTo12hr(time_block.start_time)}</Text>  
+                                        <Text fz={14}>-</Text>
+                                        <Text fz={14}>{convertTo12hr(time_block.end_time)}</Text>
+                                    </Group>
+                                )
+                            })
 
-
-
-                            {
-                                
-                                
-                                
-                                time_blocks_DOW.get(day.days_of_week) === undefined && ov_time_blocks_date.get(day.date) ===undefined
-                                ? <TimeRangePicker
-                                    data={null}
+                            : 
+                            
+                            availabilities?.map((time_block)=>{
+                                return(
+                                    <TimeRangePicker
+                                    data={time_block}
                                     onChange={async()=>{}}
+                                    
                                     />
-                                : (time_blocks_DOW.get(day.days_of_week)?.map((block)=>{
-                                    return(
-                                        
-                                            <TimeRangePicker
-                                            data={block}
-                                            onChange={async()=>{}}
-                                            />
-                                            
-                                            
-                                        
-                                    )
-                                }))
+                                )
                                 
-                            }
+                            })
+                        
+                           
+                            
+                            
+
+                            
+
+
+
+
+                        }
                         </>
+
+
+
+                            
+
                     </Flex>
 
                )

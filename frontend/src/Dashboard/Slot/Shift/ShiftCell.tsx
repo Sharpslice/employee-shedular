@@ -100,7 +100,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
             
           {activate 
-            ? shift && <TimeRangePicker data={shift} onChange={(time,string)=>updateShiftTime(time,string,shift)}/>  
+            ? shift && <TimeRangePicker data={shift} onChange={(time,string)=>updateShiftTime(time,string,shift)} bg="red"/>  
             : <ShiftDisplay shift={shift} status={status} />
                 
           }
