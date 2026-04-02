@@ -1,9 +1,9 @@
 import { ActionIcon, Button, Group, Menu } from "@mantine/core"
-import {  DatePickerInput } from "@mantine/dates"
+import {  Calendar, DatePickerInput } from "@mantine/dates"
 import { IconCalendar, IconChevronDown, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import axios from "axios"
 import {DateTime} from 'luxon'
-import { useContext } from "react"
+import { useContext, useState } from "react"
 
 
 import { Link, useNavigate} from "react-router-dom"
@@ -18,11 +18,23 @@ type HeaderProps = {
 function Header({view,selectedDate}:HeaderProps){
     const navigate = useNavigate();
     const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
+    const [calendarSwitch,setCalendarSwitch] = useState(false);
 
     const viewClick = (selectedView:'day' | 'week' | 'bi-week' | 'month') =>{
         if(selectedView != view){
             navigate(`${selectedView}/${selectedDate}`);
             
+        }
+    }
+
+    const calendarClick =()=>{
+        if(!calendarSwitch){
+            setCalendarSwitch(prev=>!prev)
+             navigate("/schedule/calendar")
+        }
+        else {
+            setCalendarSwitch(prev=>!prev)
+            navigate(-1)
         }
     }
     
@@ -172,7 +184,9 @@ function Header({view,selectedDate}:HeaderProps){
                     : null} 
 
 
-                <ActionIcon size={36} component={Link} to="/schedule/calendar">
+                <ActionIcon size={36} 
+                   onClick={()=>calendarClick()} 
+                >
                     <IconCalendar />
                 </ActionIcon>
             </Group>

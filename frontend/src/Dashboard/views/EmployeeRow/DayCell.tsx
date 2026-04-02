@@ -20,6 +20,7 @@ import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 import { getShiftStatus } from "./shiftConflictUtil"
 import type { Override } from "../../Interfaces/Override"
 import OverrideCell from "../../Slot/Override/OverrideCell"
+import axios from "axios"
 
 
 
@@ -39,7 +40,7 @@ interface DayProps{
 }
 
 function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_blocks}:DayProps){
-    const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened} = useContext(GridNavigationContext)!
+    const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened,clipboard} = useContext(GridNavigationContext)!
 
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
@@ -85,7 +86,20 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
     })
 
     
-  
+    const createCell=async ()=>{
+        console.log('creating cell')
+        console.log(date)
+        console.log(clipboard?.start_time)
+        console.log(clipboard?.end_time)
+        if(!clipboard) return
+        await axios.post(`http://localhost:3000/api/v1/employees/${employee.id}/shifts/`,
+            {date:date.date,
+            start_time: clipboard?.start_time,
+            end_time: clipboard?.end_time
+
+            },
+            {withCredentials:true})
+    }
     
 
     return(
@@ -93,10 +107,30 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
             ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
             // style={{opacity:isOver ? 1:0.5}}
             key={`${employee.id} - ${date.date}`}  
-            flex={1} direction={'column'} align={'stretch'}   p={5} bd={'1px solid black'} bg={'grey'}
+            flex={1} direction={'column'} align={'stretch'}   p={5} bd={'1px solid black'} bg={'grey'} 
             
             tabIndex={-1}
-            onKeyDown={(e)=>handleArrowKey?.(e.key,row!,index)}
+            onKeyDown={(e)=>{
+                if(e.key === 'ArrowUp' || 
+                    e.key==='ArrowDown' || 
+                    e.key ==='ArrowLeft' || 
+                    e.key ==='ArrowRight' || 
+                    e.key ==='Tab')
+                {
+                    handleArrowKey?.(e.key,row!,index)
+                }
+                
+                
+                if(e.key === 'v' && (e.ctrlKey || e.metaKey)){
+                    console.log('droppable: ', isOver)
+                    console.log('pasting: ',clipboard)
+                    createCell()
+
+
+                }
+               
+            
+            }}
             onContextMenu={(e)=>{
                 e.preventDefault()
                 setActive(true)

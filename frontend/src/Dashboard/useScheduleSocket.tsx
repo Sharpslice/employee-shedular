@@ -6,11 +6,13 @@ import type { OvTimeBlock } from "./Interfaces/OvTimeBlock";
 import type { Override } from "./Interfaces/Override";
 
 
+
 function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<number,Shift>>>,
     setOverrides: React.Dispatch<React.SetStateAction<Map<number,Override>>>,
     setOv_time_blocks: React.Dispatch<React.SetStateAction<Map<number,OvTimeBlock>>>
 
 ){
+
     const socket = useSocket()
     
     const addToMapOverride = (oldMap:Map<number,Override>,override:Override)=>{
@@ -82,6 +84,20 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
             })
             
         })
+        socket?.on('addAvailabilityOverride',(data)=>{
+            const override = data.override;
+            const time_block = data.time_block;
+            console.log(override,time_block)
+
+
+            setOverrides((oldMap) => addToMapOverride(oldMap,override))
+
+            setOv_time_blocks((oldMap)=>{
+                const newMap = new Map(oldMap)
+                newMap.set(time_block.id,time_block)
+                return newMap
+            })
+        })
         
         socket?.on('shiftUpdated',(shift:Shift)=>{
             console.log('shiftUpdated',shift)
@@ -92,6 +108,9 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
         socket?.on('shiftAdded',(shift:Shift)=>{
             console.log("adding shift")
             setShifts((oldMap)=> addToMapShift(oldMap,shift))
+
+
+            
         })
         socket?.on('shiftDeleted',(data)=>{
             console.log("deleting shift", data)

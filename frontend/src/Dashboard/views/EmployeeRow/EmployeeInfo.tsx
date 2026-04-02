@@ -12,8 +12,9 @@ function EmployeeInfo({onAvailabilityclick,employee,totalHours}:InfoProp){
             gap={15} align={'center'} 
             bd={'1px solid black'} w={'15rem'} p={5} 
             onClick={onAvailabilityclick}
+            bg={`${employee.color}`}
         >
-            <Avatar name={employee.name} radius={'xs'} color={"blue"}></Avatar>
+            <Avatar name={employee.name} radius={'xs'} color={'white'}></Avatar>
             <Flex direction={'column'}>
                 <Text size="lg">{employee.name}</Text>
                 <Text>{`Total hours: ${totalHours}`}</Text>

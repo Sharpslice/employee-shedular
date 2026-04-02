@@ -1,5 +1,5 @@
 import {Request,Response} from 'express';
-import { createAvailabilityOverrideService, deleteOverrideService, updateOverrideStatusService} from '../services/override.services';
+import { deleteOverrideService, updateOverrideStatusService} from '../services/override.services';
 import { io } from '../../app';
 
 export async function deleteOverride(req:Request,res:Response){

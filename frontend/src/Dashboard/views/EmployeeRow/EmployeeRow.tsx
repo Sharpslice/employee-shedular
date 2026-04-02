@@ -27,7 +27,7 @@ interface EmployeeRowProps{
     employee: Employee
     shifts: Shift[]
     overrides: Override[]
-    time_blocks_DOW: Map<number,TimeBlock[] >
+    time_blocks_DOW: Map<number, (TimeBlock)[] >
     ov_time_blocks_date: Map<string,OvTimeBlock[]>
 }
 function EmployeeRow({row,employee,shifts,overrides,time_blocks_DOW,ov_time_blocks_date}:EmployeeRowProps){
@@ -62,16 +62,17 @@ function EmployeeRow({row,employee,shifts,overrides,time_blocks_DOW,ov_time_bloc
             <Flex flex={1} gap={10} direction={'column'}>
                 
                 <EmployeeAvailabilityRow    
+                    employee={employee}
                     hidden={hidden} 
                     dateRange={dateRange} 
                     time_blocks_DOW={time_blocks_DOW} 
                     ov_time_blocks_date = {ov_time_blocks_date}
                 />
 
-                <Flex gap={5} flex={1} miw={'100px'} h={'75px'} >
+                <Flex gap={5} flex={1} miw={'100px'} h={'75px'}  >
                     {dateRange.map((date,index)=>{
                         
-                        const time_blocks = time_blocks_DOW.get(date.days_of_week)
+                        const time_blocks = time_blocks_DOW.get(date.days_of_week) 
                        
                         const ov_time_blocks = ov_time_blocks_date.get(date.date);
                         return(

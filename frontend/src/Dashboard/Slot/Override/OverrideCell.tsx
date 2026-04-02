@@ -1,9 +1,10 @@
 import { ActionIcon, Flex, TextInput } from "@mantine/core"
-import axios from "axios"
+
 import { useContext, useEffect, useState } from "react"
 import type { Override } from "../../Interfaces/Override"
 import { IconCheck, IconX } from "@tabler/icons-react"
 import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext"
+import { deleteOverride, updateOverrideStatus } from "../../../services/overrideServices"
 type Override_status = 'APPROVED' | 'PENDING' | 'DENIED'
 interface overrideProp{
     override:Override
@@ -13,25 +14,10 @@ function OverrideCell({override,status}:overrideProp){
 
     const [textValue, setTextValue] = useState<string>(override.type)
     const [editable, setEditable] = useState(false)
-    const {menuOpened,setMenuOpened} = useContext(GridNavigationContext)!;
-    const deleteOverride= async()=>{
-        await axios.delete(`http://localhost:3000/api/v1/overrides/${override.id}`,{withCredentials:true})
-    }
+    const {setMenuOpened} = useContext(GridNavigationContext)!;
+  
 
-    const updateOverrideStatus = async (status: Override_status) => {
-        try {
-            const response = await axios.patch(`http://localhost:3000/api/v1/overrides/${override.id}/status`,{ status },{ withCredentials: true });
-
-            if(response.data.success){
-                console.log('success')
-            }
-            else{
-                console.log('failed')
-            }
-        } catch (error) {
-            console.error("Failed to update override status:", error);
-        }
-    };
+    
 
    
 
@@ -84,7 +70,7 @@ function OverrideCell({override,status}:overrideProp){
                 onKeyDown={(e)=>{
                     if(!editable &&(e.key ==='Backspace' || e.key ==='Delete')){
                         console.log('Delete')
-                        deleteOverride()
+                        deleteOverride(override.id)
                     }
                     if(e.key ==='Enter' && editable){
                         console.log('set to false')
@@ -99,11 +85,11 @@ function OverrideCell({override,status}:overrideProp){
 
             {status === 'PENDING' && 
             <Flex direction={'column'}>
-                <ActionIcon radius={0} bg='green' w={'100%'} onClick={()=>{updateOverrideStatus('APPROVED')}}>
+                <ActionIcon radius={0} bg='green' w={'100%'} onClick={()=>{updateOverrideStatus(override.id,'APPROVED')}}>
                     <IconCheck/>
                 </ActionIcon>
                 
-                <ActionIcon radius={0} bg='green' w={'100%'} onClick={()=>updateOverrideStatus('DENIED')}>
+                <ActionIcon radius={0} bg='green' w={'100%'} onClick={()=>updateOverrideStatus(override.id,'DENIED')}>
                     <IconX/>
                 </ActionIcon>
                 

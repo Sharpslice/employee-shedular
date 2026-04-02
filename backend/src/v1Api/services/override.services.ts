@@ -4,7 +4,7 @@ import prisma from "../../../db/db";
 
 
 type Override_Status = 'APPROVED' | 'PENDING' | 'DENIED'
-export async function createAvailabilityOverrideService(
+export async function createTimeOverrideService(
     employee_id:number, date:string,type:string,
     start_time:string, end_time:string, shift_id:number
 ){

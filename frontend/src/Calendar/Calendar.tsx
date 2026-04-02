@@ -8,6 +8,7 @@ import { useOutletContext } from 'react-router-dom';
 import type { Shift } from '../Dashboard/Interfaces/Shift';
 import { DateTime } from 'luxon';
 import type { Employee } from '../Dashboard/Interfaces/Employee';
+import type { Override } from '../Dashboard/Interfaces/Override';
 
 
 
@@ -33,7 +34,27 @@ function Calendar(){
     const [daysInAMonth,setDayInAMonth] = useState<MonthElement[]>([])
     // const [currentMonth,setCurrentMonth] = useState<string>('')
 
-    const {shifts,employeeList} = useOutletContext<{shifts: Map<number,Shift>,employeeList:Map<number,Employee>}>();
+    const {shifts,employeeList,overrides} = useOutletContext<{shifts: Map<number,Shift>,employeeList:Map<number,Employee>,overrides:Map<number,Override>}>();
+
+    const overridesByDateAndEmployee= useMemo(()=>{
+        const map = new Map<string,Map<number,Override[]>>();
+
+        for (const override of overrides.values()){
+            const date = DateTime.fromISO(override.date).toISODate()!
+            if(!map.has(date)){
+                 map.set(date,new Map<number,Override[]>())
+            }
+            const employeeWOverride = map.get(date)
+            if(employeeWOverride?.has(override.employee_id)){
+                employeeWOverride.get(override.employee_id)?.push(override)
+            }
+            else{
+                employeeWOverride?.set(override.employee_id,[override])
+            }
+
+        }
+        return map
+    },[overrides])
     
     const shiftsByDateAndEmployee = useMemo(()=>{
         const map = new Map<string,Map<number,Shift[]>>();
@@ -103,11 +124,12 @@ function Calendar(){
                     
                     const date = DateTime.fromISO(dayObj.date).toISODate()
                     const dailyEmployeeShift = shiftsByDateAndEmployee.get(date!)
-                   
+                    const dailyOverrideShift = overridesByDateAndEmployee.get(date!)
                     return <DateCell 
                         key={`${dayObj.date}`}
                         day={dayObj} 
                         shiftsByEmployee={dailyEmployeeShift ?? new Map() } 
+                        overridesByEmployee={dailyOverrideShift ?? new Map()}
                         employeeList={employeeList} 
                         />
                 })}

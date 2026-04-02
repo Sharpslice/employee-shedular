@@ -1,13 +1,16 @@
 import { Flex } from "@mantine/core";
 
 import {  useContext, useState } from "react";
-import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 
-import axios from "axios";
+
+
 import type { Shift } from "../../Interfaces/Shift";
 import { useDraggable } from "@dnd-kit/core";
 import { AuthenticatedUser } from "../../../AuthenticatedUserContext";
 import ShiftDisplay from "./ShiftDisplay";
+import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext";
+import { deleteShift, updateShiftTime } from "../../../services/shiftServices";
+import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 
 
 
@@ -23,13 +26,11 @@ function ShiftCell({shift,status}:ShiftCellProps){
 
     const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
     
-   
+   const {setClipboard} = useContext(GridNavigationContext)!;
 
     const [activate,setActivate] = useState(false)
-
-    const deleteShift = async()=>{
-        await axios.delete(`http://localhost:3000/api/v1/shifts/${shift?.id}`,{withCredentials:true})
-    }
+   
+    
     
     const {attributes,listeners,setNodeRef,transform,isDragging} = useDraggable({
         id: shift.id,
@@ -49,6 +50,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
         zIndex: isDragging ? 999 : "auto",
         cursor: isDragging ? "grabbing" : "grab",
     }
+  
 
     return (
     
@@ -60,15 +62,22 @@ function ShiftCell({shift,status}:ShiftCellProps){
             flex={1}
             className="slot" 
             onKeyDown={(e)=>{
+                
+                if(e.key === 'c' && (e.ctrlKey || e.metaKey)){
+                    console.log('copying ',shift)
+                    setClipboard(shift)
+                }
+
                 if(!isUserAdmin) return
                 if(e.key ==='Backspace' || e.key ==='Delete'){
                     console.log('Delete')
-                    deleteShift()
+                    deleteShift(shift.id)
                 }
                 else if (e.key===' ' || e.key ==='Enter'){
                     console.log('space')
                     setActivate(prev=>!prev)
                 }
+
             }}
             onClick={()=>{
                 if(!isUserAdmin) return
@@ -76,6 +85,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
 
 
             }}
+            //onFocus={()=>{console.log('currenty selecting shift')}}
             onBlur={(e)=>{
 
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -90,7 +100,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
         bg={'blue'} justify={'center'} align={'center'} gap={12} mih={38} h='100%' bd={'1px solid black'} > 
             
           {activate 
-            ? <TimeRangePicker shift={shift}/> 
+            ? shift && <TimeRangePicker data={shift} onChange={(time,string)=>updateShiftTime(time,string,shift)} bg="red"/>  
             : <ShiftDisplay shift={shift} status={status} />
                 
           }

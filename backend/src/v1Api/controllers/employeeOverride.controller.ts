@@ -1,10 +1,10 @@
 import { Request,Response } from "express";
-import { createLeaveService } from "../services/employeeOverride.services";
-import { createAvailabilityOverrideService } from "../services/override.services";
+import { createAvailabilityService, createLeaveService } from "../services/employeeOverride.services";
+import { createTimeOverrideService } from "../services/override.services";
 import { io } from "../../app";
 
 
-export async function createAvailabilityOverride(req:Request,res:Response)
+export async function createTimeOverride(req:Request,res:Response)
 {
     const employee_id = req.body.employee_id;
     const date = req.body.date;
@@ -17,7 +17,7 @@ export async function createAvailabilityOverride(req:Request,res:Response)
 
 
     try{
-        const response = await createAvailabilityOverrideService(employee_id,date,type,start_time,end_time,shift_id)
+        const response = await createTimeOverrideService(employee_id,date,type,start_time,end_time,shift_id)
 
         io.emit('manualTimeOverride',{override: response.override,time_block: response.time_block})
         return res.status(200).json({success:true})
@@ -54,4 +54,25 @@ export async function createLeave(req:Request,res:Response){
     }
 
 }
+
+export async function createAvailability(req:Request,res:Response){
+    const employee_id = Number(req.params.employee_id)
+    const date = req.body.date
+    // const start_time = req.body.time.start_time
+    // const end_time = req.body.time.end_time
+    
+   
+
+
+    try{
+        // const response = await createAvailabilityService(employee_id,date,start_time,end_time,av_time_block_id)
+        // console.log(response)
+        //io.emit('addAvailabilityOverride',{override:response.override,time_block:response.time_block})
+        res.status(200).json({success:true})
+    }
+    catch(error:unknown){
+
+    }
+}
+
 
