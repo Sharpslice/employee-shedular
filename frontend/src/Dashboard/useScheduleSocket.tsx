@@ -84,6 +84,20 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
             })
             
         })
+        socket?.on('addAvailabilityOverride',(data)=>{
+            const override = data.override;
+            const time_block = data.time_block;
+            console.log(override,time_block)
+
+
+            setOverrides((oldMap) => addToMapOverride(oldMap,override))
+
+            setOv_time_blocks((oldMap)=>{
+                const newMap = new Map(oldMap)
+                newMap.set(time_block.id,time_block)
+                return newMap
+            })
+        })
         
         socket?.on('shiftUpdated',(shift:Shift)=>{
             console.log('shiftUpdated',shift)

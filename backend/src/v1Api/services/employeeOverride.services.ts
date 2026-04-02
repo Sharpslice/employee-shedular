@@ -17,3 +17,19 @@ export async function createLeaveService(employee_id:number,date:string){
 
 
 }
+
+export async function createAvailabilityService(
+    employee_id:number,date:string,
+    start_time:string,end_time:string,
+    
+
+){
+    const response = await prisma.$transaction(async (tx) => {
+
+
+      
+
+    });
+
+    return response
+}

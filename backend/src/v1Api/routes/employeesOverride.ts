@@ -1,5 +1,5 @@
 import express from "express"
-import { createAvailabilityOverride, createLeave } from "../controllers/employeeOverride.controller";
+import { createTimeOverride, createLeave, createAvailability } from "../controllers/employeeOverride.controller";
 import { validateAvailabilityOverride } from "../middleware/override.middleware/validateCreateAvailabilityOverride";
 
 
@@ -7,9 +7,9 @@ import { validateAvailabilityOverride } from "../middleware/override.middleware/
 const employeeOverrides = express.Router({mergeParams:true});
 
 
-employeeOverrides.post('/',validateAvailabilityOverride, createAvailabilityOverride)
+employeeOverrides.post('/',validateAvailabilityOverride, createTimeOverride)
 
 employeeOverrides.post('/leaves',createLeave)
-
+employeeOverrides.post(`/availabilities/`,createAvailability)
 
 export default employeeOverrides;

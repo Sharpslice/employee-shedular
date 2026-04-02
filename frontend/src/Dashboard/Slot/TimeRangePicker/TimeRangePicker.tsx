@@ -21,7 +21,7 @@ import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 
 interface PickerProps{
     data:TimeBlock | OvTimeBlock | Shift | null
-    onChange: (time:string, slot: "start" | "end")=> Promise<void>
+    onChange: (time:string, slot: "start" | "end")=> Promise<void> 
     bg?:string
 }
 
@@ -29,7 +29,7 @@ function TimeRangePicker({data,onChange,bg}:PickerProps){
    
     const {setTimeOpened} = useContext(GridNavigationContext)!
 
-    console.log(data?.start_time)
+    
     const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
     const afternoon = ['12:00:00','13:00:00','13:30:00','14:30:00','15:00:00','17:00:00']
 

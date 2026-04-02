@@ -5,6 +5,9 @@ import { DateTime } from "luxon"
 import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 import type { Employee } from "../../Interfaces/Employee"
 import TimeRangePicker from "../../Slot/TimeRangePicker/TimeRangePicker"
+import { createAvailabilityOverride } from "../../../services/overrideServices"
+import { useOutletContext } from "react-router-dom"
+import type { Availability } from "../../Interfaces/Availability"
 
 
 
@@ -23,6 +26,9 @@ const convertTo12hr = (time:string | null)=>{
 }
 
 function EmployeeAvailabilityRow({employee,hidden,dateRange,time_blocks_DOW,ov_time_blocks_date}:availabilityProp){
+    
+
+    const {availabilities} = useOutletContext<{availabilities:Map<number,Availability>}>()
 
     return(<>
 
@@ -30,7 +36,8 @@ function EmployeeAvailabilityRow({employee,hidden,dateRange,time_blocks_DOW,ov_t
             {dateRange.map((day)=>{
 
                 const overrides = ov_time_blocks_date.get(day.date)
-                const availabilities = time_blocks_DOW.get(day.days_of_week) ?? [null]
+                const time_block_array = time_blocks_DOW.get(day.days_of_week) ?? [null]
+                
                 console.log(availabilities)
                return (
                     <Flex key={day.days_of_week} 
@@ -55,11 +62,13 @@ function EmployeeAvailabilityRow({employee,hidden,dateRange,time_blocks_DOW,ov_t
 
                             : 
                             
-                            availabilities?.map((time_block)=>{
+                            time_block_array?.map((time_block)=>{
+                                
+                               
                                 return(
                                     <TimeRangePicker
                                     data={time_block}
-                                    onChange={async()=>{}}
+                                    onChange={(time,slot)=>createAvailabilityOverride(time,slot,employee.id,day.date)}
                                     
                                     />
                                 )
