@@ -54,8 +54,24 @@ model Employee {
   shifts          Employee_Shifts[]
   availability    Employee_Availability[]
   override        Employee_Time_Override[]
+  employment      Employee_Employment_History[]
 
   @@map("employee")
+}
+
+model Employee_Employment_History {
+  id                Int             @id @default(autoincrement())
+  employee_id       Int             
+
+  start_date        DateTime        @db.Date
+  end_date          DateTime?        @db.Date
+
+  @@unique([employee_id,start_date])
+
+  employee           Employee        @relation(fields: [employee_id],references:id)
+
+
+  @@map("employee_employment_history")
 }
 
 model Employee_Shifts {
