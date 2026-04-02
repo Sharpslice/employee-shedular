@@ -59,6 +59,7 @@ function Dashboard(){
     useScheduleSocket(setShifts,setOverrides,setOv_time_blocks);
 
     useEffect(() => {
+        console.log('fetching new date: ', safeDate)
         const fetchData = async () => {
             try {
                 
@@ -79,11 +80,11 @@ function Dashboard(){
                 setOv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks))
 
                 console.log("employee", EmployeeArrayToMap(employeeResponse.data.employeeList));
-                console.log("shifts", ShiftArrayToMap(employeeResponse.data.shifts));
-                console.log("availabilities", AvailabilityArrayToMap(employeeResponse.data.availabilities));
-                console.log("timeblock", TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
-                console.log("ov timeblock", TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks));
-                console.log('overrides',OverrideToMap(employeeResponse.data.overrides))
+                // console.log("shifts", ShiftArrayToMap(employeeResponse.data.shifts));
+                // console.log("availabilities", AvailabilityArrayToMap(employeeResponse.data.availabilities));
+                // console.log("timeblock", TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
+                // console.log("ov timeblock", TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks));
+                // console.log('overrides',OverrideToMap(employeeResponse.data.overrides))
 
             } catch (err) {
                 console.error("Failed to fetch data:", err);
