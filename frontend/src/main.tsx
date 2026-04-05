@@ -11,14 +11,15 @@ import '@mantine/dates/styles.css'
 import Dashboard from './Dashboard/Dashboard.tsx';
 import Week from './Dashboard/views/WeekView/Week.tsx';
 
-import DayView from './Dashboard/views/DayView/DayView.tsx';
+
 import { SocketProvider } from './SocketContext.tsx';
+import { enableMapSet } from 'immer';
 
 
 
 
 
-
+enableMapSet()
 
  const router = createBrowserRouter([
     {

@@ -6,11 +6,24 @@ import prisma from "../../../db/db"
 export async function scheduleService(
     beginDate:DateTime,endDate:DateTime
 ){
-
-
-    console.log(beginDate.weekNumber)
-    
-    //console.log(startOfWeek)
+    const data = await prisma.calendar.findMany({
+        where:{
+            date:{
+                gte:beginDate.toISO()!,
+                lte:endDate.toISO()!
+            }
+            
+        },
+        include:{
+            shift_dates:true,
+            override_dates:{
+                include:{
+                    time_blocks:true
+                }
+            }
+        }
+    })
+    console.log(data)
     const employeeList = await prisma.employee.findMany(
     {
         select:{

@@ -71,6 +71,7 @@ model Employee_Employment_History {
   employee           Employee        @relation(fields: [employee_id],references:id)
 
 
+
   @@map("employee_employment_history")
 }
 

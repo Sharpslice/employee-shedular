@@ -19,6 +19,8 @@ import type { Availability } from "./Interfaces/Availability";
 import type { TimeBlock } from "./Interfaces/TimeBlock";
 import type { Override } from "./Interfaces/Override";
 import type { OvTimeBlock } from "./Interfaces/OvTimeBlock";
+import { useQuery } from "@tanstack/react-query";
+import { useScheduleStore } from "../scheduleStore";
 
 
 
@@ -57,6 +59,30 @@ function Dashboard(){
     const [ov_time_blocks,setOv_time_blocks] = useState<Map<number,OvTimeBlock>>(new Map())
     
     useScheduleSocket(setShifts,setOverrides,setOv_time_blocks);
+
+    const fetchCalendar=async()=>{
+        const res = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${safeView}`, { withCredentials: true })
+        return res.data.dateArray
+    }
+    const info = useQuery({queryKey: ['calendar',safeDate,safeView],queryFn:fetchCalendar});
+    console.log(info)
+
+
+    const setCell = useScheduleStore(state => state.setCell)
+
+useEffect(() => {
+    setCell(1, '2026-03-23', {
+        shifts: [],
+        overrides: [],
+        time_blocks: [],
+        ov_time_blocks: []
+    })
+}, [])
+
+const testCell = useScheduleStore(state => state.scheduleGrid.get(1)?.get('2026-03-23'))
+console.log('testCell:', testCell)
+
+
 
     useEffect(() => {
         console.log('fetching new date: ', safeDate)
