@@ -34,13 +34,13 @@ export async function schedule(req:Request,res:Response){
         const response = await scheduleService(beginDate,endDate)
      
         return res.json({
-            employeeList:response.employeeList,
-            shifts:response.shifts,
-            availabilities:response.availabilities,
-            av_time_blocks:response.av_time_blocks,
-            overrides:response.overrides,
-            ov_time_blocks:response.ov_time_blocks
-           
+            // employeeList:response.employeeList,
+            // shifts:response.shifts,
+            // availabilities:response.availabilities,
+            // av_time_blocks:response.av_time_blocks,
+            // overrides:response.overrides,
+            // ov_time_blocks:response.ov_time_blocks
+            schedule:response
         })
 
     }catch(error){

@@ -97,91 +97,91 @@ export async function scheduleService(
 
 
 
-    const employeeList = await prisma.employee.findMany(
-    {
-        select:{
-            id:true,
-            name:true,
-            isWorking:true,
-            color:true,
-            position:true,
-            shifts:{
-                where:{
-                    date:{
-                        gte:beginDate.toISO()!,
-                        lte:endDate.toISO()!
-                    }
-                }
-            },
-            override:{
-                where:{
-                    date:{
-                        gte:beginDate.toISO()!,
-                        lte:endDate.toISO()!
-                    }
-                }
-            }
-            },
-        where:{
-            employment:{
-                some:{
-                    OR:[
-                        {
-                            AND:{
-                                start_date:{
-                                    lte:endDate.toISO()!
-                                },
-                                end_date:{
-                                    equals:null
-                                }
-                            },
+    // const employeeList = await prisma.employee.findMany(
+    // {
+    //     select:{
+    //         id:true,
+    //         name:true,
+    //         isWorking:true,
+    //         color:true,
+    //         position:true,
+    //         shifts:{
+    //             where:{
+    //                 date:{
+    //                     gte:beginDate.toISO()!,
+    //                     lte:endDate.toISO()!
+    //                 }
+    //             }
+    //         },
+    //         override:{
+    //             where:{
+    //                 date:{
+    //                     gte:beginDate.toISO()!,
+    //                     lte:endDate.toISO()!
+    //                 }
+    //             }
+    //         }
+    //         },
+    //     where:{
+    //         employment:{
+    //             some:{
+    //                 OR:[
+    //                     {
+    //                         AND:{
+    //                             start_date:{
+    //                                 lte:endDate.toISO()!
+    //                             },
+    //                             end_date:{
+    //                                 equals:null
+    //                             }
+    //                         },
                             
-                        },
-                        {
-                            AND:{
-                                start_date:{
-                                    lte:endDate.toISO()!
-                                },
-                                end_date:{
-                                    gte:beginDate.toISO()!
-                                }
-                            }
-                        }
-                    ]
+    //                     },
+    //                     {
+    //                         AND:{
+    //                             start_date:{
+    //                                 lte:endDate.toISO()!
+    //                             },
+    //                             end_date:{
+    //                                 gte:beginDate.toISO()!
+    //                             }
+    //                         }
+    //                     }
+    //                 ]
 
-                }
-            }
-        },
+    //             }
+    //         }
+    //     },
       
-        orderBy:{
-            index:'asc'
-        },
+    //     orderBy:{
+    //         index:'asc'
+    //     },
         
-    }
-    )
-    //console.log(employeeList)
+    // }
+    // )
+    // //console.log(employeeList)
 
-    const shifts = await prisma.employee_Shifts.findMany({
-        where:{
-            date:{
-                gte: beginDate.toISO()!,
-                lte: endDate.toISO()!
-            }
+    // const shifts = await prisma.employee_Shifts.findMany({
+    //     where:{
+    //         date:{
+    //             gte: beginDate.toISO()!,
+    //             lte: endDate.toISO()!
+    //         }
             
-        }
-    })
+    //     }
+    // })
     
 
-    const availabilities = await prisma.employee_Availability.findMany()
+    // const availabilities = await prisma.employee_Availability.findMany()
 
-    const av_time_blocks = await prisma.employee_Availability_Time_Block.findMany()
+    // const av_time_blocks = await prisma.employee_Availability_Time_Block.findMany()
 
-    const overrides = await prisma.employee_Time_Override.findMany()
+    // const overrides = await prisma.employee_Time_Override.findMany()
 
-    const ov_time_blocks = await prisma.employee_Override_Time_Block.findMany()
+    // const ov_time_blocks = await prisma.employee_Override_Time_Block.findMany()
    
     
 
 
-    return {employeeList,shifts, availabilities,av_time_blocks,overrides,ov_time_blocks}
+    return schedule
 }
