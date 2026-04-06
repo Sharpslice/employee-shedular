@@ -35,7 +35,8 @@ export async function schedule(req:Request,res:Response){
      
         return res.json({
             dates:response.dates,
-            schedule: response.schedule
+            schedule: response.schedule,
+            employees:response.employees
         })
 
     }catch(error){

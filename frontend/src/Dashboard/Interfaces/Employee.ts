@@ -1,4 +1,4 @@
-import type { Override } from "./Override"
+
 
 export interface Employee{
     id:number,
@@ -9,6 +9,5 @@ export interface Employee{
     color?:string 
     position: string
 
-    availability : []
-    override : Override[]
+   
 }

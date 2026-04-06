@@ -9,7 +9,7 @@ import { Outlet, useMatch, useParams } from "react-router-dom";
 import type { Employee } from "./Interfaces/Employee";
 import type { Day } from "./Interfaces/Day";
 
-import { AvailabilityArrayToMap, EmployeeArrayToMap,OverrideToMap,ShiftArrayToMap, TimeBlockArrayToMap } from "./views/ArrayToMap";
+
 
 import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
 import ContextMenu from "./Slot/ContextMenu/ContextMenu";
@@ -26,9 +26,6 @@ import type { ScheduleCell } from "./Interfaces/ScheduleCell";
 
 
 
-interface dateRange{
-    day:Day[]
-}
 interface schedule{
     id:number,
     date:string,
@@ -40,7 +37,8 @@ interface schedule{
 
 type scheduleResponse = {
     schedule: schedule[]
-    dateRange: Day[]
+    dates: Day[]
+    employees: Employee[]
 }
 
 
@@ -74,15 +72,19 @@ function Dashboard(){
    
     const setGrid = useScheduleStore(state=>state.setGrid)
     const setDateRange = useScheduleStore(state=>state.setDateRange)
-    const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
-    const dateRange = useScheduleStore(state=>state.dateRange)
+    const setEmployees = useScheduleStore(state=>state.setEmployees)
+    // const employees = useScheduleStore(state=>state.employees)
+    // const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
+    // const dateRange = useScheduleStore(state=>state.dateRange)
     useEffect(()=>{
+
         const schedule = data?.schedule
-        const dateRange = data?.dateRange
+        const dateRange = data?.dates
+        const employees = data?.employees
         if(!schedule) return
+        
         const gridMap = new Map<number,Map<string,ScheduleCell |null >>()
         for(const row of schedule){
-            console.log(row.id)
 
             const scheduleCell = {
                 shifts: row.shifts,
@@ -105,15 +107,22 @@ function Dashboard(){
 
         }
         setGrid(gridMap)
+        
 
         if(!dateRange) return
         setDateRange(dateRange)
-        
+        console.log(dateRange)
 
+        if(!employees) return
+        setEmployees(employees)
+        console.log(employees)
+
+
+        
+       
+    
     },[data])
-    console.log(scheduleGrid)
-    console.log(dateRange)
-  
+    
     // useEffect(() => {
     //     console.log('fetching new date: ', safeDate)
     //     const fetchData = async () => {

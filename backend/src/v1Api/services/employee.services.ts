@@ -19,7 +19,45 @@ export async function scheduleService(
         },
     })
     
-    console.log(dates)
+    
+
+    const employees = await prisma.employee.findMany({
+        select:{
+            id:true,
+            name:true,
+            isWorking:true,
+            picture:true,
+            role:true,
+            color:true,
+            position:true
+
+        },
+        where:{
+            employment:{
+                some:{
+                    
+                    start_date: {
+                        lte: beginDate.toISO()!,
+                        
+                    },
+                    OR:[
+                        {end_date:null},
+                        {end_date:{gte:beginDate.toISO()!}}
+                    ]
+                    
+
+                    
+                    
+
+                    
+                }
+            }
+        },
+        orderBy: {
+            id:'asc'
+        }
+    })
+    console.log(employees)
     
     const schedule = await prisma.$queryRaw`
         SELECT 
@@ -94,5 +132,5 @@ export async function scheduleService(
     
 
 
-    return {schedule,dates}
+    return {schedule,dates,employees}
 }
