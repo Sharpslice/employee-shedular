@@ -65,25 +65,21 @@ function Dashboard(){
         return res.data.dateArray
     }
     const info = useQuery({queryKey: ['calendar',safeDate,safeView],queryFn:fetchCalendar});
-    console.log(info)
-
+    //console.log(info)
 
     const setCell = useScheduleStore(state => state.setCell)
-
-useEffect(() => {
-    setCell(1, '2026-03-23', {
-        shifts: [],
-        overrides: [],
-        time_blocks: [],
-        ov_time_blocks: []
+    const cell = useScheduleStore(
+  state => state.scheduleGrid.get(1)?.get('2026-03-23')
+)
+    useEffect(()=>{
+        setCell(1,'2026-04-07',{
+            shifts: [],
+            overrides: [],
+            time_blocks: [],
+            ov_time_blocks: []
+        })
     })
-}, [])
-
-const testCell = useScheduleStore(state => state.scheduleGrid.get(1)?.get('2026-03-23'))
-console.log('testCell:', testCell)
-
-
-
+    console.log(cell)
     useEffect(() => {
         console.log('fetching new date: ', safeDate)
         const fetchData = async () => {
@@ -96,8 +92,8 @@ console.log('testCell:', testCell)
 
                 
                 setDateRange(calendarResponse.data.dateArray);
-                console.log('DateRange', calendarResponse.data.dateArray);
-                console.log(employeeResponse.data.overrides)
+                //console.log('DateRange', calendarResponse.data.dateArray);
+                //console.log(employeeResponse.data.overrides)
                 setEmployeeList(EmployeeArrayToMap(employeeResponse.data.employeeList));
                 setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
                 setAvailabilities(AvailabilityArrayToMap(employeeResponse.data.availabilities));
@@ -105,7 +101,7 @@ console.log('testCell:', testCell)
                 setOverrides(OverrideToMap(employeeResponse.data.overrides));
                 setOv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks))
 
-                console.log("employee", EmployeeArrayToMap(employeeResponse.data.employeeList));
+                //console.log("employee", EmployeeArrayToMap(employeeResponse.data.employeeList));
                 // console.log("shifts", ShiftArrayToMap(employeeResponse.data.shifts));
                 // console.log("availabilities", AvailabilityArrayToMap(employeeResponse.data.availabilities));
                 // console.log("timeblock", TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));

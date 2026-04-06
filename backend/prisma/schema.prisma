@@ -69,7 +69,7 @@ model Employee_Employment_History {
   @@unique([employee_id,start_date])
 
   employee           Employee        @relation(fields: [employee_id],references:id)
-
+  
 
 
   @@map("employee_employment_history")
@@ -151,18 +151,19 @@ model Employee_Override_Time_Block{
 }
 
 model Calendar{
-    date              DateTime        @id @db.Date
-    day_of_month      Int
-    days_of_week      Int
-    week              Int
-    month             Int
-    year              Int
-    is_weekend        Boolean
-    is_holiday        Boolean
-    holiday_name      String?
+    date                  DateTime        @id @db.Date
+    day_of_month          Int
+    days_of_week          Int
+    week                  Int
+    month                 Int
+    year                  Int
+    is_weekend            Boolean
+    is_holiday            Boolean
+    holiday_name          String?
 
-    shift_dates       Employee_Shifts[]
-    override_dates    Employee_Time_Override[]
+    shift_dates           Employee_Shifts[]
+    override_dates        Employee_Time_Override[]
+ 
 
     @@map("calendar")
 }

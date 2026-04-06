@@ -2,23 +2,26 @@ import {create} from 'zustand'
 import type { ScheduleCell } from './Dashboard/Interfaces/ScheduleCell'
 import { immer } from 'zustand/middleware/immer'
 import type { Employee } from './Dashboard/Interfaces/Employee'
+import type { Day } from './Dashboard/Interfaces/Day'
 
 type ScheduleStore = {
-    employees : Map<number,Employee>
+    //a list of employee rows
+    //each row has an employee id, composed of a list of dates where each date contains a schedule cell
+    dateRange: Day[]
 
     scheduleGrid: Map<number,Map<string,ScheduleCell>>
 
-    setGrid: (employees: Map<number, Employee>, grid: Map<number, Map<string, ScheduleCell>>) => void
+    setGrid: (grid: Map<number, Map<string, ScheduleCell>>) => void
     setCell: (employee_id: number, date: string, cell: ScheduleCell) => void
 }
 
 
 export const useScheduleStore = create<ScheduleStore>()(immer((set)=>({
-    employees: new Map(),
+    dateRange: [],
     scheduleGrid: new Map(),
 
-    setGrid: (employees, grid) => set(state => {
-        state.employees = employees
+    setGrid: ( grid) => set(state => {
+        
         state.scheduleGrid = grid
     }),
 
