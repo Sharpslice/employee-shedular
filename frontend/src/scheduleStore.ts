@@ -11,6 +11,7 @@ type ScheduleStore = {
 
     scheduleGrid: Map<number,Map<string,ScheduleCell | null>>
 
+    setDateRange:(dateRange:Day[]) => void
     setGrid: (grid: Map<number, Map<string, ScheduleCell | null>>) => void
     setCell: (employee_id: number, date: string, cell: ScheduleCell) => void
 }
@@ -20,7 +21,9 @@ export const useScheduleStore = create<ScheduleStore>()(immer((set)=>({
     dateRange: [],
 
     scheduleGrid: new Map(),
-
+    setDateRange:(dateRange)=> set(state=>{
+        state.dateRange = dateRange
+    }),
     setGrid: ( grid) => set(state => {
         
         state.scheduleGrid = grid

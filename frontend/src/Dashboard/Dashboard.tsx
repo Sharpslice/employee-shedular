@@ -26,8 +26,8 @@ import type { ScheduleCell } from "./Interfaces/ScheduleCell";
 
 
 
-type CalendarResponse ={
-    dateArray: Day[]
+interface dateRange{
+    day:Day[]
 }
 interface schedule{
     id:number,
@@ -38,13 +38,15 @@ interface schedule{
     override_time_block:OvTimeBlock[]
 }
 
-type scheduleResponse = schedule[]
+type scheduleResponse = {
+    schedule: schedule[]
+    dateRange: Day[]
+}
 
 
 function Dashboard(){   
     const {date} = useParams();
-    const [dateRange,setDateRange] = useState<Day[]>([]) 
-
+    
     
     const isWeek = useMatch('schedule/week/*')
     const isDay = useMatch('schedule/day/*')
@@ -65,22 +67,21 @@ function Dashboard(){
 
     const fetchCalendar=async()=>{
         const res = await axios.get(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`, { withCredentials: true })
-        return res.data.schedule
+        
+        return res.data 
     }
-    const {data} = useQuery<scheduleResponse>({queryKey: ['schedule',safeDate,safeView],queryFn:fetchCalendar});
+    const {data } = useQuery<scheduleResponse>({queryKey: ['schedule',safeDate,safeView],queryFn:fetchCalendar});
    
-
-    const setCell = useScheduleStore(state => state.setCell)
     const setGrid = useScheduleStore(state=>state.setGrid)
+    const setDateRange = useScheduleStore(state=>state.setDateRange)
     const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
-    const cell = useScheduleStore(
-        state => state.scheduleGrid.get(1)?.get('2026-03-23')
-)
+    const dateRange = useScheduleStore(state=>state.dateRange)
     useEffect(()=>{
-        if(!data) return
-
+        const schedule = data?.schedule
+        const dateRange = data?.dateRange
+        if(!schedule) return
         const gridMap = new Map<number,Map<string,ScheduleCell |null >>()
-        for(const row of data){
+        for(const row of schedule){
             console.log(row.id)
 
             const scheduleCell = {
@@ -104,10 +105,14 @@ function Dashboard(){
 
         }
         setGrid(gridMap)
+
+        if(!dateRange) return
+        setDateRange(dateRange)
         
 
     },[data])
     console.log(scheduleGrid)
+    console.log(dateRange)
   
     // useEffect(() => {
     //     console.log('fetching new date: ', safeDate)
@@ -176,7 +181,7 @@ function Dashboard(){
 
                         {   
                             <Outlet context={
-                                {   safeView,dateRange,
+                                {   safeView,
                                     employeeList,setEmployeeList,
                                     shifts,setShifts, 
                                     availabilities,setAvailabilities,
