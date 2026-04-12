@@ -73,8 +73,10 @@ function Dashboard(){
     const setDateRange = useScheduleStore(state=>state.setDateRange)
     const setEmployees = useScheduleStore(state=>state.setEmployees)
     // const employees = useScheduleStore(state=>state.employees)
-     //const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
+     const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
     // const dateRange = useScheduleStore(state=>state.dateRange)
+
+    
     useEffect(()=>{
 
         const schedule = data?.schedule
@@ -133,7 +135,7 @@ function Dashboard(){
        
     
     },[data])
-     //console.log(scheduleGrid)
+     console.log(scheduleGrid)
     
   
    

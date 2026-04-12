@@ -33,7 +33,7 @@ interface DayProps{
 
 function DayCell({row,index,hidden,employee,date}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened,clipboard} = useContext(GridNavigationContext)!
-    
+    //console.log(employee)
     const {isOver,setNodeRef} = useDroppable({
         id:`(${row},${index})`,
         data:{
@@ -49,7 +49,7 @@ function DayCell({row,index,hidden,employee,date}:DayProps){
 
 
     const scheduleCell = useScheduleStore(state=>state.scheduleGrid.get(employee.id)?.get(date.date))!
-    
+    const availability = scheduleCell.availability_time_blocks;
     
     
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
@@ -87,18 +87,18 @@ function DayCell({row,index,hidden,employee,date}:DayProps){
             },
             {withCredentials:true})
     }
-    //console.log(scheduleCell)
+    
 
     return(
         <>
         <Flex flex={1} direction={'column'} align='stretch'>
 
         
-            <AvailabilityCell hidden={hidden}></AvailabilityCell>
+            {!hidden && <AvailabilityCell employee={employee}  availability={availability} date={date}></AvailabilityCell>}
 
             <Flex  
                 ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
-                // style={{opacity:isOver ? 1:0.5}}
+                style={{opacity:availability.length ? 1:0.5}}
                 key={`${employee.id} - ${date.date}`}  
                 flex={1} direction={'column'} align={'stretch'}   p={5} bd={'1px solid black'} bg={'grey'} 
                 

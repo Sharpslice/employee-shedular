@@ -24,7 +24,7 @@ function EmployeeInfo({onAvailabilityclick,employee}:InfoProp){
     const totalHours = useMemo(()=>{
       return 0//shifts.reduce((total,shift)=> total + calculateTime(shift.start_time,shift.end_time) ,0)
     },[])
-
+    
     return(
         <Flex 
             gap={15} align={'center'} 

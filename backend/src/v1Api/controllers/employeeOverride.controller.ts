@@ -65,7 +65,7 @@ export async function createAvailability(req:Request,res:Response){
 
 
     try{
-        // const response = await createAvailabilityService(employee_id,date,start_time,end_time,av_time_block_id)
+        //const response = await createAvailabilityService(employee_id,date,)
         // console.log(response)
         //io.emit('addAvailabilityOverride',{override:response.override,time_block:response.time_block})
         res.status(200).json({success:true})
