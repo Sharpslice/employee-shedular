@@ -57,7 +57,7 @@ export async function scheduleService(
             id:'asc'
         }
     })
-    console.log(employees)
+    //console.log(employees)
     
     const schedule = await prisma.$queryRaw`
         SELECT 
@@ -67,6 +67,7 @@ export async function scheduleService(
                 JSON_AGG(
                     JSON_BUILD_OBJECT(
                         'id', s.id,
+                        'employee_id',s.employee_id,
                         'date',s.date,
                         'start_time',s.start_time,
                         'end_time',s.end_time
@@ -92,7 +93,7 @@ export async function scheduleService(
                         'shift_id',o.shift_id,
                         'status',o.status
                     )
-                ) FILTER (WHERE o.id IS NOT NULL), '[]'::json) as override,
+                ) FILTER (WHERE o.id IS NOT NULL), '[]'::json) as overrides,
             COALESCE(
             JSON_AGG(
                 JSON_BUILD_OBJECT(
@@ -122,7 +123,7 @@ export async function scheduleService(
         GROUP BY e.id,c.date
         ORDER BY e.id
     `
-    //console.log(schedule)
+    console.log(schedule)
 
 
 

@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import type { Day } from "../../Interfaces/Day";
-import type { Employee } from "../../Interfaces/Employee";
+
 import type { Shift } from "../../Interfaces/Shift";
+import { useScheduleStore } from "../../../scheduleStore";
 
 
 
 function useGridNavigation(){
-    const { dateRange,employeeList } = useOutletContext<{ dateRange: Day[],employeeList:Map<number,Employee> }>();
+    const employees = useScheduleStore(state=>state.employees)
+    const dateRange = useScheduleStore(state=>state.dateRange)
 
     const [focusedId,setFocusedId] = useState({row:100,col:100})
 
@@ -20,10 +20,10 @@ function useGridNavigation(){
     const focusedRef = React.useRef({ row: 0, col: 0 });
 
     const cellRefs = useMemo(() => {
-            return Array.from({ length: employeeList.size }, () =>
+            return Array.from({ length: employees.length }, () =>
                 Array.from({ length: dateRange.length }, () => React.createRef<HTMLDivElement>())
             );
-        }, [employeeList.size, dateRange.length]);
+        }, [employees, dateRange]);
 
 
     const handleArrowKey=(key:string,row:number,col:number)=>{

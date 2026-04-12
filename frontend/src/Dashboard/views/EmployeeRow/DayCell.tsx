@@ -8,52 +8,50 @@ import type { Employee } from "../../Interfaces/Employee"
 import type { Day } from "../../Interfaces/Day"
 
 import { ContextMenuContext } from "../../Slot/ContextMenu/ContextMenuProvider"
-// import OverrideCell from "../../Slot/Availability_override/OverrideCell"
+
 import { useDroppable } from "@dnd-kit/core"
 
 import { mergeRefs } from "@react-aria/utils";
-import type { Shift } from "../../Interfaces/Shift"
-import { DateTime } from "luxon"
 
-import type { TimeBlock } from "../../Interfaces/TimeBlock"
-import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
-import { getShiftStatus } from "./shiftConflictUtil"
-import type { Override } from "../../Interfaces/Override"
-import OverrideCell from "../../Slot/Override/OverrideCell"
+
+
 import axios from "axios"
-
-
-
-
+import { useScheduleStore } from "../../../scheduleStore"
+import OverrideCell from "../../Slot/Override/OverrideCell"
+import AvailabilityCell from "./AvailabilityCell"
 
 
 
 interface DayProps{
     row:number
+    hidden:boolean
     index:number
     employee:Employee
     date: Day
-    shifts:Shift[]
-    overrides:Override[]
-    time_blocks: TimeBlock[] | undefined
-    ov_time_blocks: OvTimeBlock[] | undefined
+    
 }
 
-function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_blocks}:DayProps){
+function DayCell({row,index,hidden,employee,date}:DayProps){
     const {cellRefs,focusedId,setFocusedId,handleArrowKey,setMenuOpened,clipboard} = useContext(GridNavigationContext)!
+    
+    const {isOver,setNodeRef} = useDroppable({
+        id:`(${row},${index})`,
+        data:{
+            employee_id:employee.id,
+            employee_name: employee.name,
+            date:date
+            
+        }
+
+    })
 
     const {setCoords,setActive, setSelectedCell}= useContext(ContextMenuContext)!
 
-    const hasShift = shifts.filter(shift => DateTime.fromISO(shift.date).toISODate() === DateTime.fromISO(date.date).toISODate());
-    const hasOverride = overrides.filter(
 
-        override => DateTime.fromISO(override.date).toISODate()=== DateTime.fromISO(date.date).toISODate() 
-        
-        
-        
+    const scheduleCell = useScheduleStore(state=>state.scheduleGrid.get(employee.id)?.get(date.date))!
     
     
-    )
+    
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         
         if(e.target === e.currentTarget){
@@ -74,18 +72,7 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
         }
     }
     
-    const {isOver,setNodeRef} = useDroppable({
-        id:`(${row},${index})`,
-        data:{
-            employee_id:employee.id,
-            employee_name: employee.name,
-            date:date
-            
-        }
 
-    })
-
-    
     const createCell=async ()=>{
         console.log('creating cell')
         console.log(date)
@@ -100,79 +87,90 @@ function DayCell({row,index,employee,date,shifts,overrides,time_blocks,ov_time_b
             },
             {withCredentials:true})
     }
-    
+    //console.log(scheduleCell)
 
     return(
-        <Flex  
-            ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
-            // style={{opacity:isOver ? 1:0.5}}
-            key={`${employee.id} - ${date.date}`}  
-            flex={1} direction={'column'} align={'stretch'}   p={5} bd={'1px solid black'} bg={'grey'} 
-            
-            tabIndex={-1}
-            onKeyDown={(e)=>{
-                if(e.key === 'ArrowUp' || 
-                    e.key==='ArrowDown' || 
-                    e.key ==='ArrowLeft' || 
-                    e.key ==='ArrowRight' || 
-                    e.key ==='Tab')
-                {
-                    handleArrowKey?.(e.key,row!,index)
-                }
+        <>
+        <Flex flex={1} direction={'column'} align='stretch'>
+
+        
+            <AvailabilityCell hidden={hidden}></AvailabilityCell>
+
+            <Flex  
+                ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
+                // style={{opacity:isOver ? 1:0.5}}
+                key={`${employee.id} - ${date.date}`}  
+                flex={1} direction={'column'} align={'stretch'}   p={5} bd={'1px solid black'} bg={'grey'} 
+                
+                tabIndex={-1}
+                onKeyDown={(e)=>{
+                    if(e.key === 'ArrowUp' || 
+                        e.key==='ArrowDown' || 
+                        e.key ==='ArrowLeft' || 
+                        e.key ==='ArrowRight' || 
+                        e.key ==='Tab')
+                    {
+                        handleArrowKey?.(e.key,row!,index)
+                    }
+                    
+                    
+                    if(e.key === 'v' && (e.ctrlKey || e.metaKey)){
+                        console.log('droppable: ', isOver)
+                        console.log('pasting: ',clipboard)
+                        createCell()
+
+
+                    }
                 
                 
-                if(e.key === 'v' && (e.ctrlKey || e.metaKey)){
-                    console.log('droppable: ', isOver)
-                    console.log('pasting: ',clipboard)
-                    createCell()
+                }}
+                onContextMenu={(e)=>{
+                    e.preventDefault()
+                    setActive(true)
+                    setCoords({x:e.clientX,y:e.clientY})
+                    setSelectedCell({employee:employee,date:date})
 
 
-                }
-               
-            
-            }}
-            onContextMenu={(e)=>{
-                e.preventDefault()
-                setActive(true)
-                setCoords({x:e.clientX,y:e.clientY})
-                setSelectedCell({employee:employee,date:date})
-
-
-            }}
-            onFocus={(e)=>{
-                onParentFocus(e)
-                setFocusedId({row:row!,col:index})
-            }}>
-                                    
-            
-            <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
-                {
-                    hasOverride.filter((override)=>override.type !='AVAILABLE').map((override,index)=>{
+                }}
+                onFocus={(e)=>{
+                    onParentFocus(e)
+                    setFocusedId({row:row!,col:index})
+                }}>
+                                        
+                
+                <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
+                    {
+                        scheduleCell.overrides.map((override)=>{
+                            return(
+                                <OverrideCell override={override} status={override.status} key={`${override.id}-${index}`}></OverrideCell>
+                            )
+                        })
                         
-                        return(
-                            <OverrideCell override={override} status={override.status} key={`${override.id}-${index}`}></OverrideCell>
-                        )
+                    }
+                    {
                         
+                        scheduleCell.shifts.map((shift,index)=>{
+                            const status = null;
+                            return(
+                                <ShiftCell key={`${shift.id}-${index}`} shift={shift} status={status}/>
+                            
+                            )
                         
-                    })
-                }
-                {
-                    hasShift.map((shift,index)=>{
-                        const status = getShiftStatus(shift, time_blocks,ov_time_blocks,hasOverride);
-                        return(
-                            <ShiftCell key={`${shift.id}-${index}`} shift={shift} status={status}/>
-                        )
-                    })
-                }
-               
+                        })
+                        
+                    }
                 
+                    
+                    
+                </SlotContainer> 
+
                 
-            </SlotContainer> 
 
-            
-
-        </Flex>
+            </Flex>
+            </Flex>
+        </>
     )
+    
 }
 
 export default DayCell

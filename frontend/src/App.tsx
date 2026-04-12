@@ -4,7 +4,7 @@ import './App.css'
 import Header from './Header/Header'
 import AuthProvider from './AuthenticatedUserContext'
 
-import {useQuery,QueryClient,QueryClientProvider} from '@tanstack/react-query'
+import {QueryClient,QueryClientProvider} from '@tanstack/react-query'
 
 
 

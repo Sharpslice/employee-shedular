@@ -1,9 +1,9 @@
 
 import {  useEffect, useState } from "react"
-import {DateTime} from 'luxon'
+
 import axios from "axios";
 import Header from "./Header";
-import { Container} from "@mantine/core";
+import { Container, } from "@mantine/core";
 import { Outlet, useMatch, useParams } from "react-router-dom";
 
 import type { Employee } from "./Interfaces/Employee";
@@ -23,21 +23,21 @@ import { useQuery } from "@tanstack/react-query";
 import { useScheduleStore } from "../scheduleStore";
 import type { ScheduleCell } from "./Interfaces/ScheduleCell";
 
+import {DateTime} from 'luxon';
 
 
-
-interface schedule{
+type schedule={
     id:number,
     date:string,
     shifts:Shift[]
-    time_blocks:TimeBlock[]
+    availability_time_blocks:TimeBlock[]
     overrides:Override[]
-    override_time_block:OvTimeBlock[]
+    override_time_blocks:OvTimeBlock[]
 }
 
 type scheduleResponse = {
-    schedule: schedule[]
     dates: Day[]
+    schedule: schedule[]
     employees: Employee[]
 }
 
@@ -61,20 +61,19 @@ function Dashboard(){
     const [overrides,setOverrides] = useState<Map<number,Override>>(new Map())
     const [ov_time_blocks,setOv_time_blocks] = useState<Map<number,OvTimeBlock>>(new Map())
     
-    useScheduleSocket(setShifts,setOverrides,setOv_time_blocks);
+    useScheduleSocket();
 
     const fetchCalendar=async()=>{
-        const res = await axios.get(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`, { withCredentials: true })
-        
+        const res = await axios.get<scheduleResponse>(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`, { withCredentials: true })
         return res.data 
     }
-    const {data } = useQuery<scheduleResponse>({queryKey: ['schedule',safeDate,safeView],queryFn:fetchCalendar});
+    const {data } = useQuery<scheduleResponse>({queryKey: ['schedule',safeDate,safeView],queryFn:fetchCalendar, staleTime: 0});
    
     const setGrid = useScheduleStore(state=>state.setGrid)
     const setDateRange = useScheduleStore(state=>state.setDateRange)
     const setEmployees = useScheduleStore(state=>state.setEmployees)
     // const employees = useScheduleStore(state=>state.employees)
-    // const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
+     //const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
     // const dateRange = useScheduleStore(state=>state.dateRange)
     useEffect(()=>{
 
@@ -85,95 +84,59 @@ function Dashboard(){
         
         const gridMap = new Map<number,Map<string,ScheduleCell |null >>()
         for(const row of schedule){
+            const date = DateTime.fromISO(row.date,{ zone: 'utc' }).toISODate()!
 
             const scheduleCell = {
                 shifts: row.shifts,
                 overrides:row.overrides,
-                time_blocks:row.time_blocks,
-                ov_time_blocks:row.override_time_block
+                availability_time_blocks:row.availability_time_blocks ,
+                override_time_blocks:row.override_time_blocks
             }
 
             if(!gridMap.has(row.id)){
                 
                 const innerMap = new Map()
-                innerMap.set(row.date,scheduleCell)
+                innerMap.set(date,scheduleCell)
                 gridMap.set(row.id, innerMap)
             }
-            if(gridMap.has(row.id) && !gridMap.get(row.id)?.has(row.date)){
-                gridMap.get(row.id)?.set(row.date,null)
+            if(gridMap.has(row.id) && !gridMap.get(row.id)?.has(date)){
+                gridMap.get(row.id)?.set(date,null)
             }
 
-            gridMap.get(row.id)?.set(row.date,scheduleCell)
+            gridMap.get(row.id)?.set(date,scheduleCell)
 
         }
         setGrid(gridMap)
         
 
         if(!dateRange) return
-        setDateRange(dateRange)
+        
+            const normalizedDates = dateRange.map(day => ({
+                ...day,
+                date: DateTime.fromISO(day.date,{ zone: 'utc' }).toISODate()!
+            }))
+        setDateRange(normalizedDates)
+
+
+
+
+
+        setDateRange(normalizedDates)
         console.log(dateRange)
 
         if(!employees) return
         setEmployees(employees)
-        console.log(employees)
+        
 
 
         
        
     
     },[data])
+     //console.log(scheduleGrid)
     
-    // useEffect(() => {
-    //     console.log('fetching new date: ', safeDate)
-    //     const fetchData = async () => {
-    //         try {
-                
-    //             const [calendarResponse, employeeResponse] = await Promise.all([
-    //                 axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${safeView}`, { withCredentials: true }),
-    //                 axios.get<EmployeeResponse>(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`, { withCredentials: true })
-    //             ]);
-
-                
-    //             setDateRange(calendarResponse.data.dateArray);
-    //             //console.log('DateRange', calendarResponse.data.dateArray);
-    //             //console.log(employeeResponse.data.overrides)
-    //             setEmployeeList(EmployeeArrayToMap(employeeResponse.data.employeeList));
-    //             setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
-    //             setAvailabilities(AvailabilityArrayToMap(employeeResponse.data.availabilities));
-    //             setAv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
-    //             setOverrides(OverrideToMap(employeeResponse.data.overrides));
-    //             setOv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks))
-
-    //             //console.log("employee", EmployeeArrayToMap(employeeResponse.data.employeeList));
-    //             // console.log("shifts", ShiftArrayToMap(employeeResponse.data.shifts));
-    //             // console.log("availabilities", AvailabilityArrayToMap(employeeResponse.data.availabilities));
-    //             // console.log("timeblock", TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
-    //             // console.log("ov timeblock", TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks));
-    //             // console.log('overrides',OverrideToMap(employeeResponse.data.overrides))
-
-    //         } catch (err) {
-    //             console.error("Failed to fetch data:", err);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [safeDate, safeView]);
-
-    // useEffect(()=>{
-    //     const handleUndoPress=(e:KeyboardEvent)=>{
-    //         if(e.key==='z' && (e.ctrlKey || e.metaKey) ){
-    //             e.preventDefault()
-    //             console.log('undo press')
-    //         }
-    //     }
-    //     window.addEventListener('keydown',(e:KeyboardEvent)=>handleUndoPress(e))
-
-    //     return () => {
-    //         window.removeEventListener('keydown', (e:KeyboardEvent)=>handleUndoPress(e));
-    //     };
-
-
-    // },[])
+  
+   
 
 
 

@@ -18,8 +18,8 @@ shifts.delete('/:id',
     deleteShift)
 
 shifts.patch('/:id',
-    validateMoveShift,
-    normalizeTime,
+    // validateMoveShift,
+    // normalizeTime,
     moveShift)
 
 

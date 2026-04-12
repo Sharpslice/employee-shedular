@@ -8,6 +8,7 @@ import TimeRangePicker from "../../Slot/TimeRangePicker/TimeRangePicker"
 import { createAvailabilityOverride } from "../../../services/overrideServices"
 import { useOutletContext } from "react-router-dom"
 import type { Availability } from "../../Interfaces/Availability"
+import { useScheduleStore } from "../../../scheduleStore"
 
 
 
@@ -15,8 +16,6 @@ interface availabilityProp{
     employee:Employee
     hidden: boolean
     dateRange: Day[]
-    time_blocks_DOW: Map<number,TimeBlock[]>
-    ov_time_blocks_date: Map<string,OvTimeBlock[]>
 }
 const convertTo12hr = (time:string | null)=>{
     
@@ -25,20 +24,19 @@ const convertTo12hr = (time:string | null)=>{
     return dt.toFormat('hh:mm a')
 }
 
-function EmployeeAvailabilityRow({employee,hidden,dateRange,time_blocks_DOW,ov_time_blocks_date}:availabilityProp){
+function EmployeeAvailabilityRow({employee,hidden,dateRange}:availabilityProp){
     
 
-    const {availabilities} = useOutletContext<{availabilities:Map<number,Availability>}>()
+    
 
     return(<>
 
         {!hidden && <Flex gap={5} >
             {dateRange.map((day)=>{
 
-                const overrides = ov_time_blocks_date.get(day.date)
-                const time_block_array = time_blocks_DOW.get(day.days_of_week) ?? [null]
-                
-                console.log(availabilities)
+                const availability_time_block = useScheduleStore.getState().scheduleGrid.get(employee.id)?.get(day.date)!.availability_time_blocks
+                const overrides = useScheduleStore.getState().scheduleGrid.get(employee.id)?.get(day.date)!.override_time_blocks
+                //console.log(availability_time_block)
                return (
                     <Flex key={day.days_of_week} 
                         flex={1}
@@ -62,7 +60,7 @@ function EmployeeAvailabilityRow({employee,hidden,dateRange,time_blocks_DOW,ov_t
 
                             : 
                             
-                            time_block_array?.map((time_block)=>{
+                            availability_time_block?.map((time_block)=>{
                                 
                                
                                 return(

@@ -30,13 +30,12 @@ function ShiftCell({shift,status}:ShiftCellProps){
 
     const [activate,setActivate] = useState(false)
    
-    
+    //console.log(shift.employee_id)
     
     const {attributes,listeners,setNodeRef,transform,isDragging} = useDraggable({
         id: shift.id,
         data:{
-            employee_id: shift.employee_id,
-            date: shift.date
+            shift:shift
         }
     })
 

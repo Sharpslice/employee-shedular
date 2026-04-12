@@ -22,29 +22,37 @@ export async function deleteShiftService(shift_id:number){
     
     return {shift,override}
 }
-export async function moveShiftService(
-    shift_id: number,
+
+type Shift = {
+    id: number,
     employee_id: number,
     date: Date,
-    start_time: string,
-    end_time: string
+    // start_time: string,
+    // end_time: string
+}
+export async function moveShiftService(
+    shift_id:number,
+    employee_id:number,
+    date:Date
 ) {
     return prisma.$transaction(async (tx) => {
-
-
-   
-      
-        const updatedShift = await tx.employee_Shifts.update({
-            where: { id: shift_id },
-            data: {
-                employee_id: employee_id,
-                date: date,
-                start_time: start_time,
-                end_time: end_time,
-            },
-        });
+        const draggedShift = await tx.employee_Shifts.findUnique({
+            where:{
+                id:shift_id
+            }
+        })
         
-        return updatedShift; // placeholder return, returns undefined
+        const shift = await tx.employee_Shifts.update({
+            where:{
+                id:shift_id
+            },
+            data:{
+                employee_id:employee_id,
+                date: date
+            }
+        })
+        return {draggedShift,shift}
+
     });
 }
 

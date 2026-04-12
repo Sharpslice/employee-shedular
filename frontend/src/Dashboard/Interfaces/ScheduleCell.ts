@@ -8,7 +8,6 @@ import type { TimeBlock } from "./TimeBlock"
 export type ScheduleCell = {
     shifts: Shift[]
     overrides: Override[]
-    time_blocks: TimeBlock[] | undefined
-    ov_time_blocks: OvTimeBlock[] | undefined
-    
+    availability_time_blocks: TimeBlock[]
+    override_time_blocks: OvTimeBlock[]
 }
