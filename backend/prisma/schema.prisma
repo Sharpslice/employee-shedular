@@ -55,7 +55,7 @@ model Employee {
   availability    Employee_Availability[]
   override        Employee_Time_Override[]
   employment      Employee_Employment_History[]
-
+   weekly_availability Employee_Weekly_Availability[]
   @@map("employee")
 }
 
@@ -96,12 +96,13 @@ model Employee_Availability{
     employee_id             Int
     day_of_week             Int
     is_available            Boolean
+    effective_from          DateTime  @db.Timestamptz @default(dbgenerated("'2026-02-02'::date"))
+
+    @@unique([employee_id,day_of_week,effective_from])
+
+    time_blocks      Employee_Availability_Time_Block[] 
+
     
-
-    @@unique([employee_id,day_of_week])
-
-    time_blocks      Employee_Availability_Time_Block[]
-
     employee          Employee  @relation(fields:[employee_id],references:id)
     
     @@map("employee_availability")
@@ -116,6 +117,30 @@ model Employee_Availability_Time_Block{
     availability        Employee_Availability @relation(fields:[employee_availability_id],references:id)
 
     @@map("employee_availability_time_block")
+}
+
+model Employee_Weekly_Availability {
+    id           Int      @id @default(autoincrement())
+    employee_id  Int
+    date         DateTime @db.Date
+    is_available Boolean
+    
+    employee     Employee @relation(fields: [employee_id], references: id)
+    time_blocks  Employee_Weekly_Availability_Time_Block[]
+
+    @@unique([employee_id, date])
+    @@map("employee_weekly_availability")
+}
+
+model Employee_Weekly_Availability_Time_Block {
+    id                              Int      @id @default(autoincrement())
+    employee_weekly_availability_id Int
+    start_time                      DateTime? @db.Timestamptz
+    end_time                        DateTime? @db.Timestamptz
+
+    weekly_availability Employee_Weekly_Availability @relation(fields: [employee_weekly_availability_id], references: id, onDelete: Cascade)
+
+    @@map("employee_weekly_availability_time_block")
 }
 
 model Employee_Time_Override {
@@ -161,9 +186,10 @@ model Calendar{
     is_holiday            Boolean
     holiday_name          String?
 
-    shift_dates           Employee_Shifts[]
-    override_dates        Employee_Time_Override[]
- 
+    
+    shift_dates             Employee_Shifts[]
+    override_dates          Employee_Time_Override[]
+   
 
     @@map("calendar")
 }

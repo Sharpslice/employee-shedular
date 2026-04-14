@@ -82,6 +82,20 @@ export async function scheduleService(
                         
                     )
                 ) FILTER (WHERE atb.id IS NOT NULL), '[]'::json) as availability_time_blocks,     
+
+
+            COALESCE(
+                JSON_AGG(
+                    JSON_BUILD_OBJECT(
+                        'id', watb.id,
+                        'employee_weekly_availability_id', watb.employee_weekly_availability_id,
+                        'start_time',watb.start_time,
+                        'end_time',watb.end_time
+                        
+                    )
+                ) FILTER (WHERE watb.id IS NOT NULL), '[]'::json) as availability_weekly_time_blocks,     
+
+
             COALESCE(
                 JSON_AGG(
                     JSON_BUILD_OBJECT(
@@ -116,6 +130,11 @@ export async function scheduleService(
             AND a.day_of_week = c.days_of_week
         LEFT JOIN employee_availability_time_block atb
             ON atb.employee_availability_id =  a.id
+        LEFT JOIN employee_weekly_availability wa
+            ON wa.employee_id =e.id
+            AND wa.date = c.date
+        LEFT JOIN employee_weekly_availability_time_block watb
+            ON watb.employee_weekly_availability_id = wa.id
         INNER JOIN employee_employment_history eh
             ON eh.employee_id = e.id
             AND eh.start_date <= ${endDate.toJSDate()} AND (eh.end_date is NULL OR eh.end_date >= ${beginDate.toJSDate()})

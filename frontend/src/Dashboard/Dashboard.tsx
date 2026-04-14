@@ -24,6 +24,7 @@ import { useScheduleStore } from "../scheduleStore";
 import type { ScheduleCell } from "./Interfaces/ScheduleCell";
 
 import {DateTime} from 'luxon';
+import type { Weekly_Time_block } from "./Interfaces/weekly_time_block";
 
 
 type schedule={
@@ -33,6 +34,7 @@ type schedule={
     availability_time_blocks:TimeBlock[]
     overrides:Override[]
     override_time_blocks:OvTimeBlock[]
+    availability_weekly_time_blocks:Weekly_Time_block[]
 }
 
 type scheduleResponse = {
@@ -83,7 +85,7 @@ function Dashboard(){
         const dateRange = data?.dates
         const employees = data?.employees
         if(!schedule) return
-        
+        console.log(schedule)
         const gridMap = new Map<number,Map<string,ScheduleCell |null >>()
         for(const row of schedule){
             const date = DateTime.fromISO(row.date,{ zone: 'utc' }).toISODate()!
@@ -92,7 +94,8 @@ function Dashboard(){
                 shifts: row.shifts,
                 overrides:row.overrides,
                 availability_time_blocks:row.availability_time_blocks ,
-                override_time_blocks:row.override_time_blocks
+                override_time_blocks:row.override_time_blocks,
+                availability_weekly_time_blocks:row.availability_weekly_time_blocks
             }
 
             if(!gridMap.has(row.id)){

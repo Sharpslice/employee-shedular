@@ -2,6 +2,7 @@ import { Request,Response } from "express";
 import { createAvailabilityService, createLeaveService } from "../services/employeeOverride.services";
 import { createTimeOverrideService } from "../services/override.services";
 import { io } from "../../app";
+import { DateTime } from "luxon";
 
 
 export async function createTimeOverride(req:Request,res:Response)
@@ -58,20 +59,30 @@ export async function createLeave(req:Request,res:Response){
 export async function createAvailability(req:Request,res:Response){
     const employee_id = Number(req.params.employee_id)
     const date = req.body.date
-    // const start_time = req.body.time.start_time
-    // const end_time = req.body.time.end_time
-    
-   
 
+    const startDt = req.body.start_time 
+        ? DateTime.fromISO(req.body.start_time).set({ year: 1970, month: 1, day: 1 }).toUTC().toISO()!
+        : undefined
 
+    const endDt = req.body.end_time
+        ? DateTime.fromISO(req.body.end_time).set({ year: 1970, month: 1, day: 1 }).toUTC().toISO()!
+        : undefined
+
+    const time_block = req.body.time_block ?? undefined
+    console.log('start: ', startDt)
+    console.log('end: ', endDt)
+    console.log('time_block',time_block)
+    console.log(date);
     try{
-        //const response = await createAvailabilityService(employee_id,date,)
+        const response = await createAvailabilityService(employee_id,date,time_block,startDt,endDt)
         // console.log(response)
-        //io.emit('addAvailabilityOverride',{override:response.override,time_block:response.time_block})
+       
+        console.log('creating availability override')
         res.status(200).json({success:true})
     }
     catch(error:unknown){
-
+        console.error('createAvailability error:', error)
+    return res.status(500).json({ success: false, error: 'Failed to create availability' })
     }
 }
 

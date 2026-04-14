@@ -50,8 +50,9 @@ function DayCell({row,index,hidden,employee,date}:DayProps){
 
     const scheduleCell = useScheduleStore(state=>state.scheduleGrid.get(employee.id)?.get(date.date))!
     const availability = scheduleCell.availability_time_blocks;
-    
-    
+    const OvTimeBlocks = scheduleCell.override_time_blocks;
+    const weekly = scheduleCell.availability_weekly_time_blocks;
+   //console.log(weekly)
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         
         if(e.target === e.currentTarget){
@@ -94,7 +95,7 @@ function DayCell({row,index,hidden,employee,date}:DayProps){
         <Flex flex={1} direction={'column'} align='stretch'>
 
         
-            {!hidden && <AvailabilityCell employee={employee}  availability={availability} date={date}></AvailabilityCell>}
+            {!hidden && <AvailabilityCell employee={employee} override={OvTimeBlocks} weekly={weekly} availability={availability} date={date}></AvailabilityCell>}
 
             <Flex  
                 ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
