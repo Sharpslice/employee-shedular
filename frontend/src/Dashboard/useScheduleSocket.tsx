@@ -7,7 +7,7 @@ import { DateTime } from "luxon";
 
 
 
-function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<number,Shift>>>,
+function useScheduleSocket(
 ){
 
     const socket = useSocket()
@@ -50,17 +50,31 @@ function useScheduleSocket(setShifts: React.Dispatch<React.SetStateAction<Map<nu
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const handleShiftMoved = ({ remove, add,socket_id:origin_socket_id }:any)=>{
             if(origin_socket_id ===socket?.id) return
-    const removeDate = DateTime.fromISO(remove.date, { zone: 'utc' }).toISODate()!
-    const addDate = DateTime.fromISO(add.date, { zone: 'utc' }).toISODate()!
-    console.log('helo')
-     useScheduleStore.getState().addShift(add.employee_id, addDate, add.shift)
-    useScheduleStore.getState().removeShift(remove.employee_id, removeDate, remove.shift_id)
+            const removeDate = DateTime.fromISO(remove.date, { zone: 'utc' }).toISODate()!
+            const addDate = DateTime.fromISO(add.date, { zone: 'utc' }).toISODate()!
+            console.log('helo')
+            useScheduleStore.getState().addShift(add.employee_id, addDate, add.shift)
+            useScheduleStore.getState().removeShift(remove.employee_id, removeDate, remove.shift_id)
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const handleAvailabilityUpdate =({exception}:any)=>{
+            console.log('availability update: ',exception)
+            console.log('exception shape:', exception)
+            console.log('time_blocks:', exception?.time_blocks[0])
+            const date = DateTime.fromISO(exception.date,{zone:'utc'}).toISODate()!
+            useScheduleStore.getState().updateWeeklyAvailability(exception.employee_id,date,exception.time_blocks[0])
         }
 
         socket?.on('shift:moved', handleShiftMoved)
+        socket?.on('availability:update',handleAvailabilityUpdate)
+
+        
+
         return () => {
             socket?.off('shift:moved', handleShiftMoved)
+            socket?.off('availability:update', handleAvailabilityUpdate)
         }
+        
         
 },[socket])
 }

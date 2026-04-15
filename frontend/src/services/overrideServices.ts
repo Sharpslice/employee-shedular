@@ -28,9 +28,7 @@ export const createOverride = async(employee_id:number,date:string)=>{
 
 export const createAvailabilityOverride =async(time: string, slot: 'start' | 'end',employee_id:number,date:string,time_block:TimeBlock | null)=>{
     try{
-        console.log('slot, ',slot)
-        console.log('found,' ,time)
-        console.log(time_block)
+       
         const response = await axios.post(`http://localhost:3000/api/v1/employees/${employee_id}/overrides/availabilities`,
             
                slot==='start' 

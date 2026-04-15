@@ -28,7 +28,7 @@ const convertTo12hr = (time:string | null)=>{
 function AvailabilityCell({availability,employee,date,override,weekly}:AvailabilityProps){
   
    
-    console.log(`${employee.name} : ${override}`)
+    //console.log(`${employee.name} : ${override}`)
     const time_blocks  = availability.length ? availability: [null];
     
     

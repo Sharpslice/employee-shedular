@@ -73,6 +73,18 @@ async function updateAvailabilityException(
             ...(end_time && { end_time: end_time })
         }
     })
+
+    const exceptionUpdated = await tx.employee_Weekly_Availability.findUnique({
+        where: {
+            employee_id_date: {
+                employee_id,
+                date: DateTime.fromISO(date).toJSDate()
+            }
+        },
+        include: { time_blocks: true }
+    })
+
+    return exceptionUpdated
 }
 
 export async function createAvailabilityService(
@@ -84,7 +96,7 @@ export async function createAvailabilityService(
     
 
 ){
-    const response = await prisma.$transaction(async (tx) => {
+    const exception = await prisma.$transaction(async (tx) => {
             console.log('poop')
             const existing = await tx.employee_Weekly_Availability.findUnique({
                 where:{
@@ -98,8 +110,8 @@ export async function createAvailabilityService(
                 console.log('doesnt exist')
                 await copyOverAvailabilityException(tx,employee_id,date,time_block?.start_time,time_block?.end_time)
             }
-            await updateAvailabilityException(tx,employee_id,date,start_time,end_time)
+            return await updateAvailabilityException(tx,employee_id,date,start_time,end_time)
     });
-
-    return response
+    
+    return exception
 }

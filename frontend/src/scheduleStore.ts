@@ -5,6 +5,8 @@ import type { Employee } from './Dashboard/Interfaces/Employee'
 import type { Day } from './Dashboard/Interfaces/Day'
 import type { Shift } from './Dashboard/Interfaces/Shift'
 import { enableMapSet } from "immer"
+import { current } from 'immer'
+import type { availability_weekly_time_blocks } from './Dashboard/Interfaces/weekly_time_block'
 enableMapSet()
 type ScheduleStore = {
     //a list of employee rows
@@ -22,6 +24,7 @@ type ScheduleStore = {
 
     addShift:(employee_id:number,date:string,shift:Shift) =>void
     removeShift:(employee_id:number,date:string,shift_id:number)=>void
+    updateWeeklyAvailability:(employee_id:number,date:string,exception:availability_weekly_time_blocks)=>void
 }
 
 
@@ -46,28 +49,41 @@ export const useScheduleStore = create<ScheduleStore>()(immer((set)=>({
     setCell: (employee_id, date, cell) => set(state => {
         state.scheduleGrid.get(employee_id)?.set(date, cell)
     }),
-   addShift: (employee_id, date, shift) =>
-  set(state => {
-    const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);
-    if (!scheduleCell) return;
+   addShift: (employee_id, date, shift) => set(state => {
+        const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);
+        if (!scheduleCell) return;
 
-    // Check if the shift already exists by unique id
-    const exists = scheduleCell.shifts.some(s => s.id === shift.id);
+        // Check if the shift already exists by unique id
+        const exists = scheduleCell.shifts.some(s => s.id === shift.id);
 
-    if (!exists) {
-      scheduleCell.shifts.push(shift);
-    }
-  }),
-    removeShift: (employee_id, date, shift_id) =>
+        if (!exists) {
+        scheduleCell.shifts.push(shift);
+        }
+    }),
+    removeShift: (employee_id, date, shift_id) => set(state => {
+            
+            const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);
+        
+            if (!scheduleCell) return;
+            console.log('removing shift',shift_id)
+            
+            scheduleCell.shifts = scheduleCell.shifts.filter(s => s.id !== shift_id);
+        }),
+    updateWeeklyAvailability:(employee_id,date,exception)=>set(state=>{
+     
+        const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);
+        
+        if(!scheduleCell) return;
+        
+        const index = scheduleCell.availability_weekly_time_blocks.findIndex((timeblock)=>timeblock.id === exception.id)
+        if(index===-1){
+            console.log('running')
+            scheduleCell.availability_weekly_time_blocks.push(exception)
+        }else{
+            scheduleCell.availability_weekly_time_blocks[index] = exception
+        }
+        
 
-  set(state => {
-    //console.log(employee_id)
-    const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);
-    //console.log('scheedule',scheduleCell)
-    if (!scheduleCell) return;
-    console.log('removing shift',shift_id)
-    // Remove the shift if it exists (idempotent)
-    scheduleCell.shifts = scheduleCell.shifts.filter(s => s.id !== shift_id);
-  }),
+    })
     
 })))

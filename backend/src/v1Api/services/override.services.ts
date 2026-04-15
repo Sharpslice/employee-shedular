@@ -71,7 +71,7 @@ export async function deleteOverrideService(override_id:number){
 }
 
 export async function updateOverrideStatusService(override_id: number, status: Override_Status) {
-    console.log('inside service')
+    
     try {
         const override = await prisma.employee_Time_Override.update({
             where: { id: override_id },

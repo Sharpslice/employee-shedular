@@ -142,7 +142,7 @@ export async function scheduleService(
         GROUP BY e.id,c.date
         ORDER BY e.id
     `
-    console.log(schedule)
+    
 
 
 

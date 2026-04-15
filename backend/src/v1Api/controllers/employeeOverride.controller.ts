@@ -69,15 +69,14 @@ export async function createAvailability(req:Request,res:Response){
         : undefined
 
     const time_block = req.body.time_block ?? undefined
-    console.log('start: ', startDt)
-    console.log('end: ', endDt)
-    console.log('time_block',time_block)
-    console.log(date);
+    
     try{
-        const response = await createAvailabilityService(employee_id,date,time_block,startDt,endDt)
-        // console.log(response)
+        const exception = await createAvailabilityService(employee_id,date,time_block,startDt,endDt)
+        io.emit('availability:update',{
+            exception
+        })
        
-        console.log('creating availability override')
+        console.log('exc',exception)
         res.status(200).json({success:true})
     }
     catch(error:unknown){
