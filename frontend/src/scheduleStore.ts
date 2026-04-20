@@ -21,7 +21,7 @@ type ScheduleStore = {
     setEmployees:(employees:Employee[])=>void
     setGrid: (grid: Map<number, Map<string, ScheduleCell |null>>) => void
     setCell: (employee_id: number, date: string, cell: ScheduleCell) => void
-
+    updateShift:(employee_id: number, date: string,shift:Shift)=>void
     addShift:(employee_id:number,date:string,shift:Shift) =>void
     removeShift:(employee_id:number,date:string,shift_id:number)=>void
     updateWeeklyAvailability:(employee_id:number,date:string,exception:availability_weekly_time_blocks)=>void
@@ -48,6 +48,16 @@ export const useScheduleStore = create<ScheduleStore>()(immer((set)=>({
 
     setCell: (employee_id, date, cell) => set(state => {
         state.scheduleGrid.get(employee_id)?.set(date, cell)
+    }),
+    updateShift:(employee_id,date,shift)=>set(state=>{
+        const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);
+        if(!scheduleCell) return
+        const temp = scheduleCell.shifts.find((temp)=>temp.id === shift.id)
+        if(temp){
+            temp.start_time = shift.start_time
+            temp.end_time= shift.end_time
+            temp.status = shift.status
+        }
     }),
    addShift: (employee_id, date, shift) => set(state => {
         const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);

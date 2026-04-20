@@ -42,7 +42,7 @@ export async function updateShiftTimes(req:Request,res:Response){
     try{
         const shift =  await updateShiftTimeservice(shift_id,date,start_time,end_time)
 
-        io.emit('shiftUpdated',shift)
+        io.emit('shift:update',shift)
         return res.status(200).json({success:true,shift})
     }
     catch(error:unknown){

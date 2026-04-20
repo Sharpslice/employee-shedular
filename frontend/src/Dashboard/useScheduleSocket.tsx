@@ -33,20 +33,7 @@ function useScheduleSocket(
         // })
 
 
-        // socket?.on('shift:remove', (draggedShift) => {
-        //     console.log('shift:remove, ',draggedShift)
-        //     const date = DateTime.fromISO(draggedShift.date,{ zone: 'utc' }).toISODate()!
-        //     useScheduleStore.getState().removeShift(draggedShift.employee_id,date,draggedShift.shift_id)
-            
-            
-        // })
-        // socket?.on('shift:add', (shift) => {
-        //     console.log('shift:remove, ',shift)
-        //     const date = DateTime.fromISO(shift.date,{ zone: 'utc' }).toISODate()!
-        //     useScheduleStore.getState().addShift(shift.employee_id,date,shift.shift)
-            
-            
-        // })
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const handleShiftMoved = ({ remove, add,socket_id:origin_socket_id }:any)=>{
             //if(origin_socket_id ===socket?.id) return
@@ -79,15 +66,23 @@ function useScheduleSocket(
             useScheduleStore.getState().removeShift(shift.employee_id,date,shift.id)
 
         }
+        const handleShiftUpdate=(shift:Shift)=>{
+            console.log('shift updated: ',shift)
+            const date = DateTime.fromISO(shift.date,{zone:'utc'}).toISODate()!
+            useScheduleStore.getState().updateShift(shift.employee_id,date,shift)
+        }
         socket?.on('shift:moved', handleShiftMoved)
         socket?.on('availability:update',handleAvailabilityUpdate)
         socket?.on('shift:add',handleShiftAdd)
         socket?.on('shift:remove',handleShiftRemove)
-        
+        socket?.on('shift:update',handleShiftUpdate)
 
         return () => {
             socket?.off('shift:moved', handleShiftMoved)
             socket?.off('availability:update', handleAvailabilityUpdate)
+            socket?.off('shift:add',handleShiftAdd)
+            socket?.off('shift:remove',handleShiftRemove)
+            socket?.off('shift:update',handleShiftUpdate)
         }
         
         
