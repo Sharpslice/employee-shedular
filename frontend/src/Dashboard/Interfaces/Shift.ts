@@ -8,5 +8,5 @@ export interface Shift{
     date: string,
     start_time:string,
     end_time:string
-    status: 'CONFLICT' | 'OVERRIDEN' | null
+    status: 'CONFLICT' | 'OVERIDDEN' | null
 }

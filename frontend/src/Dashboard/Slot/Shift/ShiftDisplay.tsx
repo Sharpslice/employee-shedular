@@ -17,22 +17,21 @@ const convertTo12hr = (time:string | null)=>{
 
 interface ShiftDisplayProps{
     shift:Shift,
-    status: ShiftStatus
 }
 
 const getShiftColors = (status:ShiftStatus)=>{
     switch(status){
-        case "conflict":
+        case 'CONFLICT':
             return 'red'
-        case "override":
+        case "OVERIDDEN":
             return 'yellow'
-        case "allowed":
+        default:
             return undefined
     }
 }
 
 
-function ShiftDisplay({shift,status}:ShiftDisplayProps){
+function ShiftDisplay({shift}:ShiftDisplayProps){
 
     const timeOverride =async()=>{
         await axios.post(`http://localhost:3000/api/v1/employees/${shift.employee_id}/overrides/`,
@@ -55,13 +54,13 @@ function ShiftDisplay({shift,status}:ShiftDisplayProps){
 
    
     return(
-         <Flex flex={1} justify={'center'} align={'center'}h={'100%'} gap={10} bg={getShiftColors(status)}  >
+         <Flex flex={1} justify={'center'} align={'center'}h={'100%'} gap={10} bg={getShiftColors(shift.status)}  >
             <Text  fz={15}>{convertTo12hr( shift.start_time)}</Text>  
             <Text  fz={15}>-</Text>
             <Text  fz={15}>{convertTo12hr(shift.end_time)}</Text>
 
-            {status ==='conflict' &&
-                <ActionIcon color={getShiftColors(status)} onClick={
+            {shift.status ==='CONFLICT' &&
+                <ActionIcon color={getShiftColors(shift.status)} onClick={
                     (e)=>{
                         e.stopPropagation()
                         timeOverride()

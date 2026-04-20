@@ -3,6 +3,7 @@ import prisma from '../../../db/db';
 import { DateTime } from 'luxon';
 import { io } from '../../app';
 import { createShiftService, updateShiftTimeservice } from '../services/employeeShift.services';
+import { getShiftStatus } from './getShiftStatus';
 
 
 
@@ -14,8 +15,8 @@ export async function createShift(req:Request,res:Response){
 
     try{
         const shift = await createShiftService(employee_id,date!,start_time,end_time)
-
-        io.emit("shiftAdded",shift)
+        console.log('from createShiftController, shift: ',shift)
+        io.emit("shift:add",shift)
         
      
         return res.status(200).json({success:true,shift})

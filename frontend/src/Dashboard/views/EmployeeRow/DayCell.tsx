@@ -89,7 +89,7 @@ function DayCell({row,index,hidden,employee,date}:DayProps){
             {withCredentials:true})
     }
     
-console.log('DayCell render:', date.date, employee.id)
+//console.log('DayCell render:', date.date, employee.id)
     return(
         <>
         <Flex flex={1} direction={'column'} align='stretch'>

@@ -57,7 +57,7 @@ export async function scheduleService(
             id:'asc'
         }
     })
-    //console.log(employees)
+   
     
     const schedule = await prisma.$queryRaw`
         SELECT 
@@ -70,7 +70,18 @@ export async function scheduleService(
                         'employee_id',s.employee_id,
                         'date',s.date,
                         'start_time',s.start_time,
-                        'end_time',s.end_time
+                        'end_time',s.end_time,
+                        'status', 
+                            CASE
+                                WHEN watb.id IS NULL AND atb.id IS NULL THEN 'CONFLICT'
+
+                                WHEN s.start_time IS NULL OR s.end_time IS NULL THEN 'CONFLICT'
+
+                                WHEN s.start_time < COALESCE(watb.start_time,atb.start_time)
+                                OR   s.end_time > COALESCE(watb.end_time,atb.end_time) THEN 'CONFLICT'
+
+                                ELSE NULL
+                            END
                     )
                 ) FILTER (WHERE s.id IS NOT NULL), '[]'::json) as shifts,
             COALESCE(

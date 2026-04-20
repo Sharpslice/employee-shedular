@@ -1,13 +1,12 @@
 import { Flex, Group, Text } from "@mantine/core"
 import type { Day } from "../../Interfaces/Day"
-import type { TimeBlock } from "../../Interfaces/TimeBlock"
+
 import { DateTime } from "luxon"
-import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
+
 import type { Employee } from "../../Interfaces/Employee"
 import TimeRangePicker from "../../Slot/TimeRangePicker/TimeRangePicker"
 import { createAvailabilityOverride } from "../../../services/overrideServices"
-import { useOutletContext } from "react-router-dom"
-import type { Availability } from "../../Interfaces/Availability"
+
 import { useScheduleStore } from "../../../scheduleStore"
 
 
@@ -66,7 +65,7 @@ function EmployeeAvailabilityRow({employee,hidden,dateRange}:availabilityProp){
                                 return(
                                     <TimeRangePicker
                                     data={time_block}
-                                    onChange={(time,slot)=>createAvailabilityOverride(time,slot,employee.id,day.date)}
+                                    onChange={(time,slot)=>createAvailabilityOverride(time,slot,employee.id,day.date,time_block)}
                                     
                                     />
                                 )

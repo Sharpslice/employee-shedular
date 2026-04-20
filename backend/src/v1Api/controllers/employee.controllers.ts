@@ -32,7 +32,7 @@ export async function schedule(req:Request,res:Response){
 
     try{
         const response = await scheduleService(beginDate,endDate)
-        console.log(response.dates)
+        
         return res.json({
             dates:response.dates,
             schedule: response.schedule,

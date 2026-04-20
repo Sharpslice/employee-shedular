@@ -1,15 +1,21 @@
 import { DateTime, Zone } from "luxon";
 import prisma from "../../../db/db";
+import { getShiftStatus } from "../controllers/getShiftStatus";
 
 export async function createShiftService(employee_id:number,date:string,start_time?:string,end_time?:string){
-    return prisma.employee_Shifts.create({
-           data:{
-                employee_id:employee_id,
+   return prisma.$transaction(async (tx) => {
+        const shift = await tx.employee_Shifts.create({
+            data: {
+                employee_id: employee_id,
                 date: date,
-                start_time:start_time ?? null,
-                end_time:end_time ??null
-           }
+                start_time: start_time ?? null,
+                end_time: end_time ?? null
+            }
         })
+        const status = await getShiftStatus(shift.id, tx)
+     
+        return { ...shift, status }
+    })
 
 }
 

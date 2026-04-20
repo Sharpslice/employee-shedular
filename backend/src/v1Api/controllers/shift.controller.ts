@@ -12,7 +12,7 @@ export async function deleteShift(req:Request,res:Response){
     try{
         const {shift,override} = await deleteShiftService(shift_id)
         
-        io.emit("shiftDeleted",{shift, override: override ?? null})
+        io.emit("shift:remove",shift)
         return res.json({ success: true, shift_id: shift.id});
 
     }catch(error:unknown){
@@ -37,7 +37,7 @@ export async function moveShift(req:Request, res:Response){
     // const end_time = req.body.end_time;
     
     try{
-          console.log('calling moveShiftService with:', { shift_id, employee_id, date })
+          //console.log('calling moveShiftService with:', { shift_id, employee_id, date })
        
         const {draggedShift,shift} = await moveShiftService(shift_id,employee_id,date)
 
@@ -53,11 +53,12 @@ export async function moveShift(req:Request, res:Response){
         //     employee_id:shift.employee_id,
         //     date:shift.date
         // })
+        
         io.emit('shift:moved', {
-    remove: { employee_id: draggedShift?.employee_id, date: draggedShift?.date, shift_id: draggedShift?.id },
-    add: { employee_id: shift?.employee_id, date: shift.date, shift: shift },
-    socket_id:socket_id
-})
+            remove: { employee_id: draggedShift?.employee_id, date: draggedShift?.date, shift_id: draggedShift?.id },
+            add: { employee_id: shift?.employee_id, date: shift.date, shift: shift },
+            socket_id:socket_id
+        })
 
 
 

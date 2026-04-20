@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import prisma from "../../../db/db";
+import { getShiftStatus } from "../controllers/getShiftStatus";
 
 
 
@@ -17,7 +18,7 @@ export async function deleteShiftService(shift_id:number){
 
     const shift = await prisma.employee_Shifts.delete({
         where:{id:shift_id},
-        select:{id:true}
+       
     })
     
     return {shift,override}
@@ -51,7 +52,8 @@ export async function moveShiftService(
                 date: date
             }
         })
-        return {draggedShift,shift}
+        const status = await getShiftStatus(shift.id,tx)
+        return {draggedShift,shift:{...shift,status}}
 
     });
 }

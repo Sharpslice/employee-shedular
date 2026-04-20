@@ -55,15 +55,16 @@ export const useScheduleStore = create<ScheduleStore>()(immer((set)=>({
 
         // Check if the shift already exists by unique id
         const exists = scheduleCell.shifts.some(s => s.id === shift.id);
-
+        
         if (!exists) {
-        scheduleCell.shifts.push(shift);
+            console.log('adding shift!', shift.status)
+            scheduleCell.shifts.push(shift);
         }
     }),
     removeShift: (employee_id, date, shift_id) => set(state => {
             
             const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);
-        
+           
             if (!scheduleCell) return;
             console.log('removing shift',shift_id)
             

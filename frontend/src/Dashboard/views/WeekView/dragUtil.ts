@@ -40,14 +40,14 @@ export const handleDragEnd = async(event:DragEndEvent,socket_id:string)=>{
     const target_employee_id = targetSlot.data?.current.employee_id
     const target_date = targetSlot.data?.current.date.date
     //console.log(target_date)
-    useScheduleStore.getState().removeShift(shift.employee_id,shift.date,shift.id)
-    useScheduleStore.getState().addShift(target_employee_id,target_date, {
-        id:shift.id,
-        employee_id:target_employee_id,
-        date:target_date,
-        start_time:shift.start_time,
-        end_time:shift.end_time
-    })
+    // useScheduleStore.getState().removeShift(shift.employee_id,shift.date,shift.id)
+    // useScheduleStore.getState().addShift(target_employee_id,target_date, {
+    //     id:shift.id,
+    //     employee_id:target_employee_id,
+    //     date:target_date,
+    //     start_time:shift.start_time,
+    //     end_time:shift.end_time
+    // })
     
  
     updateShiftPosition(Number(draggedShift.id),Number(targetSlot.data?.current.employee_id),targetSlot.data?.current.date.date,socket_id)

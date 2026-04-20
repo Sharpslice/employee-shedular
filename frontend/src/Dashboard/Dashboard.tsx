@@ -75,7 +75,7 @@ function Dashboard(){
     const setDateRange = useScheduleStore(state=>state.setDateRange)
     const setEmployees = useScheduleStore(state=>state.setEmployees)
     // const employees = useScheduleStore(state=>state.employees)
-     const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
+     
     // const dateRange = useScheduleStore(state=>state.dateRange)
 
     
@@ -85,7 +85,7 @@ function Dashboard(){
         const dateRange = data?.dates
         const employees = data?.employees
         if(!schedule) return
-        console.log(schedule)
+      
         const gridMap = new Map<number,Map<string,ScheduleCell |null >>()
         for(const row of schedule){
             const date = DateTime.fromISO(row.date,{ zone: 'utc' }).toISODate()!
@@ -138,7 +138,7 @@ function Dashboard(){
        
     
     },[data])
-     console.log(scheduleGrid)
+     //console.log(scheduleGrid)
     
   
    

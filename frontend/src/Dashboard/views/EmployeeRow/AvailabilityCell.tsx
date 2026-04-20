@@ -35,12 +35,12 @@ function AvailabilityCell({availability,employee,date,override,weekly}:Availabil
     return(
         <>
             {
-                <Flex direction={'column'}
-                 flex={1}
-                       
-                        justify={'center'}  
-                        bg={`${employee.color}`}  
-                        bd={'1px solid black'} 
+                <Flex key = {`${employee.id} - ${date.days_of_week}`}
+                    direction={'column'}
+                    flex={1}
+                    justify={'center'}  
+                    bg={`${employee.color}`}  
+                    bd={'1px solid black'} 
                 >
                    
                     {
@@ -50,25 +50,20 @@ function AvailabilityCell({availability,employee,date,override,weekly}:Availabil
                             weekly.map((time_block)=>{
                                 return(
                                      <TimeRangePicker
-                                    data={time_block}
-                                    bg="yellow"
-                                    onChange={(time,slot)=>createAvailabilityOverride(time,slot,employee.id,date.date,null)}
+                                        key={`weekly - ${employee.id} - ${date.days_of_week}`}
+                                        data={time_block}
+                                        bg="yellow"
+                                        onChange={(time,slot)=>createAvailabilityOverride(time,slot,employee.id,date.date,null)}
                                     
                                     />
                                 )
                             })
-                        
-                        
-               
                         :
-
-
-
-
                         time_blocks.map((time_block)=>{
                            
                             return(
                                <TimeRangePicker
+                                    key={`availability- ${employee.id} - ${date.days_of_week}`}
                                     data={time_block}
                                     onChange={(time,slot)=>createAvailabilityOverride(time,slot,employee.id,date.date,time_block)}
                                     
