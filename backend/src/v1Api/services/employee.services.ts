@@ -63,96 +63,154 @@ export async function scheduleService(
         SELECT 
             e.id,
             c.date,
-            COALESCE(
-                JSON_AGG(
-                    JSON_BUILD_OBJECT(
+            (
+                SELECT COALESCE( JSON_AGG(
+                    JSON_BUILD_OBJECT
+                    (
                         'id', s.id,
-                        'employee_id',s.employee_id,
-                        'date',s.date,
-                        'start_time',s.start_time,
-                        'end_time',s.end_time,
-                        'status', 
-                            CASE
-                                WHEN watb.id IS NULL AND atb.id IS NULL THEN 'CONFLICT'
+                        'employee_id', s.employee_id,
+                        'date' , s.date,
+                        'start_time', s.start_time,
+                        'end_time', s.end_time,
+                        'status', (SELECT
+                             CASE
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM employee_time_override o
+                    WHERE o.shift_id = s.id
+                    AND s.date = o.date
+                )
+                THEN 'OVERIDDEN'
+            
+                WHEN NOT EXISTS (
+                    SELECT 1
+                    FROM employee_weekly_availability wa
+                    JOIN employee_weekly_availability_time_block watb
+                        ON wa.id = watb.employee_weekly_availability_id
+                    WHERE 
+                        wa.date = s.date
+                        AND wa.employee_id = s.employee_id
+                        AND s.start_time >= watb.start_time 
+                        AND s.end_time <= watb.end_time
+                
+                ) 
+                AND NOT EXISTS(
+                    SELECT 1
+                    FROM employee_availability a 
+                    JOIN employee_availability_time_block atb
+                        ON a.id = atb.employee_availability_id
+                    WHERE 
+                        a.day_of_week = EXTRACT(DOW FROM s.date)
+                        AND a.employee_id = s.employee_id
+                        AND s.start_time >= atb.start_time
+                        AND s.end_time <= atb.end_time
+                )
+                THEN 'CONFLICT'
 
-                                WHEN s.start_time IS NULL OR s.end_time IS NULL THEN 'CONFLICT'
 
-                                WHEN s.start_time < COALESCE(watb.start_time,atb.start_time)
-                                OR   s.end_time > COALESCE(watb.end_time,atb.end_time) THEN 'CONFLICT'
+            
 
-                                ELSE NULL
-                            END
-                    )
-                ) FILTER (WHERE s.id IS NOT NULL), '[]'::json) as shifts,
-            COALESCE(
-                JSON_AGG(
-                    JSON_BUILD_OBJECT(
-                        'id', atb.id,
-                        'start_time',atb.start_time,
-                        'end_time',atb.end_time
+
+                            END)
+
                         
                     )
-                ) FILTER (WHERE atb.id IS NOT NULL), '[]'::json) as availability_time_blocks,     
+                ), '[]'::json)
+                FROM employee_shifts s
+                WHERE s.employee_id = e.id
+                AND s.date = c.date
+    
+            ) as shifts,
 
-
-            COALESCE(
-                JSON_AGG(
-                    JSON_BUILD_OBJECT(
-                        'id', watb.id,
-                        'employee_weekly_availability_id', watb.employee_weekly_availability_id,
-                        'start_time',watb.start_time,
-                        'end_time',watb.end_time
-                        
+            (
+                SELECT 
+                    JSON_BUILD_OBJECT
+                    (
+                        'id', a.id,
+                        'employee_id',a.employee_id,
+                        'day_of_week', a.day_of_week,
+                        'is_available', a.is_available,
+                        'effective_from', a.effective_from,
+                        'time_blocks', 
+                        (
+                            SELECT COALESCE (JSON_AGG(
+                                JSON_BUILD_OBJECT(
+                                    'id',atb.id,
+                                    'employee_availability_id',atb.employee_availability_id,
+                                    'start_time' , atb.start_time,
+                                    'end_time', atb.end_time
+                                )
+                                
+                            ),'[]'::json)
+                            FROM employee_availability_time_block atb
+                            WHERE atb.employee_availability_id = a.id
+                        ) 
                     )
-                ) FILTER (WHERE watb.id IS NOT NULL), '[]'::json) as availability_weekly_time_blocks,     
+                
+                FROM employee_availability a
+                WHERE a.employee_id = e.id
+                AND a.day_of_week = EXTRACT(DOW FROM c.date)
+                AND a.effective_from <= c.date
+            
 
+            ) as availabilities,
 
-            COALESCE(
-                JSON_AGG(
+            (
+                SELECT 
+                    JSON_BUILD_OBJECT(
+                        'id', wa.id,
+                        'employee_id', wa.employee_id,
+                        'date', wa.date,
+                        'is_available', wa.is_available,
+                        'status' , wa.status,
+                        'time_blocks', (
+                            SELECT COALESCE(JSON_AGG(
+                                JSON_BUILD_OBJECT(
+                                    'id', watb.id,
+                                    'employee_weekly_availability_id', watb.employee_weekly_availability_id,
+                                    'start_time', watb.start_time,
+                                    'end_time', watb.end_time
+                                )
+                            ), '[]'::json)
+                            FROM employee_weekly_availability_time_block watb
+                            WHERE watb.employee_weekly_availability_id = wa.id
+                        )
+                    )
+           
+                FROM employee_weekly_availability wa
+                WHERE wa.employee_id = e.id
+                AND wa.date = c.date
+            ) AS weekly_availability,
+
+            ( 
+                SELECT COALESCE(JSON_AGG(
                     JSON_BUILD_OBJECT(
                         'id', o.id,
                         'employee_id', o.employee_id,
-                        'date',o.date,
-                        'type',o.type,
-                        'note',o.note,
-                        'shift_id',o.shift_id,
-                        'status',o.status
+                        'date', o.date,
+                        'shift_id',o.shift_id
+                    
                     )
-                ) FILTER (WHERE o.id IS NOT NULL), '[]'::json) as overrides,
-            COALESCE(
-            JSON_AGG(
-                JSON_BUILD_OBJECT(
-                    'start_time', otb.start_time,
-                    'end_time', otb.end_time
-                )
-            ) FILTER (WHERE otb.id IS NOT NULL),'[]'::json ) AS override_time_blocks
+                
+                
+                ),'[]'::json)
+                FROM employee_time_override o
+                WHERE c.date = o.date
+                AND o.employee_id = e.id
+            
+            ) as overrides
+            
+            
         FROM calendar c
         CROSS JOIN employee e
-        LEFT JOIN employee_shifts s 
-            ON s.employee_id = e.id 
-            AND s.date = c.date
-        LEFT JOIN employee_time_override o
-            ON o.employee_id = e.id
-            AND o.date = c.date
-        LEFT JOIN employee_override_time_block otb
-            ON otb.employee_time_override_id = o.id
-        LEFT JOIN employee_availability a
-            ON a.employee_id = e.id
-            AND a.day_of_week = c.days_of_week
-        LEFT JOIN employee_availability_time_block atb
-            ON atb.employee_availability_id =  a.id
-        LEFT JOIN employee_weekly_availability wa
-            ON wa.employee_id =e.id
-            AND wa.date = c.date
-        LEFT JOIN employee_weekly_availability_time_block watb
-            ON watb.employee_weekly_availability_id = wa.id
         INNER JOIN employee_employment_history eh
             ON eh.employee_id = e.id
             AND eh.start_date <= ${endDate.toJSDate()} AND (eh.end_date is NULL OR eh.end_date >= ${beginDate.toJSDate()})
         WHERE c.date BETWEEN ${beginDate.toJSDate()} AND ${endDate.toJSDate()}
-        GROUP BY e.id,c.date
         ORDER BY e.id
+
     `
+    console.log(schedule)
     
 
 

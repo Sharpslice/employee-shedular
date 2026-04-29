@@ -6,12 +6,6 @@ import { getShiftStatus } from "../controllers/getShiftStatus";
 
 export async function deleteShiftService(shift_id:number){
   
-    const override = await prisma.employee_Time_Override.findFirst({
-        where:{shift_id:shift_id},
-        include:{
-            time_blocks:true
-        }
-    })
 
     
 
@@ -21,16 +15,10 @@ export async function deleteShiftService(shift_id:number){
        
     })
     
-    return {shift,override}
+    return {shift}
 }
 
-type Shift = {
-    id: number,
-    employee_id: number,
-    date: Date,
-    // start_time: string,
-    // end_time: string
-}
+
 export async function moveShiftService(
     shift_id:number,
     employee_id:number,

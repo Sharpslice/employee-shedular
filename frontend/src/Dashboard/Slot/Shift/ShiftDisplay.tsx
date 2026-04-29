@@ -5,6 +5,7 @@ import axios from "axios"
 import { DateTime } from "luxon"
 import type { Shift } from "../../Interfaces/Shift"
 import type { ShiftStatus } from "./ShiftCell"
+import { createShiftOverride } from "../../../services/overrideServices"
 
 
 const convertTo12hr = (time:string | null)=>{
@@ -33,24 +34,24 @@ const getShiftColors = (status:ShiftStatus)=>{
 
 function ShiftDisplay({shift}:ShiftDisplayProps){
 
-    const timeOverride =async()=>{
-        await axios.post(`http://localhost:3000/api/v1/employees/${shift.employee_id}/overrides/`,
-            {
-                employee_id: shift.employee_id,
-                date:shift.date,
-                type: 'AVAILABLE',
-                time:{
-                    start_time:shift.start_time,
-                    end_time: shift.end_time
-                },
-                shift_id:shift.id
+    // const timeOverride =async()=>{
+    //     await axios.post(`http://localhost:3000/api/v1/employees/${shift.employee_id}/overrides/`,
+    //         {
+    //             employee_id: shift.employee_id,
+    //             date:shift.date,
+    //             type: 'AVAILABLE',
+    //             time:{
+    //                 start_time:shift.start_time,
+    //                 end_time: shift.end_time
+    //             },
+    //             shift_id:shift.id
 
                 
                 
-            },
-            {withCredentials:true}
-        )
-    }
+    //         },
+    //         {withCredentials:true}
+    //     )
+    // }
 
    
     return(
@@ -63,7 +64,8 @@ function ShiftDisplay({shift}:ShiftDisplayProps){
                 <ActionIcon color={getShiftColors(shift.status)} onClick={
                     (e)=>{
                         e.stopPropagation()
-                        timeOverride()
+                        console.log(shift.id)
+                        createShiftOverride(shift.employee_id,shift.id)
                     }
                     
                     }>

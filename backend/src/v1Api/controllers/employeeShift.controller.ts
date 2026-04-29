@@ -2,7 +2,7 @@ import {Request,Response} from 'express';
 import prisma from '../../../db/db';
 import { DateTime } from 'luxon';
 import { io } from '../../app';
-import { createShiftService, updateShiftTimeservice } from '../services/employeeShift.services';
+import { createShiftOverrideService, createShiftService, updateShiftTimeservice } from '../services/employeeShift.services';
 import { getShiftStatus } from './getShiftStatus';
 
 
@@ -53,4 +53,19 @@ export async function updateShiftTimes(req:Request,res:Response){
       
 
     }   
+}
+
+export async function createShiftOverride(req:Request,res:Response){
+    const employee_id = Number(req.params.employee_id)
+    const shift_id = Number(req.params.shift_id)
+    console.log(employee_id)
+    console.log(shift_id)
+    try{
+        const override = await createShiftOverrideService(employee_id,shift_id)
+    }catch(error:unknown){
+        if(error instanceof Error){
+            console.error('Error',error.message)
+            return res.status(500).json({succeess:false,error:error.message})
+        }
+    }
 }

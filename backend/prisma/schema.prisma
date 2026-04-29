@@ -24,18 +24,17 @@ enum Position {
     PENDING
 }
 
-enum Override_Status {
+enum Availability_Status {
     PENDING
     APPROVED
     DENIED
 }
 
-enum Override_Type {
+enum Unavailability_Type {
     ILLNESS
     SCHOOL
     APPOINTMENT
     BIRTHDAY
-    AVAILABLE
     MISC
 }
 
@@ -124,7 +123,9 @@ model Employee_Weekly_Availability {
     employee_id  Int
     date         DateTime @db.Date
     is_available Boolean
-    
+    status        Availability_Status @default(PENDING)
+
+    calendar     Calendar     @relation(fields: [date], references: [date])
     employee     Employee @relation(fields: [employee_id], references: id)
     time_blocks  Employee_Weekly_Availability_Time_Block[]
 
@@ -145,35 +146,22 @@ model Employee_Weekly_Availability_Time_Block {
 
 model Employee_Time_Override {
   id          Int                       @id @default(autoincrement())
-  shift_id    Int?      @unique          // only used for shift-related overrides
+  shift_id    Int      @unique          // only used for shift-related overrides
   employee_id Int
   date        DateTime                  @db.Date
-  type        Override_Type
-  status      Override_Status
-  note        String?
 
   employee    Employee                  @relation(fields: [employee_id], references: id)
   calendar    Calendar                  @relation(fields: [date], references: date)
 
-  // Optional one-to-one relation to shift
-  shift       Employee_Shifts?          @relation("ShiftOverride", fields: [shift_id], references: [id], onDelete: Cascade)
 
-  // Time blocks for the override
-  time_blocks Employee_Override_Time_Block[]
+  shift       Employee_Shifts          @relation("ShiftOverride", fields: [shift_id], references: [id], onDelete: Cascade)
+
+
 
   @@map("employee_time_override")
 }
 
-model Employee_Override_Time_Block{
-    id                          Int         @id @default(autoincrement())
-    employee_time_override_id   Int
-    start_time                  DateTime    @db.Timestamptz
-    end_time                    DateTime    @db.Timestamptz
 
-    override                    Employee_Time_Override @relation(fields:[employee_time_override_id],references:id,onDelete: Cascade)
-
-    @@map("employee_override_time_block")
-}
 
 model Calendar{
     date                  DateTime        @id @db.Date
@@ -189,7 +177,7 @@ model Calendar{
     
     shift_dates             Employee_Shifts[]
     override_dates          Employee_Time_Override[]
-   
+    weekly_exception_dates  Employee_Weekly_Availability[]
 
     @@map("calendar")
 }

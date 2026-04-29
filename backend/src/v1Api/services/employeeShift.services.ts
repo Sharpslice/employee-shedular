@@ -18,6 +18,34 @@ export async function createShiftService(employee_id:number,date:string,start_ti
     })
 
 }
+export async function createShiftOverrideService(
+    employee_id:number,
+    shift_id:number
+){
+    return prisma.$transaction(async (tx) => {
+        console.log(shift_id)
+        const shift  = await  tx.employee_Shifts.findUnique({
+                where:{id:shift_id},
+                select:{date:true}
+            })
+
+        if(!shift) return
+        const override= await tx.employee_Time_Override.create({
+                data:{
+                    employee_id:employee_id,
+                    date:shift.date,
+                    shift_id:shift_id
+                }
+        })
+
+
+
+
+        const status = await getShiftStatus(shift_id,tx)
+        return override
+
+    });
+}
 
 export async function updateShiftTimeservice(shift_id:number,date:string,start_time?:string | null,end_time?:string | null){
 

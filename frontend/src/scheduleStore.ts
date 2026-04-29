@@ -5,8 +5,7 @@ import type { Employee } from './Dashboard/Interfaces/Employee'
 import type { Day } from './Dashboard/Interfaces/Day'
 import type { Shift } from './Dashboard/Interfaces/Shift'
 import { enableMapSet } from "immer"
-import { current } from 'immer'
-import type { availability_weekly_time_blocks } from './Dashboard/Interfaces/weekly_time_block'
+
 enableMapSet()
 type ScheduleStore = {
     //a list of employee rows
@@ -24,6 +23,7 @@ type ScheduleStore = {
     updateShift:(employee_id: number, date: string,shift:Shift)=>void
     addShift:(employee_id:number,date:string,shift:Shift) =>void
     removeShift:(employee_id:number,date:string,shift_id:number)=>void
+    removeWeeklyAvailability:(employee_id:number,date:string,exception_id:number)=>void
     updateWeeklyAvailability:(employee_id:number,date:string,exception:availability_weekly_time_blocks)=>void
 }
 
@@ -54,6 +54,7 @@ export const useScheduleStore = create<ScheduleStore>()(immer((set)=>({
         if(!scheduleCell) return
         const temp = scheduleCell.shifts.find((temp)=>temp.id === shift.id)
         if(temp){
+            
             temp.start_time = shift.start_time
             temp.end_time= shift.end_time
             temp.status = shift.status
@@ -80,6 +81,15 @@ export const useScheduleStore = create<ScheduleStore>()(immer((set)=>({
             
             scheduleCell.shifts = scheduleCell.shifts.filter(s => s.id !== shift_id);
         }),
+    removeWeeklyAvailability:(employee_id,date,exception_id)=>set(state=>{
+
+        const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);
+           
+            if (!scheduleCell) return;
+            console.log('removing shift',exception_id)
+            
+            scheduleCell.availability_weekly_time_blocks = scheduleCell.availability_weekly_time_blocks.filter(watb => watb.id !== exception_id);
+    }),
     updateWeeklyAvailability:(employee_id,date,exception)=>set(state=>{
      
         const scheduleCell = state.scheduleGrid.get(employee_id)?.get(date);

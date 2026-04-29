@@ -24,17 +24,17 @@ import { useScheduleStore } from "../scheduleStore";
 import type { ScheduleCell } from "./Interfaces/ScheduleCell";
 
 import {DateTime} from 'luxon';
-import type { Weekly_Time_block } from "./Interfaces/weekly_time_block";
+
+import type { Weekly_exception } from "./Interfaces/Weekly_exception";
 
 
 type schedule={
     id:number,
     date:string,
     shifts:Shift[]
-    availability_time_blocks:TimeBlock[]
+    availabilities:Availability
     overrides:Override[]
-    override_time_blocks:OvTimeBlock[]
-    availability_weekly_time_blocks:Weekly_Time_block[]
+    weekly_availability:Weekly_exception
 }
 
 type scheduleResponse = {
@@ -75,7 +75,7 @@ function Dashboard(){
     const setDateRange = useScheduleStore(state=>state.setDateRange)
     const setEmployees = useScheduleStore(state=>state.setEmployees)
     // const employees = useScheduleStore(state=>state.employees)
-     
+     const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
     // const dateRange = useScheduleStore(state=>state.dateRange)
 
     
@@ -93,9 +93,8 @@ function Dashboard(){
             const scheduleCell = {
                 shifts: row.shifts,
                 overrides:row.overrides,
-                availability_time_blocks:row.availability_time_blocks ,
-                override_time_blocks:row.override_time_blocks,
-                availability_weekly_time_blocks:row.availability_weekly_time_blocks
+                availabilities:row.availabilities ,
+                weekly_availability:row.weekly_availability
             }
 
             if(!gridMap.has(row.id)){
@@ -112,7 +111,7 @@ function Dashboard(){
 
         }
         setGrid(gridMap)
-        
+        console.log(scheduleGrid)
 
         if(!dateRange) return
         

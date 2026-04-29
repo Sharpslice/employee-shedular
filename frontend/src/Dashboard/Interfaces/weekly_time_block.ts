@@ -1,4 +1,4 @@
-export interface availability_weekly_time_blocks{
+export interface exception_time_blocks{
     id:number,
     start_time: string,
     end_time: string

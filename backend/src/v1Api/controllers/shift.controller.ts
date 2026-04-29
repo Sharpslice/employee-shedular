@@ -10,7 +10,7 @@ export async function deleteShift(req:Request,res:Response){
    
 
     try{
-        const {shift,override} = await deleteShiftService(shift_id)
+        const {shift} = await deleteShiftService(shift_id)
         
         io.emit("shift:remove",shift)
         return res.json({ success: true, shift_id: shift.id});

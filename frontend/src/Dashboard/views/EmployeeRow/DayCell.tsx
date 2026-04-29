@@ -17,8 +17,8 @@ import { mergeRefs } from "@react-aria/utils";
 
 import axios from "axios"
 import { useScheduleStore } from "../../../scheduleStore"
-import OverrideCell from "../../Slot/Override/OverrideCell"
-import AvailabilityCell from "./AvailabilityCell"
+
+import AvailabilitySlot from "./Availability/AvailabilitySlot"
 
 
 
@@ -49,9 +49,9 @@ function DayCell({row,index,hidden,employee,date}:DayProps){
 
 
     const scheduleCell = useScheduleStore(state=>state.scheduleGrid.get(employee.id)?.get(date.date))!
-    const availability = scheduleCell.availability_time_blocks;
-    const OvTimeBlocks = scheduleCell.override_time_blocks;
-    const weekly = scheduleCell.availability_weekly_time_blocks;
+    const availability = scheduleCell.availabilities;
+   
+    const weekly = scheduleCell.weekly_availability;
    //console.log(weekly)
     const onParentFocus = (e: React.FocusEvent<HTMLDivElement>)=>{
         
@@ -95,11 +95,11 @@ function DayCell({row,index,hidden,employee,date}:DayProps){
         <Flex flex={1} direction={'column'} align='stretch'>
 
         
-            {!hidden && <AvailabilityCell employee={employee} override={OvTimeBlocks} weekly={weekly} availability={availability} date={date}></AvailabilityCell>}
+            {!hidden && <AvailabilitySlot employee={employee} weekly={weekly} availability={availability} date={date}></AvailabilitySlot>}
 
             <Flex  
                 ref={mergeRefs(cellRefs[row][index], setNodeRef as React.Ref<HTMLDivElement>)}
-                style={{opacity:availability.length ? 1:0.5}}
+                //style={{opacity:availability.length ? 1:0.5}}
                 key={`${employee.id} - ${date.date}`}  
                 flex={1} direction={'column'} align={'stretch'}   p={5} bd={'1px solid black'} bg={'grey'} 
                 
@@ -141,11 +141,7 @@ function DayCell({row,index,hidden,employee,date}:DayProps){
                 
                 <SlotContainer coords ={{row:row!,col:index}} focusedId={focusedId} employee={employee} date={date}>
                     {
-                        scheduleCell.overrides.map((override)=>{
-                            return(
-                                <OverrideCell override={override} status={override.status} key={`${override.id}-${index}`}></OverrideCell>
-                            )
-                        })
+                       
                         
                     }
                     {

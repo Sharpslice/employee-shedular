@@ -31,6 +31,7 @@ export async function schedule(req:Request,res:Response){
     }
 
     try{
+        console.log("HIT SCHEDULE OVERVIEW", req.params);
         const response = await scheduleService(beginDate,endDate)
         
         return res.json({
@@ -40,7 +41,9 @@ export async function schedule(req:Request,res:Response){
         })
 
     }catch(error){
-        return res.status(500).json({error: "error fetching employees and shifts"})
+         console.error("❌ SCHEDULE OVERVIEW ERROR:", error);
+        res.status(500).json({ error: 'Internal Server Error' });
+       
     }
     
 }

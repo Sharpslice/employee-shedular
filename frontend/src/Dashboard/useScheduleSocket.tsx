@@ -3,6 +3,7 @@ import { useSocket } from "../SocketContext";
 import type { Shift } from "./Interfaces/Shift";
 import { useScheduleStore } from "../scheduleStore";
 import { DateTime } from "luxon";
+import type { availability_weekly_time_blocks } from "./Interfaces/weekly_time_block";
 
 
 
@@ -71,11 +72,15 @@ function useScheduleSocket(
             const date = DateTime.fromISO(shift.date,{zone:'utc'}).toISODate()!
             useScheduleStore.getState().updateShift(shift.employee_id,date,shift)
         }
+        const handleWeeklyExceptionRemove=(exception:availability_weekly_time_blocks)=>{
+            console.log('exception removed: ',exception)
+        }
         socket?.on('shift:moved', handleShiftMoved)
         socket?.on('availability:update',handleAvailabilityUpdate)
         socket?.on('shift:add',handleShiftAdd)
         socket?.on('shift:remove',handleShiftRemove)
         socket?.on('shift:update',handleShiftUpdate)
+        socket?.on('weeklyException:remove',handleWeeklyExceptionRemove)
 
         return () => {
             socket?.off('shift:moved', handleShiftMoved)

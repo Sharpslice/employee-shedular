@@ -7,8 +7,8 @@ import { authenticateAdmin } from '../middleware/auth.middleware/authenticateAdm
 const index = express.Router();
 
 index.use('/employees',employeeRoute)
-index.use('/shifts',authenticateAdmin,shiftRoute)
+index.use('/shifts',shiftRoute)
 //index.use('/availabilities',availabilitiesRoute)
-index.use('/overrides',overrideRoute)
+//index.use('/overrides',overrideRoute)
 
 export default index

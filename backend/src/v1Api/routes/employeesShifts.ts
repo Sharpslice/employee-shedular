@@ -1,7 +1,7 @@
 import express from "express"; 
 import { Request,Response } from "express";
 
-import { createShift, updateShiftTimes } from "../controllers/employeeShift.controller";
+import { createShift, createShiftOverride, updateShiftTimes } from "../controllers/employeeShift.controller";
 import { validateCreateShift } from "../middleware/employeeShift.middleware/validateCreateShift";
 import { validateUpdateShiftTime } from "../middleware/employeeShift.middleware/validateUpdateShiftTime";
 import { authenticateAdmin } from "../middleware/auth.middleware/authenticateAdmin";
@@ -19,7 +19,7 @@ employeeShifts.post('/',
 employeeShifts.patch('/:shift_id',
     validateUpdateShiftTime,
     updateShiftTimes)
-
+employeeShifts.post('/:shift_id/overrides',createShiftOverride)
 
 
 

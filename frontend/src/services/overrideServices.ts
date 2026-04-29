@@ -1,9 +1,6 @@
 import axios from "axios"
 import type { Override } from "../Dashboard/Interfaces/Override";
-import type { Availability } from "../Dashboard/Interfaces/Availability";
 
-import type { Day } from "../Dashboard/Interfaces/Day";
-import type { Employee } from "../Dashboard/Interfaces/Employee";
 import type { TimeBlock } from "../Dashboard/Interfaces/TimeBlock";
 type response ={
     success:boolean;
@@ -52,6 +49,10 @@ export const createAvailabilityOverride =async(time: string, slot: 'start' | 'en
     }catch(error:unknown){
         console.error('failed to update availability override: ',error)
     }
+}
+
+export const createShiftOverride = async(employee_id:number,shift_id:number)=>{
+    await axios.post(`http://localhost:3000/api/v1/employees/${employee_id}/shifts/${shift_id}/overrides`)
 }
 
 export const deleteOverride= async(override_id:number)=>{

@@ -1,16 +1,17 @@
 
 
+import type { Availability } from "./Availability"
 import type { Override } from "./Override"
-import type { OvTimeBlock } from "./OvTimeBlock"
+
 import type { Shift } from "./Shift"
-import type { TimeBlock } from "./TimeBlock"
-import type { availability_weekly_time_blocks } from "./weekly_time_block"
+import type { Weekly_exception } from "./Weekly_exception"
+
 
 
 export type ScheduleCell = {
     shifts: Shift[]
     overrides: Override[]
-    availability_time_blocks: TimeBlock[]
-    override_time_blocks: OvTimeBlock[]
-    availability_weekly_time_blocks: availability_weekly_time_blocks[]
+    weekly_availability: Weekly_exception
+    availabilities:Availability
+    
 }
