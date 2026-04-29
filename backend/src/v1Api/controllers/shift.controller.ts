@@ -10,9 +10,9 @@ export async function deleteShift(req:Request,res:Response){
    
 
     try{
-        const {shift,override} = await deleteShiftService(shift_id)
+        const {shift} = await deleteShiftService(shift_id)
         
-        io.emit("shiftDeleted",{shift, override: override ?? null})
+        io.emit("shift:remove",shift)
         return res.json({ success: true, shift_id: shift.id});
 
     }catch(error:unknown){
@@ -24,18 +24,46 @@ export async function deleteShift(req:Request,res:Response){
 
     
 }
+
+
 export async function moveShift(req:Request, res:Response){
     const shift_id = Number(req.params.id);
-    const employee_id = Number(req.body.employee_id)
-    const date = new Date(req.body.date);
-    const start_time = req.body.start_time;
-    const end_time = req.body.end_time;
-    try{
-       
-        const shift = await moveShiftService(shift_id,employee_id,date,start_time,end_time)
+   
 
-        io.emit('shiftMoved', shift )
-        res.status(200).json( shift );
+     const employee_id = Number(req.body.employee_id)
+     const date = DateTime.fromISO(req.body.date).toJSDate()!;
+     const socket_id = req.body.socket_id;
+    // const start_time = req.body.start_time;
+    // const end_time = req.body.end_time;
+    
+    try{
+          //console.log('calling moveShiftService with:', { shift_id, employee_id, date })
+       
+        const {draggedShift,shift} = await moveShiftService(shift_id,employee_id,date)
+
+        // io.emit('shift:remove', {
+        //     shift_id:draggedShift?.id,
+        //     employee_id:draggedShift?.employee_id,
+        //     date: draggedShift?.date
+        // } 
+        // )
+
+        // io.emit('shift:add',{
+        //     shift:shift,
+        //     employee_id:shift.employee_id,
+        //     date:shift.date
+        // })
+        
+        io.emit('shift:moved', {
+            remove: { employee_id: draggedShift?.employee_id, date: draggedShift?.date, shift_id: draggedShift?.id },
+            add: { employee_id: shift?.employee_id, date: shift.date, shift: shift },
+            socket_id:socket_id
+        })
+
+
+
+
+       return res.status(200).json({ success: true })
 
     }catch(error:any){
         console.error("Error updating shift:", error);

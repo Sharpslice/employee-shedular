@@ -14,8 +14,8 @@ employees.get('/schedule-overview/:view/:date',
 
 
 
-employees.use('/:employee_id/shifts',authenticateAdmin,employeeShiftsRoute)
+employees.use('/:employee_id/shifts',employeeShiftsRoute)
 //employees.use('/:employee_id/availabilities',employeeAvailabilitiesRoute)
-employees.use('/:employee_id/overrides',employeeOverridesRoute)
+//employees.use('/:employee_id/overrides',employeeOverridesRoute)
 export default employees;
 

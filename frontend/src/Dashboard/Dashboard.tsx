@@ -1,15 +1,15 @@
 
 import {  useEffect, useState } from "react"
-import {DateTime} from 'luxon'
+
 import axios from "axios";
 import Header from "./Header";
-import { Container} from "@mantine/core";
+import { Container, } from "@mantine/core";
 import { Outlet, useMatch, useParams } from "react-router-dom";
 
 import type { Employee } from "./Interfaces/Employee";
 import type { Day } from "./Interfaces/Day";
 
-import { AvailabilityArrayToMap, EmployeeArrayToMap,OverrideToMap,ShiftArrayToMap, TimeBlockArrayToMap } from "./views/ArrayToMap";
+
 
 import { ContextMenuProvider } from "./Slot/ContextMenu/ContextMenuProvider";
 import ContextMenu from "./Slot/ContextMenu/ContextMenu";
@@ -19,27 +19,34 @@ import type { Availability } from "./Interfaces/Availability";
 import type { TimeBlock } from "./Interfaces/TimeBlock";
 import type { Override } from "./Interfaces/Override";
 import type { OvTimeBlock } from "./Interfaces/OvTimeBlock";
+import { useQuery } from "@tanstack/react-query";
+import { useScheduleStore } from "../scheduleStore";
+import type { ScheduleCell } from "./Interfaces/ScheduleCell";
+
+import {DateTime} from 'luxon';
+
+import type { Weekly_exception } from "./Interfaces/Weekly_exception";
 
 
-
-
-type CalendarResponse ={
-    dateArray: Day[]
+type schedule={
+    id:number,
+    date:string,
+    shifts:Shift[]
+    availabilities:Availability
+    overrides:Override[]
+    weekly_availability:Weekly_exception
 }
-interface EmployeeResponse{
-    employeeList: Employee[]
-    shifts: Shift[]
-    availabilities: Availability[]
-    av_time_blocks: TimeBlock[]
-    overrides: Override[]
-    ov_time_blocks: TimeBlock[]
+
+type scheduleResponse = {
+    dates: Day[]
+    schedule: schedule[]
+    employees: Employee[]
 }
 
 
 function Dashboard(){   
     const {date} = useParams();
-    const [dateRange,setDateRange] = useState<Day[]>([]) 
-
+    
     
     const isWeek = useMatch('schedule/week/*')
     const isDay = useMatch('schedule/day/*')
@@ -56,58 +63,84 @@ function Dashboard(){
     const [overrides,setOverrides] = useState<Map<number,Override>>(new Map())
     const [ov_time_blocks,setOv_time_blocks] = useState<Map<number,OvTimeBlock>>(new Map())
     
-    useScheduleSocket(setShifts,setOverrides,setOv_time_blocks);
+    useScheduleSocket();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                
-                const [calendarResponse, employeeResponse] = await Promise.all([
-                    axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/date?date=${safeDate}&view=${safeView}`, { withCredentials: true }),
-                    axios.get<EmployeeResponse>(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`, { withCredentials: true })
-                ]);
+    const fetchCalendar=async()=>{
+        const res = await axios.get<scheduleResponse>(`http://localhost:3000/api/v1/employees/schedule-overview/${safeView}/${safeDate}`, { withCredentials: true })
+        return res.data 
+    }
+    const {data } = useQuery<scheduleResponse>({queryKey: ['schedule',safeDate,safeView],queryFn:fetchCalendar, staleTime: 0});
+   
+    const setGrid = useScheduleStore(state=>state.setGrid)
+    const setDateRange = useScheduleStore(state=>state.setDateRange)
+    const setEmployees = useScheduleStore(state=>state.setEmployees)
+    // const employees = useScheduleStore(state=>state.employees)
+     const scheduleGrid = useScheduleStore(state=>state.scheduleGrid)
+    // const dateRange = useScheduleStore(state=>state.dateRange)
 
-                
-                setDateRange(calendarResponse.data.dateArray);
-                console.log('DateRange', calendarResponse.data.dateArray);
-                console.log(employeeResponse.data.overrides)
-                setEmployeeList(EmployeeArrayToMap(employeeResponse.data.employeeList));
-                setShifts(ShiftArrayToMap(employeeResponse.data.shifts));
-                setAvailabilities(AvailabilityArrayToMap(employeeResponse.data.availabilities));
-                setAv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
-                setOverrides(OverrideToMap(employeeResponse.data.overrides));
-                setOv_time_blocks(TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks))
-
-                console.log("employee", EmployeeArrayToMap(employeeResponse.data.employeeList));
-                console.log("shifts", ShiftArrayToMap(employeeResponse.data.shifts));
-                console.log("availabilities", AvailabilityArrayToMap(employeeResponse.data.availabilities));
-                console.log("timeblock", TimeBlockArrayToMap(employeeResponse.data.av_time_blocks));
-                console.log("ov timeblock", TimeBlockArrayToMap(employeeResponse.data.ov_time_blocks));
-                console.log('overrides',OverrideToMap(employeeResponse.data.overrides))
-
-            } catch (err) {
-                console.error("Failed to fetch data:", err);
-            }
-        };
-
-        fetchData();
-    }, [safeDate, safeView]);
-
+    
     useEffect(()=>{
-        const handleUndoPress=(e:KeyboardEvent)=>{
-            if(e.key==='z' && (e.ctrlKey || e.metaKey) ){
-                e.preventDefault()
-                console.log('undo press')
+
+        const schedule = data?.schedule
+        const dateRange = data?.dates
+        const employees = data?.employees
+        if(!schedule) return
+      
+        const gridMap = new Map<number,Map<string,ScheduleCell |null >>()
+        for(const row of schedule){
+            const date = DateTime.fromISO(row.date,{ zone: 'utc' }).toISODate()!
+
+            const scheduleCell = {
+                shifts: row.shifts,
+                overrides:row.overrides,
+                availabilities:row.availabilities ,
+                weekly_availability:row.weekly_availability
             }
+
+            if(!gridMap.has(row.id)){
+                
+                const innerMap = new Map()
+                innerMap.set(date,scheduleCell)
+                gridMap.set(row.id, innerMap)
+            }
+            if(gridMap.has(row.id) && !gridMap.get(row.id)?.has(date)){
+                gridMap.get(row.id)?.set(date,null)
+            }
+
+            gridMap.get(row.id)?.set(date,scheduleCell)
+
         }
-        window.addEventListener('keydown',(e:KeyboardEvent)=>handleUndoPress(e))
+        setGrid(gridMap)
+        console.log(scheduleGrid)
 
-        return () => {
-            window.removeEventListener('keydown', (e:KeyboardEvent)=>handleUndoPress(e));
-        };
+        if(!dateRange) return
+        
+            const normalizedDates = dateRange.map(day => ({
+                ...day,
+                date: DateTime.fromISO(day.date,{ zone: 'utc' }).toISODate()!
+            }))
+        setDateRange(normalizedDates)
 
 
-    },[])
+
+
+
+        setDateRange(normalizedDates)
+        console.log(dateRange)
+
+        if(!employees) return
+        setEmployees(employees)
+        
+
+
+        
+       
+    
+    },[data])
+     //console.log(scheduleGrid)
+    
+  
+   
 
 
 
@@ -124,7 +157,7 @@ function Dashboard(){
 
                         {   
                             <Outlet context={
-                                {   safeView,dateRange,
+                                {   safeView,
                                     employeeList,setEmployeeList,
                                     shifts,setShifts, 
                                     availabilities,setAvailabilities,

@@ -31,20 +31,19 @@ export async function schedule(req:Request,res:Response){
     }
 
     try{
+        console.log("HIT SCHEDULE OVERVIEW", req.params);
         const response = await scheduleService(beginDate,endDate)
-     
+        
         return res.json({
-            employeeList:response.employeeList,
-            shifts:response.shifts,
-            availabilities:response.availabilities,
-            av_time_blocks:response.av_time_blocks,
-            overrides:response.overrides,
-            ov_time_blocks:response.ov_time_blocks
-           
+            dates:response.dates,
+            schedule: response.schedule,
+            employees:response.employees
         })
 
     }catch(error){
-        return res.status(500).json({error: "error fetching employees and shifts"})
+         console.error("❌ SCHEDULE OVERVIEW ERROR:", error);
+        res.status(500).json({ error: 'Internal Server Error' });
+       
     }
     
 }

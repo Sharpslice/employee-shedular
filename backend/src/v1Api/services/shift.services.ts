@@ -1,50 +1,48 @@
 import { DateTime } from "luxon";
 import prisma from "../../../db/db";
+import { getShiftStatus } from "../controllers/getShiftStatus";
 
 
 
 export async function deleteShiftService(shift_id:number){
   
-    const override = await prisma.employee_Time_Override.findFirst({
-        where:{shift_id:shift_id},
-        include:{
-            time_blocks:true
-        }
-    })
 
     
 
 
     const shift = await prisma.employee_Shifts.delete({
         where:{id:shift_id},
-        select:{id:true}
+       
     })
     
-    return {shift,override}
+    return {shift}
 }
+
+
 export async function moveShiftService(
-    shift_id: number,
-    employee_id: number,
-    date: Date,
-    start_time: string,
-    end_time: string
+    shift_id:number,
+    employee_id:number,
+    date:Date
 ) {
     return prisma.$transaction(async (tx) => {
-
-
-   
-      
-        const updatedShift = await tx.employee_Shifts.update({
-            where: { id: shift_id },
-            data: {
-                employee_id: employee_id,
-                date: date,
-                start_time: start_time,
-                end_time: end_time,
-            },
-        });
+        const draggedShift = await tx.employee_Shifts.findUnique({
+            where:{
+                id:shift_id
+            }
+        })
         
-        return updatedShift; // placeholder return, returns undefined
+        const shift = await tx.employee_Shifts.update({
+            where:{
+                id:shift_id
+            },
+            data:{
+                employee_id:employee_id,
+                date: date
+            }
+        })
+        const status = await getShiftStatus(shift.id,tx)
+        return {draggedShift,shift:{...shift,status}}
+
     });
 }
 

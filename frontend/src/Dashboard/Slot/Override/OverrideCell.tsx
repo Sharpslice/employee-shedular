@@ -42,7 +42,7 @@ function OverrideCell({override,status}:overrideProp){
             setMenuOpened(true)
         }
         }, [editable])
-    
+    if(override.type ==='AVAILABLE') return
     return(
         <Flex h={'100%'} bg={'pink'} align={'center'} 
         

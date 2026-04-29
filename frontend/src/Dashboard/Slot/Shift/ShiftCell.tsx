@@ -14,7 +14,7 @@ import TimeRangePicker from "../TimeRangePicker/TimeRangePicker";
 
 
 
-export type ShiftStatus = 'conflict' | 'override' | 'allowed'
+export type ShiftStatus = 'CONFLICT' | 'OVERIDDEN' | null
 
 interface ShiftCellProps{
     shift:Shift,
@@ -22,21 +22,20 @@ interface ShiftCellProps{
 }
 
 
-function ShiftCell({shift,status}:ShiftCellProps){
+function ShiftCell({shift}:ShiftCellProps){
 
     const isUserAdmin = useContext(AuthenticatedUser)?.role === 'ADMIN'
     
-   const {setClipboard} = useContext(GridNavigationContext)!;
+     const {setClipboard} = useContext(GridNavigationContext)!;
 
     const [activate,setActivate] = useState(false)
    
-    
+    //console.log(shift.employee_id)
     
     const {attributes,listeners,setNodeRef,transform,isDragging} = useDraggable({
         id: shift.id,
         data:{
-            employee_id: shift.employee_id,
-            date: shift.date
+            shift:shift
         }
     })
 
@@ -101,7 +100,7 @@ function ShiftCell({shift,status}:ShiftCellProps){
             
           {activate 
             ? shift && <TimeRangePicker data={shift} onChange={(time,string)=>updateShiftTime(time,string,shift)} bg="red"/>  
-            : <ShiftDisplay shift={shift} status={status} />
+            : <ShiftDisplay shift={shift} />
                 
           }
 

@@ -10,6 +10,7 @@ import { useContext, useRef, useState } from "react"
 import { GridNavigationContext } from "../../views/GridNavigation/GridNavigationContext"
 import type { TimeBlock } from "../../Interfaces/TimeBlock"
 import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
+import type { availability_weekly_time_blocks } from "../../Interfaces/weekly_time_block"
 
 
 
@@ -20,18 +21,23 @@ import type { OvTimeBlock } from "../../Interfaces/OvTimeBlock"
 // }
 
 interface PickerProps{
-    data:TimeBlock | OvTimeBlock | Shift | null
+    data:TimeBlock | OvTimeBlock | Shift | null | availability_weekly_time_blocks
     onChange: (time:string, slot: "start" | "end")=> Promise<void> 
     bg?:string
 }
+
+const MORNING_PRESET = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
+const AFTERNOON_PRESET = ['12:00:00','13:00:00','13:30:00','14:30:00','15:00:00','17:00:00']
+
+const PRESETS=[
+    {label:'Morning',values:MORNING_PRESET},
+    {label:'Afternoon', values:AFTERNOON_PRESET}
+]
 
 function TimeRangePicker({data,onChange,bg}:PickerProps){
    
     const {setTimeOpened} = useContext(GridNavigationContext)!
 
-    
-    const morning = getTimeRange({startTime:'9:00',endTime: '11:30',interval:'00:30'})
-    const afternoon = ['12:00:00','13:00:00','13:30:00','14:30:00','15:00:00','17:00:00']
 
     const start_time = data?.start_time ?  DateTime.fromISO(data.start_time).toFormat('HH:mm') : ''
     const end_time = data?.end_time ?  DateTime.fromISO(data.end_time).toFormat('HH:mm') : ''
@@ -39,7 +45,6 @@ function TimeRangePicker({data,onChange,bg}:PickerProps){
 
    
         
-    
     const startHoursRef= useRef<HTMLInputElement>(null);
     const startMinutesRef = useRef<HTMLInputElement>(null);
     const startAmPmRef = useRef<HTMLSelectElement>(null);
@@ -104,10 +109,7 @@ function TimeRangePicker({data,onChange,bg}:PickerProps){
                     }}      
                     format="12h"
                     withDropdown
-                    presets={[
-                        {label:'Morning',values:morning},
-                        {label:'Afternoon', values:afternoon}
-                    ]}
+                    presets={PRESETS}
                     popoverProps={{
                         width: 300, // match your Group width
                         position: 'bottom',
@@ -140,10 +142,7 @@ function TimeRangePicker({data,onChange,bg}:PickerProps){
                     onInput={()=>{setUserTyping(true)}}
                     format="12h"
                     withDropdown
-                    presets={[
-                        {label:'Morning',values:morning},
-                        {label:'Afternoon', values:afternoon}
-                    ]}
+                    presets={PRESETS}
                     popoverProps={{
                         width: 300, 
                         position: 'bottom',
