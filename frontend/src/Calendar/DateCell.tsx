@@ -6,6 +6,8 @@ import type { Employee } from '../Dashboard/Interfaces/Employee';
 import { DateTime } from 'luxon';
 import {  useNavigate } from 'react-router-dom';
 import type { Override } from '../Dashboard/Interfaces/Override';
+import { useScheduleStore } from '../scheduleStore';
+import Row from './row';
 
 
 
@@ -19,26 +21,20 @@ type MonthElement = {
 type Props ={
    
     day: MonthElement
-    employeeList: Map<number,Employee>
-    shiftsByEmployee: Map<number,Shift[]>
-    overridesByEmployee: Map<number,Override[]>
+   
 }
 function getMonthName(monthNumber:number){
         const month = new Date(2000,monthNumber-1,1);
         return month.toLocaleString('default',{month:'short'})
     }
 
-    const convertTo12hr = (time:string | null)=>{
-        if(!time) return ""
-        const dt = DateTime.fromISO(time);
-        return dt.toFormat('hh:mm a')
-    }
 
 
 
 
 
-function DateCell({day,shiftsByEmployee,employeeList,overridesByEmployee}: PropsWithChildren<Props>){
+
+function DateCell({day}: PropsWithChildren<Props>){
    
     const navigate =useNavigate()
 
@@ -50,13 +46,18 @@ function DateCell({day,shiftsByEmployee,employeeList,overridesByEmployee}: Props
       
         
     }
+    const employeeList = useScheduleStore(state=>state.employees)
     
+    console.log(day.date)
+
+
+    const date = DateTime.fromISO(day.date,{zone:'utc'}).toISODate()!
     return (<>
         <Flex 
             direction={'column'}
             style={{
                 backgroundColor: day.month != 8?'rgba(0,0,0,0.1)': "transparent",
-                width:'100%', height:'100%',border:'1px solid grey',borderRadius:'0',
+                width:'100%', height:'100%',border:'1px solid grey',borderRadius:'0', minHeight:'450px'
             }}>
 
 
@@ -68,57 +69,20 @@ function DateCell({day,shiftsByEmployee,employeeList,overridesByEmployee}: Props
 
             <Flex direction={'column'} >
                 {
-                    [...employeeList.values()].map((employee)=>{
+                    employeeList.map((e)=>{
 
+                        
                         return(
-                            shiftsByEmployee.has(employee.id)
-                            ?   <Flex bg={`${employee.color}`} key={employee.id} mih={30} h={20}  p={'4px'} wrap='wrap'  >
-                                    {
-                                        shiftsByEmployee.get(employee.id)?.map((shift)=>{
-                                            return(
-                                                <Text key={shift.id} onDoubleClick={()=>{navigateTo('week',shift.date)}}>
-                                                    {`
-                                                        ${employee.name} - 
-                                                        ${convertTo12hr(shift.start_time)} - ${convertTo12hr(shift.end_time)}
-                                                        
-                                                        
-                                                    `}
-                                                </Text>
-                                            )
-                                        })
-                                    }
+                            <>
+                                <Flex mih={30}>
+                                    <Row employee={e} date={date}></Row>
                                 </Flex>
-
-                            : overridesByEmployee.has(employee.id) ? 
-                                    <Flex bg={`${employee.color}`} key={employee.id} mih={30} h={20}  p={'4px'} wrap='wrap'  >
-                                    {
-                                        overridesByEmployee.get(employee.id)?.map((override)=>{
-                                            return(
-                                                <Text>
-                                                    {`
-                                                        ${employee.name} - 
-                                                        ${'unavailable'} 
-                                                        
-                                                        
-                                                    `}
-                                                    
-                                                </Text>
-                                            )
-                                        })
-                                    }
-                                </Flex>
-                            
-                            
-                            
-                            :
-
-                                <Flex key={employee.id}  mih={30} h={20}  p={'4px'}  style={{}} >
-                                    {''}
-                                </Flex>
+                            </>
                         )
-
-
                     })
+
+
+                   
                 
                 
                 

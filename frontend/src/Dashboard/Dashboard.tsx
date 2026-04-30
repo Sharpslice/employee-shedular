@@ -28,7 +28,7 @@ import {DateTime} from 'luxon';
 import type { Weekly_exception } from "./Interfaces/Weekly_exception";
 
 
-type schedule={
+export type schedule={
     id:number,
     date:string,
     shifts:Shift[]
@@ -56,12 +56,7 @@ function Dashboard(){
     const safeDate = date ?? DateTime.local().toISODate()
     
   
-    const [employeeList,setEmployeeList] = useState<Map<number,Employee>>(new Map())
-    const [shifts,setShifts] = useState<Map<number,Shift>>(new Map())
-    const [availabilities,setAvailabilities] = useState<Map<number,Availability>>(new Map())
-    const [av_time_blocks,setAv_time_blocks] = useState<Map<number,TimeBlock>>(new Map())
-    const [overrides,setOverrides] = useState<Map<number,Override>>(new Map())
-    const [ov_time_blocks,setOv_time_blocks] = useState<Map<number,OvTimeBlock>>(new Map())
+    
     
     useScheduleSocket();
 
@@ -85,7 +80,7 @@ function Dashboard(){
         const dateRange = data?.dates
         const employees = data?.employees
         if(!schedule) return
-      
+        
         const gridMap = new Map<number,Map<string,ScheduleCell |null >>()
         for(const row of schedule){
             const date = DateTime.fromISO(row.date,{ zone: 'utc' }).toISODate()!
@@ -111,7 +106,7 @@ function Dashboard(){
 
         }
         setGrid(gridMap)
-        console.log(scheduleGrid)
+        
 
         if(!dateRange) return
         
@@ -142,8 +137,8 @@ function Dashboard(){
   
    
 
-
-
+    if(scheduleGrid.size ===0 ) return null
+    console.log(scheduleGrid)
     return(
         <>  
         
@@ -158,12 +153,7 @@ function Dashboard(){
                         {   
                             <Outlet context={
                                 {   safeView,
-                                    employeeList,setEmployeeList,
-                                    shifts,setShifts, 
-                                    availabilities,setAvailabilities,
-                                    av_time_blocks,setAv_time_blocks,
-                                    overrides,setOverrides,
-                                    ov_time_blocks,setOv_time_blocks
+                                   
 
                                 }
                             }/>

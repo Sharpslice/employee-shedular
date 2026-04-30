@@ -5,6 +5,7 @@ import type { Employee } from './Dashboard/Interfaces/Employee'
 import type { Day } from './Dashboard/Interfaces/Day'
 import type { Shift } from './Dashboard/Interfaces/Shift'
 import { enableMapSet } from "immer"
+import type { schedule } from './Dashboard/Dashboard'
 
 enableMapSet()
 type ScheduleStore = {
@@ -15,7 +16,7 @@ type ScheduleStore = {
     employees: Employee[]
 
     scheduleGrid: Map<number,Map<string,ScheduleCell | null>>
-
+    mergeScheduleGrid: (schedule: schedule[]) =>void
     setDateRange:(dateRange:Day[]) => void
     setEmployees:(employees:Employee[])=>void
     setGrid: (grid: Map<number, Map<string, ScheduleCell |null>>) => void
@@ -33,7 +34,11 @@ export const useScheduleStore = create<ScheduleStore>()(immer((set)=>({
     employees:[],
     scheduleGrid: new Map(),
 
-
+    mergeScheduleGrid:(schedule)=>set(state=>{
+        for(const row of schedule.values()){
+            console.log(row)
+        }
+    }),
     setDateRange:(dateRange)=> set(state=>{
         state.dateRange = dateRange
     }),

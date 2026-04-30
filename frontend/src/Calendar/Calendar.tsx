@@ -1,14 +1,12 @@
 
 
 import { Box, Flex } from '@mantine/core';
-import { useEffect, useMemo, useState } from 'react';
+
 import axios from 'axios';
 import DateCell from './DateCell';
-import { useOutletContext } from 'react-router-dom';
-import type { Shift } from '../Dashboard/Interfaces/Shift';
-import { DateTime } from 'luxon';
-import type { Employee } from '../Dashboard/Interfaces/Employee';
-import type { Override } from '../Dashboard/Interfaces/Override';
+
+import { useQuery } from '@tanstack/react-query';
+
 
 
 
@@ -31,64 +29,12 @@ type CalendarResponse ={
 //     }
 
 function Calendar(){
-    const [daysInAMonth,setDayInAMonth] = useState<MonthElement[]>([])
-    // const [currentMonth,setCurrentMonth] = useState<string>('')
 
-    const {shifts,employeeList,overrides} = useOutletContext<{shifts: Map<number,Shift>,employeeList:Map<number,Employee>,overrides:Map<number,Override>}>();
-
-    const overridesByDateAndEmployee= useMemo(()=>{
-        const map = new Map<string,Map<number,Override[]>>();
-
-        for (const override of overrides.values()){
-            const date = DateTime.fromISO(override.date).toISODate()!
-            if(!map.has(date)){
-                 map.set(date,new Map<number,Override[]>())
-            }
-            const employeeWOverride = map.get(date)
-            if(employeeWOverride?.has(override.employee_id)){
-                employeeWOverride.get(override.employee_id)?.push(override)
-            }
-            else{
-                employeeWOverride?.set(override.employee_id,[override])
-            }
-
-        }
-        return map
-    },[overrides])
-    
-    const shiftsByDateAndEmployee = useMemo(()=>{
-        const map = new Map<string,Map<number,Shift[]>>();
-
-        for(const shift of shifts.values()){
-            const date = DateTime.fromISO(shift.date).toISODate()!
-            
-            if(!map.has(date)){
-                map.set(date,new Map<number,Shift[]>())
-            }
-
-            const employeeWShift = map.get(date)
-
-            if(employeeWShift?.has(shift.employee_id)){
-                employeeWShift.get(shift.employee_id)?.push(shift)
-            }
-            else{
-                employeeWShift?.set(shift.employee_id,[shift])
-            }
-
-            
-        }
-        console.log(map)
-        return map
-
-    },[shifts])
-     
-    useEffect(()=>{
         const fetchCalendarData =async()=>{
             try{
                 const response = await axios.get<CalendarResponse>(`http://localhost:3000/api/calendar/currentMonth`,{withCredentials:true});
-                setDayInAMonth(response.data.month)
-                //setCurrentMonth(getMonthName(response.data.currentMonth))
-                
+                return response.data.month
+              
 
             }catch(error){
                 if(error instanceof Error)
@@ -98,11 +44,14 @@ function Calendar(){
                 
             }
         }
-        fetchCalendarData();
-    },[])
+    const {data:daysInAMonth } = useQuery({queryKey: ['schedule',2026,4],queryFn:fetchCalendarData, staleTime: 0});
+    console.log('month: ',daysInAMonth)
 
     const daysOfTheWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+    if(!daysInAMonth) return null
 
+
+    
     return (
     <>
 
@@ -122,16 +71,14 @@ function Calendar(){
             
                 daysInAMonth.map((dayObj: MonthElement) => {
                     
-                    const date = DateTime.fromISO(dayObj.date).toISODate()
-                    const dailyEmployeeShift = shiftsByDateAndEmployee.get(date!)
-                    const dailyOverrideShift = overridesByDateAndEmployee.get(date!)
-                    return <DateCell 
-                        key={`${dayObj.date}`}
-                        day={dayObj} 
-                        shiftsByEmployee={dailyEmployeeShift ?? new Map() } 
-                        overridesByEmployee={dailyOverrideShift ?? new Map()}
-                        employeeList={employeeList} 
-                        />
+                    //const date = DateTime.fromISO(dayObj.date).toISODate()!
+                   
+                    return (
+                    <>
+                        <DateCell day={dayObj}></DateCell>
+                    
+                    
+                    </>)
                 })}
 
 
